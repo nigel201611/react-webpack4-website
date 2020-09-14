@@ -3,9 +3,9 @@ import { connect } from 'react-redux'
 import { Button, Form, Input, /* Select, */ Modal, Row, Col, message } from 'antd'
 import { regExpConfig } from '@reg'
 import md5 from 'md5'
-import {
-  fetchPassword,
-} from '@actions/common'
+// import {
+//   fetchPassword,
+// } from '@actions/common'
 
 const FormItem = Form.Item
 // const Option = Select.Option
@@ -54,19 +54,19 @@ export default class index extends Component {
         password: fieldsValue.password ? fieldsValue.password : '',
       };
       this.submitLoading = true
-      this.props.dispatch(fetchPassword({
-        ...values,
-      }, (res) => {
-        message.success(res.msg)
-        this.submitLoading = false
-        this.setState({})
-        this.props.onCancel()
-      }, (res) => {
-        message.warning(res.msg)
-        this.props.form.setFields({ oldPwd: '', password: '', confirm: '' })
-        this.submitLoading = false
-        this.setState({})
-      }))
+      // this.props.dispatch(fetchPassword({
+      //   ...values,
+      // }, (res) => {
+      //   message.success(res.msg)
+      //   this.submitLoading = false
+      //   this.setState({})
+      //   this.props.onCancel()
+      // }, (res) => {
+      //   message.warning(res.msg)
+      //   this.props.form.setFields({ oldPwd: '', password: '', confirm: '' })
+      //   this.submitLoading = false
+      //   this.setState({})
+      // }))
 
       // this.props.form.resetFields()
     });

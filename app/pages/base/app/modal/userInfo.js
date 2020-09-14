@@ -4,7 +4,7 @@ import { Form, Button, Input, message } from 'antd'
 import { regExpConfig } from '@configs/regular.config'
 import Drawer from '@components/draw/draw'
 import md5 from 'md5'
-import { updatePwd } from '@apis/common' // 修改密码api
+// import { updatePwd } from '@apis/common' // 修改密码api
 import '@styles/personalCenter.less'
 
 const FormItem = Form.Item
@@ -79,19 +79,19 @@ export default class userInfo extends Component {
       p = md5(values.password)
       o = md5(values.oldPass)
       // }
-      updatePwd(
-        {
-          password: p,
-          oldPassword: o,
-        }, (res) => {
-          message.info(res.msg)
-          this.setState({ submitLoading: false })
-        },
-        (res) => {
-          message.error(res.msg)
-          this.setState({ submitLoading: false })
-        },
-      )
+      // updatePwd(
+      //   {
+      //     password: p,
+      //     oldPassword: o,
+      //   }, (res) => {
+      //     message.info(res.msg)
+      //     this.setState({ submitLoading: false })
+      //   },
+      //   (res) => {
+      //     message.error(res.msg)
+      //     this.setState({ submitLoading: false })
+      //   },
+      // )
     })
   }
 

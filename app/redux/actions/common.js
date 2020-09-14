@@ -13,5 +13,3 @@ export const login = createAjaxAction(common.login, requestLogin, recevieLogin)
 export const setGformCache2 = createAction('set gform cache2')
 export const clearGformCache2 = createAction('clear gform cache2')
 
-// socket receive
-// export const socketReceive = createAction('socketReceive')

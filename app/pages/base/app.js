@@ -4,8 +4,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 import { message, LocaleProvider } from 'antd'
-import { validateTickit/* , parseQueryString */ } from '@configs/common'
-import { loginByKey } from '@apis/common'
+// import { validateTickit/* , parseQueryString */ } from '@configs/common'
+// import { loginByKey } from '@apis/common'
 import zhCN from 'antd/lib/locale-provider/zh_CN'
 import '@styles/base.less'
 
@@ -50,63 +50,61 @@ export default class App extends Component {
         menuStyle: false,
       })
     }
-    console.log(sessionStorage.getItem('menuStyle'))
-    console.log(sessionStorage.getItem('menuStyle') === 'true')
     if (sessionStorage.getItem('menuStyle') === 'true') {
       this.setState({
         menuStyle: true,
       })
     }
     const { query } = this.props.location
-    if (query.ticket) { // 如果是url路径带ticket的话，那么在当前页面做登录的初始化
-      validateTickit(this.props.location, (res) => {
-        this.setState({
-          idRenderChild: true,
-        })
-      })
-    } else if (query.key) {
-      // const params = parseQueryString(window.location.href)
-      loginByKey({ }, (res) => {
-        sessionStorage.setItem('key', query.key)
-        this.setState({
-          idRenderChild: true,
-        })
-      })
-    } else {
-      this.setState({ gMenuList: JSON.parse(sessionStorage.getItem('gMenuList')) })
-      this.getMenuId(JSON.parse(sessionStorage.getItem('gMenuList')), this.props.location.pathname.replace('/', ''))
-      // 初始化比较当前的顶级菜单属于哪个
-      const { topMenuReskey } = this.state
-      if (topMenuReskey !== sessionStorage.getItem('topMenuReskey')) {
-        this.setState({ topMenuReskey: sessionStorage.getItem('topMenuReskey') })
-      }
-      this.setState({
-        idRenderChild: true,
-        // menuStyle: false,
-      })
-    }
+    // if (query.ticket) { // 如果是url路径带ticket的话，那么在当前页面做登录的初始化
+    //   validateTickit(this.props.location, (res) => {
+    //     this.setState({
+    //       idRenderChild: true,
+    //     })
+    //   })
+    // } else if (query.key) {
+    //   // const params = parseQueryString(window.location.href)
+    //   loginByKey({ }, (res) => {
+    //     sessionStorage.setItem('key', query.key)
+    //     this.setState({
+    //       idRenderChild: true,
+    //     })
+    //   })
+    // } else {
+    //   this.setState({ gMenuList: JSON.parse(sessionStorage.getItem('gMenuList')) })
+    //   this.getMenuId(JSON.parse(sessionStorage.getItem('gMenuList')), this.props.location.pathname.replace('/', ''))
+    //   // 初始化比较当前的顶级菜单属于哪个
+    //   const { topMenuReskey } = this.state
+    //   if (topMenuReskey !== sessionStorage.getItem('topMenuReskey')) {
+    //     this.setState({ topMenuReskey: sessionStorage.getItem('topMenuReskey') })
+    //   }
+    //   this.setState({
+    //     idRenderChild: true,
+    //     // menuStyle: false,
+    //   })
+    // }
 
-    if (query.mode === 'iframe' || query.key) {
-      this.setState({
-        isIframe: true,
-      })
-    } else {
-      this.setState({
-        isIframe: false,
-      })
-    }
+    // if (query.mode === 'iframe' || query.key) {
+    //   this.setState({
+    //     isIframe: true,
+    //   })
+    // } else {
+    //   this.setState({
+    //     isIframe: false,
+    //   })
+    // }
   }
 
-  // 获取菜单id
-  getMenuId = (nav, pathname) => {
-    this.topMenuReskeyFlag = '' // 顶级菜单分类
-    this.topMenuReskeyChild = [] // 顶级菜单的孩子，也就是当前要显示在左侧页面的菜单
-    this.flag = false // 用来保存顶级菜单的标志
-    // console.log(nav)
-    if (nav && nav.length > 0) {
-      this.compare(nav, pathname)
-    }
-  }
+  // // 获取菜单id
+  // getMenuId = (nav, pathname) => {
+  //   this.topMenuReskeyFlag = '' // 顶级菜单分类
+  //   this.topMenuReskeyChild = [] // 顶级菜单的孩子，也就是当前要显示在左侧页面的菜单
+  //   this.flag = false // 用来保存顶级菜单的标志
+  //   // console.log(nav)
+  //   if (nav && nav.length > 0) {
+  //     this.compare(nav, pathname)
+  //   }
+  // }
 
   // 比较方法
   compare(children, pathname) {

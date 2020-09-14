@@ -29,7 +29,7 @@ export default class Drawer extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const {
       size = 'default',
     } = this.props
@@ -49,7 +49,7 @@ export default class Drawer extends Component {
   }
 
   // 监测visible属性,
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     /* const {
       visible = true,
     } = this.props

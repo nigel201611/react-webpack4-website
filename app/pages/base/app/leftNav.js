@@ -14,8 +14,6 @@ const { SubMenu } = Menu
 export default class LeftNav extends Component {
   constructor(props, context) {
     super(props, context)
-
-    // const { pathname } = props.location
     this.state = {
       // current: pathname,
       openKeys: [],

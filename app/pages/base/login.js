@@ -29,13 +29,11 @@ export default class Login extends Component {
     super(props)
     this.state = {
       loading: false,
-      isCertificates: false,
       show: true,
     }
   }
 
   componentDidMount() {
-    this.props.dispatch(clearGformCache2({}))
     this.props.form.setFieldsValue({ username: 'username', password: '123456' })
   }
 
@@ -43,10 +41,6 @@ export default class Login extends Component {
 
   handleSubmit(e, isCertificates) {
     e.preventDefault()
-    if (isCertificates) {
-      message.warning('证书登录功能未开通')
-      return
-    }
     this.props.form.validateFields((err, values) => {
       if (!err) {
         const query = this.props.form.getFieldsValue()
@@ -100,7 +94,7 @@ export default class Login extends Component {
     return (
       <div className="login-container">
         <div className="login-main">
-          <QueuiAnim delay={300} type="bottom" key="row">
+          {/* <QueuiAnim delay={300} type="bottom" key="row"> */}
             {
               this.state.show ? [
                 <Row key="row0">
@@ -140,7 +134,7 @@ export default class Login extends Component {
                 </Row>,
               ] : null
             }
-          </QueuiAnim>
+          {/* </QueuiAnim> */}
         </div>
         <Ship />
       </div>

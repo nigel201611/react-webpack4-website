@@ -25,7 +25,7 @@ export default class Drawer extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     document.body.classList.add('body-drawer')
   }
 
@@ -46,7 +46,7 @@ export default class Drawer extends Component {
   }
 
   // 监测visible属性,
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
 
   }
 

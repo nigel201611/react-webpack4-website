@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-15 15:15:12
+ * @LastEditTime: 2020-09-15 16:33:45
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -53,6 +53,10 @@ export default class Login extends Component {
             console.log(res);
             this.setState({ loading: false });
             sessionStorage.setItem("token", res.data.token);
+            sessionStorage.setItem(
+              "userInfo",
+              JSON.stringify(res.data.userInfo)
+            );
             hashHistory.push("/");
           },
           (res) => {

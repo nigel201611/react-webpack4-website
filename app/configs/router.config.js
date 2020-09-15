@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-14 14:32:45
+ * @LastEditTime: 2020-09-15 17:22:53
  */
 import React from 'react'
 import { Router, Route, IndexRoute, hashHistory/* , Redirect */ } from 'react-router'

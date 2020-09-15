@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-08 14:42:29
+ * @LastEditTime: 2020-09-15 17:53:05
  */
 
 const path = require('path')
@@ -139,8 +139,8 @@ const webpackConfigBase = {
         loader: 'url-loader',
         options: {
           limit: 8192,
-          name: '[name].[hash:4].[ext]',
-          outputPath: '/img'
+          // name: '[name].[hash:4].[ext]',
+          // outputPath: '/img'
         }
       },
       {

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-14 18:15:43
+ * @LastEditTime: 2020-09-15 15:15:12
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -47,19 +47,18 @@ export default class Login extends Component {
         const query = this.props.form.getFieldsValue();
         this.setState({ loading: true });
         // values.password = md5(values.password);
-        this.props.dispatch(
-          login(
-            values,
-            (res) => {
-              sessionStorage.setItem("token", res.data.token);
-            },
-            (res) => {
-              message.warning(res.msg);
-              this.setState({
-                loading: false,
-              });
-            }
-          )
+        login(
+          values,
+          (res) => {
+            console.log(res);
+            this.setState({ loading: false });
+            sessionStorage.setItem("token", res.data.token);
+            hashHistory.push("/");
+          },
+          (res) => {
+            message.warning(res.msg);
+            this.setState({ loading: false });
+          }
         );
       }
     });

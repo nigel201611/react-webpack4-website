@@ -1,11 +1,9 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-14 18:24:44
+ * @LastEditTime: 2020-09-15 14:16:33
  */
 
-import { hashHistory } from "react-router";
-import { message } from "antd";
 import { login as loginApi } from "@apis/common";
 
 export function parseQueryString(url) {
@@ -28,8 +26,6 @@ export const login = (params, success, failure) => {
     params,
     (response) => {
       sessionStorage.setItem("token", response.data.token);
-      localStorage.setItem("sessionStorage", JSON.stringify(sessionStorage));
-      // _fetchNav().then(() => { success() })
       if (typeof success === "function") success(response);
     },
     (response) => {

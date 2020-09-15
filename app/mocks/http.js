@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-09 11:25:08
+ * @LastEditTime: 2020-09-15 11:13:27
  */
 const http = require('http')
 const _map = require('./interfaceMap')
@@ -25,6 +25,7 @@ http.createServer((req, res) => {
     req.addListener('data', dataBuffer => postData += dataBuffer)
     req.addListener('end', () => {
       postData = JSON.parse(postData)
+      console.log(req.url);
       const originData = _map[req.url]
         ? Mock.mock(_map[req.url])
         : ''

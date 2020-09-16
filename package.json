@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "a react develop stack for pc management system",
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run mock\"",
-    "dev": "webpack-dev-server --config ./scripts/webpack.dev.config.js",
+    "dev": "concurrently \"npm run dev\" \"npm run mock\"",
+    "start": "webpack-dev-server --config ./scripts/webpack.dev.config.js",
     "testing": "webpack --config ./scripts/webpack.testing.config.js",
     "build": "cross-env NODE_ENV=production webpack --config ./scripts/webpack.prod.config.js",
     "lint": "eslint ./ --cache --fix --ignore-pattern .gitignore",

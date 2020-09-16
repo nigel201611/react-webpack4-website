@@ -46,6 +46,9 @@ export default class Header extends Component {
       },
     });
   }
+  handleLogin() {
+    hashHistory.push('/login');
+  }
 
   navigateToMyTemplate() {
     console.log("我的模板");
@@ -130,14 +133,20 @@ export default class Header extends Component {
               <div className="right">
                 <ul>
                   <li>
-                    <Dropdown overlay={userinfoMenu}>
-                      <a
-                        className="ant-dropdown-link"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        {name} <i className="iconfont icon-login"></i>
+                    {name ? (
+                      <Dropdown overlay={userinfoMenu}>
+                        <a
+                          className="ant-dropdown-link"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          {name} <i className="iconfont icon-login"></i>
+                        </a>
+                      </Dropdown>
+                    ) : (
+                      <a onClick={this.handleLogin}>
+                        登录 <i className="iconfont icon-login"></i>
                       </a>
-                    </Dropdown>
+                    )}
                   </li>
                   <li>
                     <Dropdown overlay={languageMenu}>

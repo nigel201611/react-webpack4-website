@@ -6,6 +6,8 @@ import zhCN from "antd/lib/locale-provider/zh_CN";
 import "@styles/base.less";
 
 import Header from "./app/header";
+import Main from "./home";
+import Footer from "./app/footer";
 
 @connect((state, props) => ({}))
 export default class App extends Component {
@@ -21,6 +23,8 @@ export default class App extends Component {
       <ConfigProvider locale={zhCN}>
         <div id="container">
           <Header></Header>
+          <Main></Main>
+          <Footer></Footer>
         </div>
       </ConfigProvider>
     );

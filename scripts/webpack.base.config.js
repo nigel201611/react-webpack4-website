@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-15 17:53:05
+ * @LastEditTime: 2020-09-16 11:17:01
  */
 
 const path = require('path')
@@ -23,7 +23,7 @@ const webpackConfigBase = {
     path: resolve('../dist'),
     filename: devMode ?'js/[name].[hash].js' : 'js/[name].[contenthash].js',
     chunkFilename: devMode ? 'chunks/[name].[hash:4].js':'chunks/[name].[contenthash].js',
-    // publicPath: './'
+    publicPath: '/'
   },
   resolve: {// 减少后缀
     extensions: ['.js', '.jsx', '.json'],

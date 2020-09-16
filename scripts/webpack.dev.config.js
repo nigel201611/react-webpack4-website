@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-15 14:50:25
+ * @LastEditTime: 2020-09-16 10:59:35
  */
 
 const path = require("path");
@@ -43,15 +43,6 @@ function resolve(relatedPath) {
 }
 const webpackConfigDev = {
   mode: "development",
-  // proxyTable: {
-  //   "/api/": {
-  //     target: "http://127.0.0.1:80/",
-  //     changeOrigin: true,
-  //     pathRewrite: {
-  //       "^/api": "/api",
-  //     },
-  //   },
-  // },
   plugins: [
     // 定义环境变量为开发环境
     new webpack.DefinePlugin({

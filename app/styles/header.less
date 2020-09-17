@@ -39,6 +39,24 @@
       li {
         margin: 0 40px 0 0;
         cursor: pointer;
+        box-sizing: border-box;
+      }
+      li::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 100%;
+        width: 0;
+        height: 100%;
+        border-bottom: 2px solid #11aae4;
+        transition: 0.2s all linear;
+      }
+      li:hover::before {
+        width: 100%;
+        left: 0;
+      }
+      li:hover ~ li::before {
+        left: 0;
       }
       .active {
         border-bottom: 2px solid #11aae4;
@@ -55,7 +73,7 @@
       white-space: nowrap;
       display: inline-block;
       vertical-align: middle;
-      line-height: @g-header-height;
+      line-height: @g-header-height - 4;
       li {
         display: inline-block;
         position: relative;

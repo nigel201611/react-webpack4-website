@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
-import { Modal, message, Icon, Row, Col, Menu, Dropdown } from "antd";
-import { brandName } from "@config";
+import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
 import { logout } from "@apis/common";
+import { debounce, getElemOffsetTop } from "../../../utils/common";
 import logoImage from "@images/logo.png";
 import "@styles/header.less";
 const { confirm } = Modal;
@@ -18,6 +18,24 @@ export default class Header extends Component {
     super(props);
     this.state = {
       loading: false,
+      currentNav: 1, //当前导航索引
+      navList: [
+        {
+          id: 1,
+          text: "OCR 识别",
+          name: "ocr_category_content",
+        },
+        {
+          id: 2,
+          text: "IOT 物联",
+          name: "iot_category_content",
+        },
+        {
+          id: 3,
+          text: "AI 算法 ",
+          name: "ai_category_content",
+        },
+      ],
     };
     this.handleLogout = this.handleLogout.bind(this);
     this.handleChangeLang = this.handleChangeLang.bind(this);
@@ -25,7 +43,42 @@ export default class Header extends Component {
   }
 
   // 组件已经加载到dom中
-  componentDidMount() {}
+  componentDidMount() {
+    window.onscroll = () => debounce(this.handleScroll(), 600);
+  }
+  componentWillUnmount() {
+    window.onscroll = null;
+  }
+  handleScroll() {
+    console.log(1111);
+
+    //根据滚动条滚动位置，判断不同元素是否在视野中，设置导航avtive
+    let ocrSectionElem = document.getElementById("ocr_category_content");
+    let iotSectionElem = document.getElementById("iot_category_content");
+    let aiSectionElem = document.getElementById("ai_category_content");
+
+    console.log(aiSectionElem);
+    let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    let winH =
+      document.documentElement.offsetHeight || document.body.offsetHeight;
+
+    if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
+      this.setState({
+        currentNav: 1,
+      });
+    }
+    if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
+      this.setState({
+        currentNav: 2,
+      });
+    }
+    if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
+      this.setState({
+        currentNav: 3,
+      });
+    }
+  }
   // 登出
   handleLogout() {
     const { config } = this.props;
@@ -47,7 +100,7 @@ export default class Header extends Component {
     });
   }
   handleLogin() {
-    hashHistory.push('/login');
+    hashHistory.push("/login");
   }
 
   navigateToMyTemplate() {
@@ -60,6 +113,23 @@ export default class Header extends Component {
 
   logoClick = () => {
     console.log("nri");
+  };
+
+  scrollToAnchor = (index, anchorName, event) => {
+    event.stopPropagation();
+    this.setState({
+      currentNav: index,
+    });
+    if (anchorName) {
+      let anchorElement = document.getElementById(anchorName);
+      if (anchorElement) {
+        anchorElement.scrollIntoView({
+          behavior: "smooth",
+          block: index == 1 ? "start" : index == 2 ? "center" : "start",
+          // inline: "start",
+        });
+      }
+    }
   };
 
   render() {
@@ -104,12 +174,8 @@ export default class Header extends Component {
         <div id="navbar-container" className="boxed">
           <Row className="row">
             <Col span={20}>
-              <div
-                className="navbar-brand"
-                title={brandName}
-                onClick={this.logoClick}
-              >
-                <span className="brand-title">
+              <div className="navbar-brand">
+                <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
                     <img className="logo_icon" src={logoImage} alt="NRI logo" />
                     野村综合研究所
@@ -117,15 +183,23 @@ export default class Header extends Component {
                 </span>
 
                 <ul className="navList">
-                  <li className="active">
-                    <a href="#">OCR 识别</a>
-                  </li>
-                  <li>
-                    <a href="#">AI 算法 </a>
-                  </li>
-                  <li>
-                    <a href="#">IOT 物联</a>
-                  </li>
+                  {this.state.navList.map((item) => {
+                    return (
+                      <li
+                        key={item.id}
+                        onClick={this.scrollToAnchor.bind(
+                          this,
+                          item.id,
+                          item.name
+                        )}
+                        className={
+                          this.state.currentNav === item.id ? "active" : ""
+                        }
+                      >
+                        <a>{item.text}</a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </Col>

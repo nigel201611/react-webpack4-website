@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-09-16 15:10:03
+ * @LastEditTime: 2020-09-17 15:08:48
  */
 
 import React, { Component } from "react";
@@ -23,6 +23,8 @@ export default class Ship extends Component {
         </Col>
       );
     });
-    return <Row gutter={16}>{listItems}</Row>;
+    return (
+      <Row gutter={[16, { xs: 8, sm: 16, md: 16, lg: 16 }]}>{listItems}</Row>
+    );
   }
 }

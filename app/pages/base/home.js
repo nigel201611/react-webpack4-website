@@ -2,15 +2,60 @@ import React, { Component } from "react";
 import Cards from "@components/Card/Card";
 import { Row, Col } from "antd";
 import "@styles/home.less";
+import { debounce, getElemOffsetTop } from "../../utils/common";
 
 export default class app extends Component {
   static defaultProps = {};
   static propTypes = {};
+
   constructor(props) {
     super(props);
+    this.ocrTitleRef = React.createRef();
+    this.iotTitleRef = React.createRef();
+    this.aiTitleRef = React.createRef();
     this.state = {};
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.init();
+  }
+
+  componentWillUnmount() {
+    window.onscroll = null;
+  }
+
+  init() {
+    window.onscroll = () => debounce(this.handleScroll(), 600);
+  }
+
+  handleScroll() {
+    let ocrTitleElem = this.ocrTitleRef.current;
+    let aiTitleElem = this.aiTitleRef.current;
+    let iotTitleElem = this.iotTitleRef.current;
+    this.judgeScrollTop([ocrTitleElem, aiTitleElem, iotTitleElem], "mainMod");
+    // this.judgeScrollTop([aiVideoElem], "rightMod");
+  }
+
+  judgeScrollTop(elemArr, animateType) {
+    let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    let winH =
+      document.documentElement.offsetHeight || document.body.offsetHeight;
+
+    elemArr.forEach((elem) => {
+      let firstChild = elem.firstElementChild;
+      let lastChild = elem.lastElementChild;
+      //获取当前元素相对文档顶部距离 ocrTitleElem.offsetTop
+      let offsetTop = getElemOffsetTop(elem);
+      if (scrollTop + winH > offsetTop) {
+        if (firstChild && !firstChild.classList.contains("animated")) {
+          firstChild.classList.add("animated", animateType);
+        }
+        if (lastChild && !lastChild.classList.contains("animated")) {
+          lastChild.classList.add("animated", animateType);
+        }
+      }
+    });
+  }
   render() {
     const cardList = [
       {
@@ -56,8 +101,8 @@ export default class app extends Component {
     ];
     return (
       <div className="main_wrap">
-        <section className="ocr_category_content">
-          <div className="ocr_title">
+        <section className="ocr_category_content" id="ocr_category_content">
+          <div className="ocr_title" ref={this.ocrTitleRef}>
             <h1>OCR 识别</h1>
             <p>
               NRI通用OCR识别，自定OCR模板，运单识别，邮编识别，T-通用，G-通用OCR识别
@@ -68,8 +113,8 @@ export default class app extends Component {
           </div>
         </section>
 
-        <section className="iot_category_content">
-          <div className="iot_title">
+        <section className="iot_category_content" id="iot_category_content">
+          <div className="iot_title" ref={this.iotTitleRef}>
             <h1>IOT 物联</h1>
             <ul>
               <li>
@@ -84,10 +129,10 @@ export default class app extends Component {
           </div>
         </section>
 
-        <section className="ai_category_content">
+        <section className="ai_category_content" id="ai_category_content">
           <Row gutter={16}>
             <Col className="column-item" span={12}>
-              <div className="iot_h1">
+              <div className="iot_h1" ref={this.aiTitleRef}>
                 <h1>IOT 算法领域</h1>
                 <p>
                   AI 算法领域，算法工程师针对不同行业

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
 import { logout } from "@apis/common";
-import { debounce, getElemOffsetTop } from "../../../utils/common";
 import logoImage from "@images/logo.png";
 import "@styles/header.less";
 const { confirm } = Modal;
@@ -18,7 +17,6 @@ export default class Header extends Component {
     super(props);
     this.state = {
       loading: false,
-      currentNav: 1, //当前导航索引
       navList: [
         {
           id: 1,
@@ -42,43 +40,6 @@ export default class Header extends Component {
     this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
   }
 
-  // 组件已经加载到dom中
-  componentDidMount() {
-    window.onscroll = () => debounce(this.handleScroll(), 600);
-  }
-  componentWillUnmount() {
-    window.onscroll = null;
-  }
-  handleScroll() {
-    console.log(1111);
-
-    //根据滚动条滚动位置，判断不同元素是否在视野中，设置导航avtive
-    let ocrSectionElem = document.getElementById("ocr_category_content");
-    let iotSectionElem = document.getElementById("iot_category_content");
-    let aiSectionElem = document.getElementById("ai_category_content");
-
-    console.log(aiSectionElem);
-    let scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    let winH =
-      document.documentElement.offsetHeight || document.body.offsetHeight;
-
-    if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
-      this.setState({
-        currentNav: 1,
-      });
-    }
-    if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
-      this.setState({
-        currentNav: 2,
-      });
-    }
-    if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
-      this.setState({
-        currentNav: 3,
-      });
-    }
-  }
   // 登出
   handleLogout() {
     const { config } = this.props;
@@ -117,9 +78,7 @@ export default class Header extends Component {
 
   scrollToAnchor = (index, anchorName, event) => {
     event.stopPropagation();
-    this.setState({
-      currentNav: index,
-    });
+    this.props.setCurrentNav(index);
     if (anchorName) {
       let anchorElement = document.getElementById(anchorName);
       if (anchorElement) {
@@ -169,6 +128,7 @@ export default class Header extends Component {
         </Menu.Item>
       </Menu>
     );
+
     return (
       <header id="navbar">
         <div id="navbar-container" className="boxed">
@@ -193,7 +153,7 @@ export default class Header extends Component {
                           item.name
                         )}
                         className={
-                          this.state.currentNav === item.id ? "active" : ""
+                          this.props.currentNav === item.id ? "active" : ""
                         }
                       >
                         <a>{item.text}</a>

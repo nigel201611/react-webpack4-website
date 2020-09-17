@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Cards from "@components/Card/Card";
 import { Row, Col } from "antd";
 import "@styles/home.less";
-import { debounce, getElemOffsetTop } from "../../utils/common";
+import { debounce, getElemOffsetTop } from "@utils/common";
 
 export default class app extends Component {
   static defaultProps = {};
@@ -31,8 +31,31 @@ export default class app extends Component {
     let ocrTitleElem = this.ocrTitleRef.current;
     let aiTitleElem = this.aiTitleRef.current;
     let iotTitleElem = this.iotTitleRef.current;
-    this.judgeScrollTop([ocrTitleElem, aiTitleElem, iotTitleElem], "mainMod");
-    // this.judgeScrollTop([aiVideoElem], "rightMod");
+    let cardsElem = document.querySelector(".cards-row");
+    this.judgeScrollTop(
+      [ocrTitleElem, aiTitleElem, iotTitleElem, cardsElem],
+      "mainMod"
+    );
+    this.judgeWhichSection();
+  }
+
+  judgeWhichSection() {
+    let ocrSectionElem = document.getElementById("ocr_category_content");
+    let iotSectionElem = document.getElementById("iot_category_content");
+    let aiSectionElem = document.getElementById("ai_category_content");
+    let scrollTop =
+      document.documentElement.scrollTop || document.body.scrollTop;
+    let winH =
+      document.documentElement.offsetHeight || document.body.offsetHeight;
+    if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
+      this.props.setCurrentNav(1);
+    }
+    if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
+      this.props.setCurrentNav(2);
+    }
+    if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
+      this.props.setCurrentNav(3);
+    }
   }
 
   judgeScrollTop(elemArr, animateType) {
@@ -41,18 +64,16 @@ export default class app extends Component {
     let winH =
       document.documentElement.offsetHeight || document.body.offsetHeight;
 
-    elemArr.forEach((elem) => {
-      let firstChild = elem.firstElementChild;
-      let lastChild = elem.lastElementChild;
+    elemArr.forEach((elem, index) => {
       //获取当前元素相对文档顶部距离 ocrTitleElem.offsetTop
       let offsetTop = getElemOffsetTop(elem);
       if (scrollTop + winH > offsetTop) {
-        if (firstChild && !firstChild.classList.contains("animated")) {
-          firstChild.classList.add("animated", animateType);
-        }
-        if (lastChild && !lastChild.classList.contains("animated")) {
-          lastChild.classList.add("animated", animateType);
-        }
+        let childrenList = Array.from(elem.children);
+        childrenList.forEach((child) => {
+          if (child && !child.classList.contains("animated")) {
+            child.classList.add("animated", animateType);
+          }
+        });
       }
     });
   }
@@ -133,7 +154,7 @@ export default class app extends Component {
           <Row gutter={16}>
             <Col className="column-item" span={12}>
               <div className="iot_h1" ref={this.aiTitleRef}>
-                <h1>IOT 算法领域</h1>
+                <h1>AI 算法领域</h1>
                 <p>
                   AI 算法领域，算法工程师针对不同行业
                   领域应用落地。右边是烟雾探测监控算法，以及更多其他领域应用...

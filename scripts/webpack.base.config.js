@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-17 16:38:54
+ * @LastEditTime: 2020-09-18 11:09:17
  */
 
 const path = require("path");
@@ -47,6 +47,7 @@ const webpackConfigBase = {
       "@reg": path.join(__dirname, "../app/configs/regular.config.js"),
       "@images": path.join(__dirname, "../app/images"),
       "@utils": path.join(__dirname, "../app/utils"),
+      "@locales": path.join(__dirname, "../app/locales"),
       "@middleware": path.join(__dirname, "../app/middleware"),
       "@pages": path.join(__dirname, "../app/pages"),
       "@styles": path.join(__dirname, "../app/styles"),

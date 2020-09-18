@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { ConfigProvider } from "antd";
-import zhCN from "antd/lib/locale-provider/zh_CN";
+// ...省略若干行
+// import zhCN from 'antd/es/locale/zh_CN';
+// import jp from 'antd/es/locale/ja_JP';
+import enUS from "antd/es/locale/en_US";
+
 import "@styles/base.less";
 import Header from "./app/header";
 import Main from "./home";
@@ -24,12 +28,13 @@ export default class App extends Component {
   render() {
     const { location, children } = this.props;
     return (
-      <ConfigProvider locale={zhCN}>
+      <ConfigProvider locale={enUS}>
         <div id="container">
           <Header
             currentNav={this.state.currentNav}
             setCurrentNav={this.setCurrentNavCallback}
           ></Header>
+          {/* <p>{this.props.t("Welcome to React")}</p> */}
           <Main setCurrentNav={this.setCurrentNavCallback}></Main>
           <Footer></Footer>
         </div>

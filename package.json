@@ -21,7 +21,6 @@
     }
   },
   "author": "nigel",
-
   "jest": {
     "moduleFileExtensions": [
       "js",
@@ -146,6 +145,7 @@
     "enzyme-adapter-react-16": "^1.6",
     "esri-loader": "0.3.1",
     "husky": "^1.1.2",
+    "i18next": "^19.7.0",
     "identity-obj-proxy": "^3.0.0",
     "immutable": "~3.8.1",
     "lint-staged": "^7.3.0",
@@ -157,6 +157,7 @@
     "react-copy-to-clipboard": "~5.0.1",
     "react-dom": "^16.5.2",
     "react-hot-loader": "^4.12.18",
+    "react-i18next": "^11.7.2",
     "react-redux": "~5.0.6",
     "react-router": "3.2.0",
     "react-router-redux": "~4.0.5",

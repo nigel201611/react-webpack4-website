@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import Cards from "@components/Card/Card";
 import { Row, Col } from "antd";
+import { withTranslation } from "react-i18next";
 import "@styles/home.less";
 import { debounce, getElemOffsetTop } from "@utils/common";
 
-export default class app extends Component {
+class Home extends Component {
   static defaultProps = {};
   static propTypes = {};
 
@@ -89,7 +90,8 @@ export default class app extends Component {
         id: 2,
         image: "../images/home/jppostcode.jpg",
         title: "日文邮编识别",
-        desc: "'日文邮编识别'上传日文邮编图片，识别对应邮编数据",
+        desc:
+          "'日文邮编识别'上传一张日文邮编图片，识别对应邮编数据（包括印刷和手写邮编）",
       },
       {
         id: 3,
@@ -124,7 +126,7 @@ export default class app extends Component {
       <div className="main_wrap">
         <section className="ocr_category_content" id="ocr_category_content">
           <div className="ocr_title" ref={this.ocrTitleRef}>
-            <h1>OCR 识别</h1>
+            <h1>{this.props.t("ocr_nav")}</h1>
             <p>
               NRI通用OCR识别，自定OCR模板，运单识别，邮编识别，T-通用，G-通用OCR识别
             </p>
@@ -174,3 +176,5 @@ export default class app extends Component {
     );
   }
 }
+
+export default withTranslation("home")(Home);

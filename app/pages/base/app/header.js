@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
+import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
 import { logout } from "@apis/common";
 import logoImage from "@images/logo.png";
@@ -11,7 +12,7 @@ const { confirm } = Modal;
   config: state.config,
   staffResponse: state.staffResponse,
 }))
-export default class Header extends Component {
+class Header extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
     super(props);
@@ -21,23 +22,29 @@ export default class Header extends Component {
         {
           id: 1,
           text: "OCR 识别",
+          nav: "ocr_nav",
           name: "ocr_category_content",
         },
         {
           id: 2,
           text: "IOT 物联",
+          nav: "iot_nav",
           name: "iot_category_content",
         },
         {
           id: 3,
           text: "AI 算法 ",
+          nav: "ai_nav",
           name: "ai_category_content",
         },
       ],
     };
     this.handleLogout = this.handleLogout.bind(this);
-    this.handleChangeLang = this.handleChangeLang.bind(this);
     this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
+  }
+
+  componentDidMount() {
+    // console.log(i18n);
   }
 
   // 登出
@@ -68,9 +75,9 @@ export default class Header extends Component {
     console.log("我的模板");
   }
 
-  handleChangeLang() {
-    console.log("切换语言");
-  }
+  handleChangeLang = ({ key }) => {
+    this.props.i18n.changeLanguage(key);
+  };
 
   logoClick = () => {
     console.log("nri");
@@ -110,21 +117,15 @@ export default class Header extends Component {
       </Menu>
     );
     const languageMenu = (
-      <Menu>
-        <Menu.Item>
-          <a href="#" onClick={this.handleChangeLang}>
-            中文
-          </a>
+      <Menu onClick={this.handleChangeLang}>
+        <Menu.Item key="zh_CN">
+          <span>中文</span>
         </Menu.Item>
-        <Menu.Item>
-          <a href="#" onClick={this.handleChangeLang}>
-            日本語
-          </a>
+        <Menu.Item key="ja_JP">
+          <span>日本語</span>
         </Menu.Item>
-        <Menu.Item>
-          <a href="#" onClick={this.handleChangeLang}>
-            English
-          </a>
+        <Menu.Item key="en_US">
+          <span>English</span>
         </Menu.Item>
       </Menu>
     );
@@ -138,7 +139,7 @@ export default class Header extends Component {
                 <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
                     <img className="logo_icon" src={logoImage} alt="NRI logo" />
-                    野村综合研究所
+                    {this.props.t("NRI_title")}
                   </span>
                 </span>
 
@@ -156,7 +157,7 @@ export default class Header extends Component {
                           this.props.currentNav === item.id ? "active" : ""
                         }
                       >
-                        <a>{item.text}</a>
+                        <a>{this.props.t(item.nav)}</a>
                       </li>
                     );
                   })}
@@ -178,7 +179,8 @@ export default class Header extends Component {
                       </Dropdown>
                     ) : (
                       <a onClick={this.handleLogin}>
-                        登录 <i className="iconfont icon-login"></i>
+                        {this.props.t("login")}{" "}
+                        <i className="iconfont icon-login"></i>
                       </a>
                     )}
                   </li>
@@ -188,7 +190,8 @@ export default class Header extends Component {
                         className="ant-dropdown-link"
                         onClick={(e) => e.preventDefault()}
                       >
-                        语言<i className="iconfont icon-duoyuyan"></i>
+                        {this.props.t("language_set")}
+                        <i className="iconfont icon-duoyuyan"></i>
                       </a>
                     </Dropdown>
                   </li>
@@ -201,3 +204,5 @@ export default class Header extends Component {
     );
   }
 }
+
+export default withTranslation("header")(Header);

@@ -5,4 +5,8 @@ export default {
   ai_nav: "AI 算法",
   login: "登录",
   language_set: "语言",
+  logOut: "退出",
+  myTemplate: "我的模板",
+  tip: "提示",
+  logoutMesage: "确认退出登录吗？",
 };

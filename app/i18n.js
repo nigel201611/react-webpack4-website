@@ -8,6 +8,11 @@ import en_US_home from "@locales/en_US/home";
 import zh_CN_header from "@locales/zh_CN/header";
 import ja_JP_header from "@locales/ja_JP/header";
 import en_US_header from "@locales/en_US/header";
+
+import zh_CN_login from "@locales/zh_CN/login";
+import ja_JP_login from "@locales/ja_JP/login";
+import en_US_login from "@locales/en_US/login";
+
 const resources = {
   zh_CN: {
     home: {
@@ -15,6 +20,9 @@ const resources = {
     },
     header: {
       ...zh_CN_header,
+    },
+    login: {
+      ...zh_CN_login,
     },
   },
   ja_JP: {
@@ -24,6 +32,9 @@ const resources = {
     header: {
       ...ja_JP_header,
     },
+    login: {
+      ...ja_JP_login,
+    },
   },
   en_US: {
     home: {
@@ -31,6 +42,9 @@ const resources = {
     },
     header: {
       ...en_US_header,
+    },
+    login: {
+      ...en_US_login,
     },
   },
 };

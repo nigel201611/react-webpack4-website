@@ -1,18 +1,17 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-15 16:33:45
+ * @LastEditTime: 2020-09-18 17:10:40
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { hashHistory /* , Link */ } from "react-router";
+import { withTranslation } from "react-i18next";
 import { Spin, Form, Icon, Input, Button, Row, message } from "antd";
 import { regExpConfig } from "@reg";
-// import { login } from "@actions/common";
 import { login } from "@apis/common";
 // import md5 from "md5";
 import QueuiAnim from "rc-queue-anim";
-
 import Ship from "@components/ship/ship";
 import "@styles/login.less";
 
@@ -25,7 +24,7 @@ const FormItem = Form.Item;
 @Form.create({
   onFieldsChange(props, items) {},
 })
-export default class Login extends Component {
+class Login extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
     super(props);
@@ -50,7 +49,6 @@ export default class Login extends Component {
         login(
           values,
           (res) => {
-            console.log(res);
             this.setState({ loading: false });
             sessionStorage.setItem("token", res.data.token);
             sessionStorage.setItem(
@@ -88,17 +86,18 @@ export default class Login extends Component {
                             required: true,
                             min: 4,
                             max: 10,
-                            message: "用户名为4-10个字符",
+                            message: "the user name is 4-10 characters",
                           },
                           {
                             pattern: regExpConfig.policeNo,
-                            message: "账号4-10位数字或字母组成",
+                            message:
+                              "the account consists of 4-10 digits or letters",
                           },
                         ],
                       })(
                         <Input
                           prefix={<Icon type="user" />}
-                          placeholder="请输入用户名"
+                          placeholder="please enter the user name"
                           type="text"
                         />
                       )}
@@ -110,17 +109,18 @@ export default class Login extends Component {
                             required: true,
                             min: 4,
                             max: 16,
-                            message: "密码为4-16个字符",
+                            message: "password is 4-16 characters",
                           },
                           {
                             pattern: regExpConfig.pwd,
-                            message: "密码由4-16位数字或者字母组成",
+                            message:
+                              "the password consists of 4-16 digits or letters",
                           },
                         ],
                       })(
                         <Input
                           prefix={<Icon type="lock" />}
-                          placeholder="请输入密码"
+                          placeholder="please enter the password"
                           type="password"
                         />
                       )}
@@ -145,3 +145,5 @@ export default class Login extends Component {
     );
   }
 }
+
+export default withTranslation("login")(Login);

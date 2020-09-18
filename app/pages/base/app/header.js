@@ -52,8 +52,8 @@ class Header extends Component {
     const { config } = this.props;
     const self = this;
     confirm({
-      title: "提示",
-      content: "确认退出登录吗？",
+      title: self.props.t('tip'),
+      content: self.props.t('logoutMesage'),
       onOk() {
         logout({}, (result) => {
           if (result.errno === 0) {
@@ -106,12 +106,12 @@ class Header extends Component {
       <Menu>
         <Menu.Item>
           <a href="#" onClick={this.handleLogout}>
-            退出
+            {this.props.t('logOut')}
           </a>
         </Menu.Item>
         <Menu.Item>
           <a href="#" onClick={this.navigateToMyTemplate}>
-            我的模板
+          {this.props.t('myTemplate')}
           </a>
         </Menu.Item>
       </Menu>

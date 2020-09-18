@@ -5,4 +5,8 @@ export default {
   ai_nav: "AI アルゴリズム",
   login: "ログイン",
   language_set: "言語",
+  logOut: "ログアウト",
+  myTemplate: "マイテンプレート",
+  tip: "ヒント",
+  logoutMesage: "ログアウトを確認しますか？",
 };

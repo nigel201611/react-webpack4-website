@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
@@ -8,10 +7,7 @@ import logoImage from "@images/logo.png";
 import "@styles/header.less";
 const { confirm } = Modal;
 
-@connect((state, props) => ({
-  config: state.config,
-  staffResponse: state.staffResponse,
-}))
+
 class Header extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -41,10 +37,6 @@ class Header extends Component {
     };
     this.handleLogout = this.handleLogout.bind(this);
     this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
-  }
-
-  componentDidMount() {
-    // console.log(i18n);
   }
 
   // 登出

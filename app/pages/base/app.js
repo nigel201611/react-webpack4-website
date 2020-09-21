@@ -10,8 +10,6 @@ import "@styles/base.less";
 import Header from "./app/header";
 import Main from "./home";
 import Footer from "./app/footer";
-
-@connect((state, props) => ({}))
 export default class App extends Component {
   constructor(props, context) {
     super(props);
@@ -34,7 +32,6 @@ export default class App extends Component {
             currentNav={this.state.currentNav}
             setCurrentNav={this.setCurrentNavCallback}
           ></Header>
-          {/* <p>{this.props.t("Welcome to React")}</p> */}
           <Main setCurrentNav={this.setCurrentNavCallback}></Main>
           <Footer></Footer>
         </div>

@@ -10,6 +10,7 @@ import configure from "@middleware/configureStore";
 
 const HotRoutes = hot(Routes);
 const store = configure({});
+// console.log(store.getState());
 ReactDOM.render(
   <Provider store={store}>
     <HotRoutes />

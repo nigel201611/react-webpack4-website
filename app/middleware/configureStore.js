@@ -7,7 +7,6 @@ import { logger, /* router, */ reduxRouterMiddleware } from './index'
 const nextReducer = require('@reducers')
 
 export default function configure(initialState) {
-  // console.log('initialState', initialState)
   const create = window.devToolsExtension
     ? window.devToolsExtension()(createStore)
     : createStore

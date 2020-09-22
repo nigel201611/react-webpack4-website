@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import Cards from "@components/Card/Card";
+import { connect } from "react-redux";
 import { Row, Col } from "antd";
 import { withTranslation } from "react-i18next";
 import "@styles/home.less";
 import { debounce, getElemOffsetTop } from "@utils/common";
-
+import { setCurrentNav } from "@actions/common";
+@connect((state) => ({
+  currentNav: state.config.currentNav
+}))
 class Home extends Component {
   static defaultProps = {};
   static propTypes = {};
@@ -47,15 +51,20 @@ class Home extends Component {
       document.documentElement.scrollTop || document.body.scrollTop;
     let winH =
       document.documentElement.offsetHeight || document.body.offsetHeight;
+    let index = 1;
     if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
-      this.props.setCurrentNav(1);
+      // this.props.setCurrentNav(1);
+      index = 1;
     }
     if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
-      this.props.setCurrentNav(2);
+      // this.props.setCurrentNav(2);
+      index = 2;
     }
     if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
-      this.props.setCurrentNav(3);
+      // this.props.setCurrentNav(3);
+      index = 3;
     }
+    this.props.dispatch(setCurrentNav(index));
   }
 
   judgeScrollTop(elemArr, animateType) {
@@ -80,7 +89,7 @@ class Home extends Component {
   render() {
     const cardList = this.props.t("cardList", { returnObjects: true });
     return (
-      <div className="main_wrap">
+      <div className="home_wrap">
         <section className="ocr_category_content" id="ocr_category_content">
           <div className="ocr_title" ref={this.ocrTitleRef}>
             <h1>{this.props.t("ocr_nav")}</h1>

@@ -1,19 +1,28 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { hashHistory } from "react-router";
+import { connect } from "react-redux";
+import { setCurrentNav } from "@actions/common";
 import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
 import { logout } from "@apis/common";
 import logoImage from "@images/logo.png";
+// import { store } from "@app/client";
 import "@styles/header.less";
 const { confirm } = Modal;
 
-
+@connect((state) => {
+  // console.log(state);
+  return {
+    currentNav: state.currentNav,
+  };
+})
 class Header extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
     super(props);
     this.state = {
       loading: false,
+      currentNav: this.props.currentNav,
       navList: [
         {
           id: 1,
@@ -38,19 +47,24 @@ class Header extends Component {
     this.handleLogout = this.handleLogout.bind(this);
     this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
   }
+  // componentDidMount() {
+  //   this.unsubscribe = store.subscribe(() => {});
+  // }
+
+  // componentWillUnmount() {
+  //   this.unsubscribe();
+  // }
 
   // 登出
   handleLogout() {
-    const { config } = this.props;
     const self = this;
     confirm({
-      title: self.props.t('tip'),
-      content: self.props.t('logoutMesage'),
+      title: self.props.t("tip"),
+      content: self.props.t("logoutMesage"),
       onOk() {
         logout({}, (result) => {
           if (result.errno === 0) {
             sessionStorage.clear();
-            config.staff = {};
             hashHistory.push("/login");
           } else {
             message.warning(result.msg);
@@ -77,7 +91,9 @@ class Header extends Component {
 
   scrollToAnchor = (index, anchorName, event) => {
     event.stopPropagation();
-    this.props.setCurrentNav(index);
+    // this.props.setCurrentNav(index);
+    this.props.dispatch(setCurrentNav(index));
+    hashHistory.push("/home");//可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
     if (anchorName) {
       let anchorElement = document.getElementById(anchorName);
       if (anchorElement) {
@@ -98,12 +114,12 @@ class Header extends Component {
       <Menu>
         <Menu.Item>
           <a href="#" onClick={this.handleLogout}>
-            {this.props.t('logOut')}
+            {this.props.t("logOut")}
           </a>
         </Menu.Item>
         <Menu.Item>
           <a href="#" onClick={this.navigateToMyTemplate}>
-          {this.props.t('myTemplate')}
+            {this.props.t("myTemplate")}
           </a>
         </Menu.Item>
       </Menu>

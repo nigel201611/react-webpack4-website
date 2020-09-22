@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-18 20:08:57
+ * @LastEditTime: 2020-09-22 16:30:10
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -9,7 +9,8 @@ import { hashHistory /* , Link */ } from "react-router";
 import { withTranslation } from "react-i18next";
 import { Spin, Form, Icon, Input, Button, Row, message } from "antd";
 import { regExpConfig } from "@reg";
-import { login } from "@apis/common";
+import { login } from "@actions/common";
+// import { login } from "@apis/common";
 // import md5 from "md5";
 import QueuiAnim from "rc-queue-anim";
 import Ship from "@components/ship/ship";
@@ -17,10 +18,12 @@ import "@styles/login.less";
 
 const FormItem = Form.Item;
 
-@connect((state, props) => ({
-  config: state.config,
-  loginResponse: state.loginResponse,
-}))
+@connect(
+  (state) => ({
+    config: state.config,
+    loginResponse: state.loginResponse,
+  })
+)
 @Form.create({
   onFieldsChange(props, items) {},
 })
@@ -46,21 +49,39 @@ class Login extends Component {
         const query = this.props.form.getFieldsValue();
         this.setState({ loading: true });
         // values.password = md5(values.password);
-        login(
-          values,
-          (res) => {
-            this.setState({ loading: false });
-            sessionStorage.setItem("token", res.data.token);
-            sessionStorage.setItem(
-              "userInfo",
-              JSON.stringify(res.data.userInfo)
-            );
-            hashHistory.push("/");
-          },
-          (res) => {
-            message.warning(res.msg);
-            this.setState({ loading: false });
-          }
+        // login(
+        //   values,
+        //   (res) => {
+        //     this.setState({ loading: false });
+        //     sessionStorage.setItem("token", res.data.token);
+        //     sessionStorage.setItem(
+        //       "userInfo",
+        //       JSON.stringify(res.data.userInfo)
+        //     );
+        //     hashHistory.push("/");
+        //   },
+        //   (res) => {
+        //     message.warning(res.msg);
+        //     this.setState({ loading: false });
+        //   }
+        // );
+        this.props.dispatch(
+          login(
+            values,
+            (res) => {
+              this.setState({ loading: false });
+              sessionStorage.setItem("token", res.data.token);
+              sessionStorage.setItem(
+                "userInfo",
+                JSON.stringify(res.data.userInfo)
+              );
+              hashHistory.push("/");
+            },
+            (res) => {
+              message.warning(res.msg);
+              this.setState({ loading: false });
+            }
+          )
         );
       }
     });

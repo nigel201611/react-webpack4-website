@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-16 10:59:35
+ * @LastEditTime: 2020-09-22 14:13:12
  */
 
 const path = require("path");
@@ -10,6 +10,7 @@ const merge = require("webpack-merge");
 const webpackConfigBase = require("./webpack.base.config");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+// const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const os = require("os");
 let selfIp;
 try {
@@ -56,6 +57,7 @@ const webpackConfigDev = {
     }),
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    // new ReactRefreshWebpackPlugin(),
   ],
   devtool: "source-map",
   devServer: {

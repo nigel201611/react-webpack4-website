@@ -54,7 +54,7 @@ export const oftenFetchByPost = (api, options) => {
     const data = rest[0] || {};
     let success = null;
     let failure = null;
-    let config = null;
+    let config = {};
     for (let i = 1; i < rest.length; i += 1) {
       if (typeof rest[i] === "function") {
         if (!success) {

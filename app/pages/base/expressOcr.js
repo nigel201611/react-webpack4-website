@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 13:42:29
+ * @LastEditTime: 2020-09-24 18:51:15
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -149,7 +149,6 @@ class ExpressOcr extends Component {
           },
         ];
       }
-
       //   let postcodeOfPoints = [],
       //     addressOfPoints = [],
       //     nameOfPoints = [];

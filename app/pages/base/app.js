@@ -31,10 +31,7 @@ export default class App extends Component {
     return (
       <ConfigProvider locale={enUS}>
         <div id="container">
-          <Header
-          // currentNav={this.state.currentNav}
-          // setCurrentNav={this.setCurrentNavCallback}
-          ></Header>
+          <Header></Header>
           <div className="main_wrap">{this.props.children}</div>
           {/* <Main setCurrentNav={this.setCurrentNavCallback}></Main> */}
 

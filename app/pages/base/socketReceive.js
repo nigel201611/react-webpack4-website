@@ -1,38 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 // import PropTypes from 'prop-types'
-import { Button } from 'antd'
-import { connect } from 'react-redux'
+import { Button } from "antd";
+import { connect } from "react-redux";
 // import {} from '@actions/xxx'
 // import Socket from '@configs/socket'
 
-@connect(store => ({
+@connect((store) => ({
   // socketCollection: store.socketCollection,
 }))
-
 export default class app extends Component {
-  static defaultProps = {
-  }
+  static defaultProps = {};
 
-  static propTypes = {
-  }
+  static propTypes = {};
 
   constructor(props) {
-    super(props)
-    this.state = {}
+    super(props);
+    this.state = {};
   }
-
-  componentDidMount() { }
-
-  // #region vscode 1.17的收缩代码块功能  业务代码
-
-
-  // #endregion
-
+  componentDidMount() {}
   // 发送socket数据
   onClickSend = () => {
     // Socket.dispatch({ type: 'receive/hello2' })
-  }
-
+  };
   render() {
     // const { socketCollection = {} } = this.props
     return (
@@ -49,6 +38,6 @@ export default class app extends Component {
           </pre>
         </div>
       </div>
-    )
+    );
   }
 }

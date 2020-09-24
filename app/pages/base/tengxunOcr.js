@@ -1,21 +1,11 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 18:17:26
+ * @LastEditTime: 2020-09-24 19:46:03
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import {
-  Spin,
-  Icon,
-  message,
-  Upload,
-  Row,
-  Col,
-  Table,
-  Button,
-  Input,
-} from "antd";
+import { Spin, Icon, message, Upload, Row, Table, Button, Input } from "antd";
 import "@styles/tengxunOcr.less";
 import { tengxunOcr } from "@apis/tengxunOcr";
 
@@ -66,6 +56,11 @@ const imgArrVtx = [
   { url: require("@images/ocr_common05.jpg") },
   { url: require("@images/ocr_common06.jpg") },
 ];
+function getBase64(imagefile, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(imagefile);
+}
 class ExpressOcr extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -85,7 +80,6 @@ class ExpressOcr extends Component {
       },
       input_url: "",
       curentIndex: 0, //当前激活要识别的图片索引
-      currentType: "ch_en_ex", //标识当前通用识别类型，分中英文体验，中英文多角度体验，其他语种体验
       tableData: [],
     };
   }
@@ -96,6 +90,70 @@ class ExpressOcr extends Component {
     this.box_h = 410;
     this.myCtx = this.myCanvasRef.current.getContext("2d");
   }
+
+  beforeUpload = (file) => {
+    const isJpgOrPng =
+      file.type === "image/jpeg" ||
+      file.type === "image/png" ||
+      file.type === "image/jpg";
+    if (!isJpgOrPng) {
+      message.error("You can only upload JPG/PNG/JPG file!");
+    }
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error("Image must smaller than 5MB!");
+    }
+
+    if (isLt5M && isJpgOrPng) {
+      this.setState({
+        imageUrl: "",
+        tableData: [],
+      });
+      this.clearCanvasContent();
+    }
+    return isJpgOrPng && isLt5M;
+  };
+
+  handleChange = (info) => {
+    if (info.file.status === "uploading") {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === "done") {
+      if (this.state.isRequesting) {
+        return;
+      }
+
+      getBase64(info.file.originFileObj, (imageUrl) => {
+        let image = new Image();
+        image.onload = () => {
+          //限制图片宽
+          this.img_width = image.width;
+          this.img_height = image.height;
+          let imgUrl = URL.createObjectURL(info.file.originFileObj);
+          this.setState(
+            {
+              loading: false,
+              img_width: image.width,
+              img_height: image.height,
+              imageUrl: imgUrl,
+              imgObj: {
+                backgroundImage: `url(${imgUrl})`,
+              },
+            },
+            () => {
+              this.init();
+            }
+          );
+        };
+        image.src = imageUrl;
+      });
+    }
+    if (info.file.status === "error") {
+      this.setState({ loading: false });
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
   /**
    *@name:init
    * @msg: 根据用户上传、切换不同图片、输入远程链接图片，
@@ -125,6 +183,7 @@ class ExpressOcr extends Component {
         });
       }
     } else {
+      console.log(imageUrl);
       this.getImageToBase64Data(imageUrl).then((params) => {
         //默认第一张图,调用接口返回数据
         this.tengxunGeneralOcr(params, this.imgOptions);
@@ -171,12 +230,10 @@ class ExpressOcr extends Component {
           }
         }
       },
-      (error) => {
-        console.log(error);
-        this.setState({
-          isRequesting: false,
-          result: this.props.t("recognition-fail"),
-        });
+      (res) => {
+        // console.warn(error);
+        message.warning(res.errmsg);
+        this.setState({ isRequesting: false });
       }
     );
   }
@@ -300,13 +357,11 @@ class ExpressOcr extends Component {
     }
     //清理下canvas
     //消除用戶自己輸入遠程圖片鏈接
-    this.setState({
-      input_url: "",
-      curentIndex: index,
-    });
     this.clearCanvasContent();
     this.setState(
       {
+        input_url: "",
+        curentIndex: index,
         imageUrl: image,
         imgObj: {
           backgroundImage: `url(${image})`,
@@ -417,9 +472,12 @@ class ExpressOcr extends Component {
                   class="generalocr-uploader"
                   action="https://imageregdemo.nrihkerp.com"
                   accept="image/jpg, image/jpeg, image/png"
-                  before-upload="beforeRead"
+                  showUploadList={false}
+                  beforeUpload={this.beforeUpload}
+                  onChange={this.handleChange}
                 >
                   <Button type="primary">
+                    <Icon type={this.state.loading ? "loading" : "upload"} />
                     {this.props.t("upload-btn-text")}
                   </Button>
                 </Upload>

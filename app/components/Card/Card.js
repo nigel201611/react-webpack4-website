@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-09-24 14:28:13
+ * @LastEditTime: 2020-09-24 18:50:55
  */
 import { hashHistory } from "react-router";
 import React, { Component } from "react";
@@ -11,17 +11,17 @@ import "./Card.less";
 export default class Card extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
   }
   handleClickCardItem = (id, event) => {
     event.stopPropagation();
+    // 这里的路径数据也可以通过props传过来
     const map = new Map([
       [1, "/expressOcr"],
       [2, "/expressOcr"],
-      [3, "/T_GeneralOcr"],
-      [4, "T_GeneralOcr"],
-      [5, "T_GeneralOcr"],
-      [6, "T_GeneralOcr"],
+      [3, "/developing"],
+      [4, "/developing"],
+      [5, "/T_GeneralOcr"],
+      [6, "/T_GeneralOcr"],
     ]);
     hashHistory.push(map.get(id));
   };

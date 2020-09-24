@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 14:05:59
+ * @LastEditTime: 2020-09-24 18:40:41
  */
 import React from "react";
 import {
@@ -20,6 +20,7 @@ export default () => (
       <Route path="/home" component={base.home} />
       <Route path="/expressOcr" component={base.expressOcr} />
       <Route path="/T_GeneralOcr" component={base.tengxunOcr} />
+      <Route path="/developing" component={base.developing} />
     </Route>
 
     <Route path="/login" component={base.login} />

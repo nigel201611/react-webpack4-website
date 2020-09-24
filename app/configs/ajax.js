@@ -2,26 +2,28 @@ import axios from "axios";
 import { hashHistory } from "react-router";
 import { timeout, baseURL } from "@config";
 import { message } from "antd";
+// import { toLocaleString } from "core-js/fn/number/epsilon";/
 
 const { CancelToken } = axios;
 // 防止连续出现多个用户登录超时的提示
 let flag = true;
 function logOut(text) {
   if (flag) {
-    message.warning(text || "用户登录过期或从其他浏览器登录");
+    message.warning(
+      text || "User login expired or logged in from another browser"
+    );
     hashHistory.replace("/login");
     flag = false;
     setTimeout(() => (flag = true), 0);
   }
 }
-let token = sessionStorage.getItem("token");
+// let token = sessionStorage.getItem("token");
 let baseConfig = {
   url: "/",
   method: "post", // default
   baseURL: "",
   headers: {
     "Content-Type": "application/json;charset=utf-8",
-    "x-nri_admin-token": token,
   },
   params: {},
   data: {},
@@ -37,6 +39,8 @@ let baseConfig = {
 baseConfig = { ...baseConfig, timeout: timeout, baseURL: baseURL };
 
 export const oftenFetchByPost = (api, options) => {
+  let token = sessionStorage.getItem("token");
+  baseConfig.headers["x-nri_admin-token"] = token;
   // 当api参数为createApi创建的返回值
   if (typeof api === "function") return api;
   /**

@@ -156,7 +156,7 @@ h5,
 .h3,
 .h4,
 .h5 {
-  font-weight: 600;
+  font-weight: 400;
 }
 
 ::selection {
@@ -575,9 +575,9 @@ body {
     background-color: @background-color-content;
   }
 
-  .ant-table tr:nth-of-type(even) {
-    background-color: @background-color-base;
-  }
+  // .ant-table tr:nth-of-type(even) {
+  //   background-color: @background-color-base;
+  // }
 
   .ant-form {
     // 重置form相关
@@ -1723,32 +1723,8 @@ body button + button,
 }
 
 //用户信息样式
-.user {
-  margin-top: @space-big;
-  .user-info {
-    margin-top: 30px;
-
-    ul li {
-      padding: @space-big;
-      border-bottom: 1px solid #494e61;
-      display: flex;
-      color: #c0c0c0;
-      justify-content: space-between;
-
-      b {
-        color: #fff;
-      }
-    }
-  }
-
-  .gout-btn {
-    margin-top: 30px;
-    text-align: center;
-
-    .ant-btn {
-      width: 95px;
-    }
-  }
+.ant-table-thead > tr > th {
+  background: #ffffff !important;
 }
 
 .main_wrap {

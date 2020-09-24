@@ -1,10 +1,52 @@
 .express-container {
   width: 100%;
-  margin: 0 0 60px 0;
+  margin: 0 0 40px 0;
   .express-banner {
-    text-align: center;
-    height: 432px;
-    background: url("../images/home/banner_ocr.jpg") no-repeat 0 center;
+    text-align: left;
+    height: 332px;
+    background: url("../images/expressOcr/express_ocr.jpg") no-repeat 0 center;
     background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    .express-title {
+      // width: 1200px;
+      // margin: 60px auto 0;
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px 0;
+      }
+      p {
+        font-size: 18px;
+      }
+    }
+  }
+  .express-main {
+    width: 1200px;
+    margin: 0 auto;
+    .avatar-uploader {
+      margin: 60px 0 0 0;
+    }
+    .avatar-uploader > .ant-upload {
+      // width: 612px;
+      height: 412px;
+      width: 100%;
+    }
+    .ant-upload-text {
+      color: #c1c1c0;
+    }
+    .table-content {
+      margin: 60px 0 0 0;
+    }
+    .border_postcode {
+      border: 1px solid #d601fd;
+    }
+    .border_address {
+      border: 1px solid #07be14;
+    }
+    .border_name {
+      border: 1px solid #fd0101;
+    }
   }
 }

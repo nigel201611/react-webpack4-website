@@ -4,6 +4,6 @@ import login from "./login";
 import notfound from "./notfound";
 import app from "./app";
 import expressOcr from "./expressOcr";
-// import socketReceive from './socketReceive'
+import tengxunOcr from "./tengxunOcr";
 
-export { developing, home, login, notfound, app, expressOcr };
+export { developing, home, login, notfound, app, expressOcr, tengxunOcr };

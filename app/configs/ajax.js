@@ -17,7 +17,6 @@ function logOut(text) {
     setTimeout(() => (flag = true), 0);
   }
 }
-// let token = sessionStorage.getItem("token");
 let baseConfig = {
   url: "/",
   method: "post", // default
@@ -39,8 +38,6 @@ let baseConfig = {
 baseConfig = { ...baseConfig, timeout: timeout, baseURL: baseURL };
 
 export const oftenFetchByPost = (api, options) => {
-  let token = sessionStorage.getItem("token");
-  baseConfig.headers["x-nri_admin-token"] = token;
   // 当api参数为createApi创建的返回值
   if (typeof api === "function") return api;
   /**
@@ -55,6 +52,8 @@ export const oftenFetchByPost = (api, options) => {
   return (...rest) => {
     // 参数:(data:Object,sucess?:Function,failure?:Function,config?:Object)
     // 参数分析
+    let token = sessionStorage.getItem("token");
+    baseConfig.headers["x-nri_admin-token"] = token;
     const data = rest[0] || {};
     let success = null;
     let failure = null;

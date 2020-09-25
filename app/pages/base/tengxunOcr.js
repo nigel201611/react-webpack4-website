@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 19:46:03
+ * @LastEditTime: 2020-09-25 11:58:31
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -114,7 +114,11 @@ class ExpressOcr extends Component {
     return isJpgOrPng && isLt5M;
   };
 
-  handleChange = (info) => {
+  handleInputUrlChange = (event) => {
+    this.setState({ input_url: event.target.value });
+  };
+
+  handleUploadChange = (info) => {
     if (info.file.status === "uploading") {
       this.setState({ loading: true });
       return;
@@ -183,7 +187,6 @@ class ExpressOcr extends Component {
         });
       }
     } else {
-      console.log(imageUrl);
       this.getImageToBase64Data(imageUrl).then((params) => {
         //默认第一张图,调用接口返回数据
         this.tengxunGeneralOcr(params, this.imgOptions);
@@ -474,7 +477,7 @@ class ExpressOcr extends Component {
                   accept="image/jpg, image/jpeg, image/png"
                   showUploadList={false}
                   beforeUpload={this.beforeUpload}
-                  onChange={this.handleChange}
+                  onChange={this.handleUploadChange}
                 >
                   <Button type="primary">
                     <Icon type={this.state.loading ? "loading" : "upload"} />
@@ -484,6 +487,8 @@ class ExpressOcr extends Component {
                 <div className="url_input">
                   <Input
                     value={input_url}
+                    onChange={this.handleInputUrlChange.bind(this)}
+                    allowClear={true}
                     placeholder={this.props.t("input_url_tip")}
                   />
                 </div>

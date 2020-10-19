@@ -5,5 +5,17 @@ import notfound from "./notfound";
 import app from "./app";
 import expressOcr from "./expressOcr";
 import tengxunOcr from "./tengxunOcr";
+import googleOcr from "./googleOcr";
+import customizeTemplate from "./customizeTemplate";
 
-export { developing, home, login, notfound, app, expressOcr, tengxunOcr };
+export {
+  developing,
+  home,
+  login,
+  notfound,
+  app,
+  expressOcr,
+  tengxunOcr,
+  googleOcr,
+  customizeTemplate,
+};

@@ -1,13 +1,13 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-19 11:49:24
+ * @LastEditTime: 2020-10-19 14:16:52
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { Spin, Icon, message, Upload, Row, Table, Button, Input } from "antd";
 import "@styles/tengxunOcr.less";
-import { tengxunOcr } from "@apis/tengxunOcr";
+import { googleOcr } from "@apis/googleOcr";
 
 const columns = [
   {
@@ -40,28 +40,12 @@ const imgArrOrigin = [
   { url: require("@images/worddetect_3.jpg") },
   { url: require("@images/worddetect_4.jpg") },
 ];
-const imgArrAuto = [
-  { url: require("@images/other_auto/ocr_other_auto_1.jpg") },
-  { url: require("@images/other_auto/ocr_other_auto_2.jpg") },
-  { url: require("@images/other_auto/ocr_other_auto_3.jpg") },
-  { url: require("@images/other_auto/ocr_other_auto_4.jpg") },
-  { url: require("@images/ocr_common05.jpg") },
-  { url: require("@images/ocr_common06.jpg") },
-];
-const imgArrVtx = [
-  { url: require("@images/vtx_dectect/vtx_dectect_1.jpg") },
-  { url: require("@images/vtx_dectect/vtx_dectect_2.jpg") },
-  { url: require("@images/ocr_common03.jpg") },
-  { url: require("@images/ocr_common04.jpg") },
-  { url: require("@images/ocr_common05.jpg") },
-  { url: require("@images/ocr_common06.jpg") },
-];
 function getBase64(imagefile, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(imagefile);
 }
-class TengxunOcr extends Component {
+class GoogleOcr extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
     super(props);
@@ -70,7 +54,6 @@ class TengxunOcr extends Component {
     this.state = {
       loading: false,
       isRequesting: false,
-      currentBtn: 1, //当前选择的类型索引
       imgArr: imgArrOrigin,
       imageUrl: imgArrOrigin[0].url,
       img_height: "",
@@ -134,6 +117,7 @@ class TengxunOcr extends Component {
           //限制图片宽
           this.img_width = image.width;
           this.img_height = image.height;
+          //这里使用createObjectURL来创建临时图片链接，是为了防止base64格式数据太大，给浏览器造成负担
           let imgUrl = URL.createObjectURL(info.file.originFileObj);
           this.setState(
             {
@@ -179,18 +163,16 @@ class TengxunOcr extends Component {
           },
         });
         this.clearCanvasContent();
-        this.tengxunGeneralOcr({ url: input_url }, this.imgOptions);
+        this.googleGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        // this.$notify({
-        //   title: this.props.t("tip-text"),
-        //   message: this.props.t("input_url-tip"),
-        // });
         message.warning(this.props.t("input_url-tip"));
       }
     } else {
+      // 上面上传转换得到的imageUrl是临时图片链接，需要再计算一次，牺牲计算减少内存使用
+      // imageUrl可能是临时图片链接，可能是初始化时赋值的图片路径
       this.getImageToBase64Data(imageUrl).then((params) => {
         //默认第一张图,调用接口返回数据
-        this.tengxunGeneralOcr(params, this.imgOptions);
+        this.googleGeneralOcr(params, this.imgOptions);
       });
     }
   }
@@ -200,7 +182,7 @@ class TengxunOcr extends Component {
     }
     this.init(this.state.input_url);
   };
-  tengxunGeneralOcr(params, options = {}) {
+  googleGeneralOcr(params, options = {}) {
     if (this.isRequesting) {
       return;
     }
@@ -208,7 +190,8 @@ class TengxunOcr extends Component {
     this.setState({
       isRequesting: true,
     });
-    tengxunOcr(
+    // 接口请求
+    googleOcr(
       params,
       (res) => {
         this.setState({
@@ -218,19 +201,60 @@ class TengxunOcr extends Component {
           let resData = res.data;
           let { errorcode } = resData;
           if (errorcode === 0) {
-            let items = resData.items.map((item, index) => {
-              return Object.assign({}, item, { index: index, key: index });
-            });
-            this.setState({
-              tableData: items,
-            });
-            //coordpoint 文本行对应在原图上的四点坐标
-            //使用canvas绘制识别出的文本行在原图中矩形框
-            let coordpointArr = resData.items.map((value) => {
-              return value.coordpoint;
-            });
-            this.drawRectangleByCanvas(coordpointArr);
-            // console.log(coordpointArr);
+            let responses = resData.responses || [];
+            // 确认返回的responses有数据
+            if (responses.length) {
+              // 默认至于单个请求体，或者一个页面的请求
+              let firstPage_response = responses[0] || {};
+              let pagesArr = firstPage_response.fullTextAnnotation.pages;
+              // pages里保存了blocks，blocks保存了识别出来的每行文字信息或者段落信息，以及对应的每行坐标
+              //从blocks取出每行文字以及对应的confidence
+              let blocksArr = pagesArr[0].blocks; //由于发送的请求只有一个，所以默认取第一个blocks
+              //从blocksArr中获取该页面每行文字信息和坐标
+              let coordpointArr = [];
+              let items = [];
+              for (let i = 0; i < blocksArr.length; i++) {
+                let block = blocksArr[i];
+                let obj = {
+                  itemstring: "",
+                  itemconf: "",
+                  coordpoint: [],
+                };
+                // confidence
+                obj.itemconf = block["property"]
+                  ? block["property"]["detectedLanguages"].confidence
+                  : "";
+                // 该行对应坐标
+                obj.coordpoint = block["boundingBox"].vertices || [];
+                // 里面保存了每段或者每行的所有字符，将他们串联起来，保存到itemstring里
+                let paragraphs = block.paragraphs[0];
+                let words = paragraphs.words;
+                obj.itemstring = words.reduce((total, word) => {
+                  let symbols = word.symbols;
+                  symbols.forEach((element) => {
+                    total += element.text;
+                  });
+                  return total;
+                }, "");
+                items.push(obj);
+                //canvas绘制识别出的文本行在原图中矩形框需要的坐标
+                let coordpoint = obj.coordpoint.reduce((total, item) => {
+                  let { x, y } = item;
+                  return total.concat(x, y);
+                }, []);
+                coordpointArr.push({ x: coordpoint });
+              }
+              items = items.map((item, index) => {
+                return Object.assign({}, item, { index: index, key: index });
+              });
+              this.setState({
+                tableData: items,
+              });
+              this.drawRectangleByCanvas(coordpointArr);
+              //获取针对该页面的一个总的confidence
+              // let avgConfidence =
+              //   pagesArr[0].property["detectedLanguages"][0].confidence;
+            }
           }
         }
       },
@@ -376,48 +400,11 @@ class TengxunOcr extends Component {
       }
     );
   };
-  handleClickSelector(current) {
-    if (this.state.isRequesting) {
-      return;
-    }
-    //消除用戶自己輸入遠程圖片鏈接
-    this.setState({
-      input_url: "",
-      currentBtn: current,
-    });
-    let imgArr = [];
-    let imgOptions;
-    switch (current) {
-      case 1:
-        imgOptions = {};
-        imgArr = imgArrOrigin;
-        break;
-      case 2:
-        imgOptions = { enable_vtx_detect: true, preprocess: false };
-        imgArr = imgArrVtx;
-        break;
-      case 3:
-        imgOptions = { language: "auto" };
-        imgArr = imgArrAuto;
-        break;
-    }
-    this.setState({
-      imgArr: imgArr,
-      imgOptions: imgOptions,
-      imageUrl: imgArr[0].url,
-      curentIndex: 0,
-      imgObj: {
-        backgroundImage: `url(${imgArr[0].url})`,
-      },
-    });
-    this.clearCanvasContent();
-  }
   render() {
     const {
       imageUrl,
       isRequesting,
       tableData,
-      currentBtn,
       imgArr,
       curentIndex,
       img_height,
@@ -442,34 +429,14 @@ class TengxunOcr extends Component {
         <section className="tx-wrap">
           <div className="tx-banner">
             <div className="tx-title">
-              <h1>T-通用识别</h1>
+              <h1>G-通用识别</h1>
               <p>
-                'T-通用识别'使用T-通用引擎准确识别对应图片数据，针对印刷、手写、英文等字符
+                'G-通用识别'使用G-通用引擎准确识别对应图片数据，针对印刷、手写、英文等字符
               </p>
             </div>
           </div>
           <div className="tx-main">
             <Spin spinning={isRequesting}>
-              <Row className="btnList">
-                <Button
-                  onClick={this.handleClickSelector.bind(this, 1)}
-                  type={currentBtn === 1 ? "primary" : ""}
-                >
-                  日文英文体验
-                </Button>
-                <Button
-                  onClick={this.handleClickSelector.bind(this, 2)}
-                  type={currentBtn === 2 ? "primary" : ""}
-                >
-                  日文英文多角度体验
-                </Button>
-                <Button
-                  onClick={this.handleClickSelector.bind(this, 3)}
-                  type={currentBtn === 3 ? "primary" : ""}
-                >
-                  其他语种体验
-                </Button>
-              </Row>
               <Row className="imgList">{imgList}</Row>
               <Row className="input_form">
                 <Upload
@@ -528,4 +495,4 @@ class TengxunOcr extends Component {
   }
 }
 
-export default withTranslation("tengxunOcr")(TengxunOcr);
+export default withTranslation("googleOcr")(GoogleOcr);

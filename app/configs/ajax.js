@@ -1,3 +1,8 @@
+/*
+ * @Author: nigel
+ * @Date: 2020-09-03 15:54:51
+ * @LastEditTime: 2020-10-13 16:53:10
+ */
 import axios from "axios";
 import { hashHistory } from "react-router";
 import { timeout, baseURL } from "@config";

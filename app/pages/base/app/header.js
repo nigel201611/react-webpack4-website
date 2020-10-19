@@ -11,7 +11,7 @@ import "@styles/header.less";
 const { confirm } = Modal;
 
 @connect((state) => {
-  // console.log(state);
+  // console.log(state);mapStateToProps
   return {
     currentNav: state.currentNav,
   };
@@ -93,7 +93,7 @@ class Header extends Component {
     event.stopPropagation();
     // this.props.setCurrentNav(index);
     this.props.dispatch(setCurrentNav(index));
-    hashHistory.push("/home");//可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
+    hashHistory.push("/home"); //可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
     if (anchorName) {
       let anchorElement = document.getElementById(anchorName);
       if (anchorElement) {

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-09-24 18:50:55
+ * @LastEditTime: 2020-10-19 16:56:13
  */
 import { hashHistory } from "react-router";
 import React, { Component } from "react";
@@ -18,10 +18,10 @@ export default class Card extends Component {
     const map = new Map([
       [1, "/expressOcr"],
       [2, "/expressOcr"],
-      [3, "/developing"],
+      [3, "/customizeTemp"],
       [4, "/developing"],
       [5, "/T_GeneralOcr"],
-      [6, "/T_GeneralOcr"],
+      [6, "/G_GeneralOcr"],
     ]);
     hashHistory.push(map.get(id));
   };

@@ -15,15 +15,16 @@ export default {
       id: 1,
       image: "../images/home/jpexpress.png",
       title: "Identification of Japanese waybill",
-      desc: "'Japanese waybill recognition' uploads the Japanese waybill image to identify the corresponding postcode, address and name data",
-    },
-    {
-      id: 2,
-      image: "../images/home/jppostcode.jpg",
-      title: "Japanese postcode recognition",
       desc:
-        "'Japanese postcode recognition' uploads a Japanese postcode image to identify the corresponding postcode data (including printed and handwritten postcode)",
+        "'Japanese waybill recognition' uploads the Japanese waybill image to identify the corresponding postcode, address and name data",
     },
+    // {
+    //   id: 2,
+    //   image: "../images/home/jppostcode.jpg",
+    //   title: "Japanese postcode recognition",
+    //   desc:
+    //     "'Japanese postcode recognition' uploads a Japanese postcode image to identify the corresponding postcode data (including printed and handwritten postcode)",
+    // },
     {
       id: 3,
       image: "../images/home/customTemplate.jpg",

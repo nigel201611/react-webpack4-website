@@ -23,7 +23,6 @@ class Header extends Component {
   constructor(props, context) {
     super(props);
     this.state = {
-      loading: false,
       currentNav: this.props.currentNav,
       currentNavItem: "1",
       navList: navList,
@@ -72,14 +71,17 @@ class Header extends Component {
     let currentNav = key.length == 1 ? key : key.substr(0, 1);
     this.props.dispatch(setCurrentNav(currentNav));
     window.sessionStorage.setItem("currentNavItem", key);
+    console.log(key);
 
     let anchorName = props.name;
     let path = props.path;
+    let documentElement = document.documentElement || document.body;
+    documentElement.scrollTop = 0;
     hashHistory.replace(path);
     if (anchorName && path === "/home") {
       setTimeout(() => {
-        let documentElement = document.documentElement || document.body;
-        documentElement.scrollTop = 0;
+        // let documentElement = document.documentElement || document.body;
+        // documentElement.scrollTop = 0;
         let anchorElement = document.getElementById(anchorName);
         if (anchorElement) {
           anchorElement.scrollIntoView({
@@ -203,6 +205,9 @@ class Header extends Component {
                             key={item.id}
                             name={item.name}
                             path={item.path}
+                            // className={
+                            //   this.props.currentNav === item.id ? "active" : ""
+                            // }
                           >
                             {this.props.t(item.nav)}
                           </Menu.Item>

@@ -17,13 +17,13 @@ export default {
       title: "日文运单识别",
       desc: "'日文运单识别'上传日文运单图片，识别对应邮编、地址、姓名数据",
     },
-    {
-      id: 2,
-      image: "../images/home/jppostcode.jpg",
-      title: "日文邮编识别",
-      desc:
-        "'日文邮编识别'上传一张日文邮编图片，识别对应邮编数据（包括印刷和手写邮编）",
-    },
+    // {
+    //   id: 2,
+    //   image: "../images/home/jppostcode.jpg",
+    //   title: "日文邮编识别",
+    //   desc:
+    //     "'日文邮编识别'上传一张日文邮编图片，识别对应邮编数据（包括印刷和手写邮编）",
+    // },
     {
       id: 3,
       image: "../images/home/customTemplate.jpg",

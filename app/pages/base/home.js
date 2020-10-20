@@ -61,6 +61,7 @@ class Home extends Component {
     if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
       index = "4";
     }
+    // console.log(index);
     this.props.dispatch(setCurrentNav(index));
   }
 

@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import { setCurrentNav } from "@actions/common";
 import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
+
+const { SubMenu } = Menu;
 import { logout } from "@apis/common";
 import logoImage from "@images/logo.png";
 // import { store } from "@app/client";
 import "@styles/header.less";
+import navList from "@apis/navList.js";
 const { confirm } = Modal;
 
 @connect((state) => {
-  // console.log(state);mapStateToProps
   return {
     currentNav: state.currentNav,
   };
@@ -23,38 +25,12 @@ class Header extends Component {
     this.state = {
       loading: false,
       currentNav: this.props.currentNav,
-      navList: [
-        {
-          id: 1,
-          text: "OCR 识别",
-          nav: "ocr_nav",
-          name: "ocr_category_content",
-        },
-        {
-          id: 2,
-          text: "IOT 物联",
-          nav: "iot_nav",
-          name: "iot_category_content",
-        },
-        {
-          id: 3,
-          text: "AI 算法 ",
-          nav: "ai_nav",
-          name: "ai_category_content",
-        },
-      ],
+      currentNavItem: "1",
+      navList: navList,
     };
     this.handleLogout = this.handleLogout.bind(this);
     this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
   }
-  // componentDidMount() {
-  //   this.unsubscribe = store.subscribe(() => {});
-  // }
-
-  // componentWillUnmount() {
-  //   this.unsubscribe();
-  // }
-
   // 登出
   handleLogout() {
     const self = this;
@@ -88,10 +64,36 @@ class Header extends Component {
   logoClick = () => {
     console.log("nri");
   };
+  handleClick = (e) => {
+    let { key, item } = e;
+    let { props } = item;
+    this.setState({ currentNavItem: key });
+    //保存当前nav索引到sessionStorage
+    let currentNav = key.length == 1 ? key : key.substr(0, 1);
+    this.props.dispatch(setCurrentNav(currentNav));
+    window.sessionStorage.setItem("currentNavItem", key);
+
+    let anchorName = props.name;
+    let path = props.path;
+    hashHistory.replace(path);
+    if (anchorName && path === "/home") {
+      setTimeout(() => {
+        let documentElement = document.documentElement || document.body;
+        documentElement.scrollTop = 0;
+        let anchorElement = document.getElementById(anchorName);
+        if (anchorElement) {
+          anchorElement.scrollIntoView({
+            behavior: "smooth",
+            block: key == "2" ? "start" : key == "3" ? "center" : "start",
+            // inline: "start",
+          });
+        }
+      }, 0);
+    }
+  };
 
   scrollToAnchor = (index, anchorName, event) => {
     event.stopPropagation();
-    // this.props.setCurrentNav(index);
     this.props.dispatch(setCurrentNav(index));
     hashHistory.push("/home"); //可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
     if (anchorName) {
@@ -105,8 +107,18 @@ class Header extends Component {
       }
     }
   };
-
+  componentDidMount() {
+    let currentNavItem = window.sessionStorage.getItem("currentNavItem") || "1";
+    // 由于用户可能单击某个子菜单，currentNav只记录第一级菜单索引
+    let currentNav =
+      currentNavItem.length == 1 ? currentNavItem : currentNavItem.substr(0, 1);
+    this.props.dispatch(setCurrentNav(currentNav));
+    this.setState({
+      currentNavItem,
+    });
+  }
   render() {
+    const { navList, currentNav, currentNavItem } = this.state;
     const userinfo = JSON.parse(sessionStorage.getItem("userInfo")) || {};
     let name = "";
     userinfo && userinfo.username && (name = userinfo.username);
@@ -150,23 +162,52 @@ class Header extends Component {
                     {this.props.t("NRI_title")}
                   </span>
                 </span>
-
+                {
+                  // return (
+                  //   <li
+                  //     key={item.id}
+                  //     onClick={this.scrollToAnchor.bind(
+                  //       this,
+                  //       item.id,
+                  //       item.name
+                  //     )}
+                  //     className={
+                  //       this.props.currentNav === item.id ? "active" : ""
+                  //     }
+                  //   >
+                  //     <a>{this.props.t(item.nav)}</a>
+                  //   </li>
+                  // );
+                }
                 <ul className="navList">
-                  {this.state.navList.map((item) => {
+                  {navList.map((item) => {
                     return (
-                      <li
-                        key={item.id}
-                        onClick={this.scrollToAnchor.bind(
-                          this,
-                          item.id,
-                          item.name
-                        )}
-                        className={
-                          this.props.currentNav === item.id ? "active" : ""
-                        }
+                      <Menu
+                        onClick={this.handleClick}
+                        selectedKeys={[currentNavItem]}
+                        mode="horizontal"
+                        key={item.text}
                       >
-                        <a>{this.props.t(item.nav)}</a>
-                      </li>
+                        {item.children != undefined && item.children.length ? (
+                          <SubMenu key={item.id} title={this.props.t(item.nav)}>
+                            {item.children.map((child) => {
+                              return (
+                                <Menu.Item key={child.id} path={child.path}>
+                                  {this.props.t(child.nav)}
+                                </Menu.Item>
+                              );
+                            })}
+                          </SubMenu>
+                        ) : (
+                          <Menu.Item
+                            key={item.id}
+                            name={item.name}
+                            path={item.path}
+                          >
+                            {this.props.t(item.nav)}
+                          </Menu.Item>
+                        )}
+                      </Menu>
                     );
                   })}
                 </ul>

@@ -51,18 +51,15 @@ class Home extends Component {
       document.documentElement.scrollTop || document.body.scrollTop;
     let winH =
       document.documentElement.offsetHeight || document.body.offsetHeight;
-    let index = 1;
+    let index = "1";
     if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
-      // this.props.setCurrentNav(1);
-      index = 1;
+      index = "2";
     }
     if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
-      // this.props.setCurrentNav(2);
-      index = 2;
+      index = "3";
     }
     if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
-      // this.props.setCurrentNav(3);
-      index = 3;
+      index = "4";
     }
     this.props.dispatch(setCurrentNav(index));
   }

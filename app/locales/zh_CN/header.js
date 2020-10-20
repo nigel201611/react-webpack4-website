@@ -9,4 +9,10 @@ export default {
   myTemplate: "我的模板",
   tip: "提示",
   logoutMesage: "确认退出登录吗？",
+  expressOcr: "日文运单识别",
+  postcodeOcr: "日文邮编识别",
+  customizeTemplate: "自定OCR模板",
+  performOcr: "执行OCR",
+  T_GeneralOcr: "T-通用",
+  G_GeneralOcr: "G-通用",
 };

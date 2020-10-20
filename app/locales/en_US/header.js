@@ -9,4 +9,10 @@ export default {
   myTemplate: "my template",
   tip: "prompt",
   logoutMesage: "are you sure you want to log out? ",
+  expressOcr: "Identification of Japanese waybill",
+  postcodeOcr: "Japanese postcode recognition",
+  customizeTemplate: "Custom OCR template",
+  performOcr: "Perform OCR",
+  T_GeneralOcr: "T-general",
+  G_GeneralOcr: "G-general",
 };

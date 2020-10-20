@@ -9,7 +9,7 @@ import Routes from "@configs/router.config";
 import configure from "@middleware/configureStore";
 // const HotRoutes = hot(Routes);
 export const store = configure({
-  currentNav: 1,
+  currentNav: "1",
 });
 
 ReactDOM.render(

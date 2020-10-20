@@ -1,0 +1,73 @@
+export default [
+  {
+    id: "1",
+    text: "Home",
+    nav: "Home",
+    name: "ocr_category_content",
+    path: "/home",
+  },
+  {
+    id: "2",
+    text: "OCR 识别",
+    nav: "ocr_nav",
+    name: "ocr_category_content",
+    children: [
+      {
+        id: "2_1",
+        text: "日文运单识别",
+        path: "/expressOcr",
+        nav: "expressOcr",
+        parentId: "2",
+      },
+      {
+        id: "2_2",
+        text: "日文邮编识别",
+        path: "/expressOcr",
+        nav: "postcodeOcr",
+        parentId: "2",
+      },
+      {
+        id: "2_3",
+        text: "自定OCR模板",
+        path: "/customizeTemplate",
+        nav: "customizeTemplate",
+        parentId: "2",
+      },
+      {
+        id: "2_4",
+        text: "执行OCR",
+        path: "/developing",
+        nav: "performOcr",
+        parentId: "2",
+      },
+      {
+        id: "2_5",
+        text: "T-通用",
+        path: "/T_GeneralOcr",
+        nav: "T_GeneralOcr",
+        parentId: "2",
+      },
+      {
+        id: "2_6",
+        text: "G-通用",
+        path: "/G_GeneralOcr",
+        nav: "G_GeneralOcr",
+        parentId: "2",
+      },
+    ],
+  },
+  {
+    id: "3",
+    text: "IOT 物联",
+    nav: "iot_nav",
+    name: "iot_category_content",
+    path: "/home",
+  },
+  {
+    id: "4",
+    text: "AI 算法 ",
+    nav: "ai_nav",
+    name: "ai_category_content",
+    path: "/home",
+  },
+];

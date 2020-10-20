@@ -9,4 +9,10 @@ export default {
   myTemplate: "マイテンプレート",
   tip: "ヒント",
   logoutMesage: "ログアウトを確認しますか？",
+  expressOcr: "日本語送り状の識別",
+  postcodeOcr: "日本語郵便番号の識別",
+  customizeTemplate: "自定OCRテンプレート",
+  performOcr: "OCRを実行",
+  T_GeneralOcr: "T-汎用",
+  G_GeneralOcr: "G-汎用",
 };

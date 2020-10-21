@@ -164,23 +164,6 @@ class Header extends Component {
                     {this.props.t("NRI_title")}
                   </span>
                 </span>
-                {
-                  // return (
-                  //   <li
-                  //     key={item.id}
-                  //     onClick={this.scrollToAnchor.bind(
-                  //       this,
-                  //       item.id,
-                  //       item.name
-                  //     )}
-                  //     className={
-                  //       this.props.currentNav === item.id ? "active" : ""
-                  //     }
-                  //   >
-                  //     <a>{this.props.t(item.nav)}</a>
-                  //   </li>
-                  // );
-                }
                 <ul className="navList">
                   {navList.map((item) => {
                     return (

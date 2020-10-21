@@ -1,7 +1,7 @@
 /*
- * @Author: nigel
- * @Date: 2020-09-17 14:22:07
- * @LastEditTime: 2020-09-17 16:08:51
+ * @Author: ,: nigel
+ * @Date: ,: 2020-09-17 14:22:07
+ * @LastEditTime: ,: 2020-10-21 17:36:01
  */
 /*
  * @name: 防抖函数
@@ -70,4 +70,15 @@ export function getElemOffsetTop(elem) {
     currentElem = currentElem.offsetParent;
   }
   return offsetTop;
+}
+/*
+ * @name: getBase64
+ * @msg: 将图片文件对象转换为base64格式数据
+ * @param {file对象,callback}
+ * @return {database数据}
+ */
+export function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
 }

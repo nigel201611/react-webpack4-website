@@ -1,16 +1,15 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-22 15:06:43
+ * @LastEditTime: ,: 2020-10-22 18:54:27
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import { Icon, message, Table, Steps, Button } from "antd";
+import { Icon, message, Steps, Button } from "antd";
 import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
 import "@styles/customizeTemplate.less";
 import UploadComp from "@components/UploadComp/UploadComp";
 import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
-import { expressBill } from "@apis/expressOcr";
 
 const { Step } = Steps;
 const steps = [
@@ -64,6 +63,7 @@ class CustomizeTemp extends Component {
     super(props);
     this.customizeZoneRef = React.createRef();
     this.imgElemRef = React.createRef();
+    this.customizeAreaRef = React.createRef();
     this.state = {
       loading: false,
       isRequesting: false,
@@ -75,22 +75,11 @@ class CustomizeTemp extends Component {
   }
 
   componentDidMount() {
-    this.editImageArr = []; //保存用户自定区域绘制起点和宽高[{x:0,y:0,width:100,height:100}]
-    // 模板数据，模板里可能包含多个自定区域数据 blockItem:
-    // [{"block_id":"20200901181925pwxa1jykfid","name":"地址","ocr_engine":"expressbill","block":{"x":93,"y":176,"width":235,"height":113}}]
-    this.TemplateData = [];
     this.fixSizeW = 2048; //控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
     this.fixSizeH = 2048;
     this.myCanvas = document.createElement("canvas");
     this.myCtx = this.myCanvas.getContext("2d");
     this.OriginImageUrl = ""; //保存用户上传未处理的图片数据
-    this.scaleMini = 1; //缩小比例
-    this.scaleMax = 1; //放大比例
-    this.curDiv = null; //保存当前绘制的框图
-    this.editCustomBlockFlag = false; //标识是否二次修改自定区域
-    this.curId = ""; //标识当前修改的id
-    this.blockItem = null; //标识当前根据id找到的自定区域块数据
-    this.matchTemplateItem = null; //模板匹配命中其中一个模板数据
     this.calibrating = false; //控制图片校准标识，防止过频
   }
 
@@ -247,6 +236,15 @@ class CustomizeTemp extends Component {
     this.TemplateData = [];
   };
 
+  saveCustTemplate = () => {
+    console.log(this.customizeAreaRef);
+    this.customizeAreaRef.saveCustomize();
+  };
+
+  customizeAreaRef = (customizeAreaRef) => {
+    this.customizeAreaRef = customizeAreaRef;
+  };
+
   render() {
     const { imageUrl, current, bill_width, bill_height, loading } = this.state;
     const uploadButton = (
@@ -277,6 +275,9 @@ class CustomizeTemp extends Component {
             imageUrl={imageUrl}
             bill_height={bill_height}
             bill_width={bill_width}
+            imgElem={this.imgElemRef}
+            wrappedComponentRef={this.customizeAreaRef}
+            // ref={this.customizeAreaRef}
           ></CustomizeArea>
         );
         break;
@@ -318,10 +319,7 @@ class CustomizeTemp extends Component {
                   <Button type="primary" onClick={this.handleClearArea}>
                     清除区域
                   </Button>
-                  <Button
-                    type="primary"
-                    onClick={() => message.success("Processing complete!")}
-                  >
+                  <Button type="primary" onClick={this.saveCustTemplate}>
                     保存模板
                   </Button>
                 </>

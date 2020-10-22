@@ -6,9 +6,6 @@ import { withTranslation } from "react-i18next";
 import "@styles/home.less";
 import { debounce, getElemOffsetTop } from "@utils/common";
 import { setCurrentNav } from "@actions/common";
-@connect((state) => ({
-  currentNav: state.config.currentNav,
-}))
 class Home extends Component {
   static defaultProps = {};
   static propTypes = {};

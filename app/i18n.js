@@ -13,6 +13,10 @@ import zh_CN_login from "@locales/zh_CN/login";
 import ja_JP_login from "@locales/ja_JP/login";
 import en_US_login from "@locales/en_US/login";
 
+import zh_CN_customizeArea from "@locales/zh_CN/customizeArea";
+import ja_JP_customizeArea from "@locales/ja_JP/customizeArea";
+import en_US_customizeArea from "@locales/en_US/customizeArea";
+
 const resources = {
   zh_CN: {
     home: {
@@ -23,6 +27,9 @@ const resources = {
     },
     login: {
       ...zh_CN_login,
+    },
+    customizeArea: {
+      ...zh_CN_customizeArea,
     },
   },
   ja_JP: {
@@ -35,6 +42,9 @@ const resources = {
     login: {
       ...ja_JP_login,
     },
+    customizeArea: {
+      ...ja_JP_customizeArea,
+    },
   },
   en_US: {
     home: {
@@ -45,6 +55,9 @@ const resources = {
     },
     login: {
       ...en_US_login,
+    },
+    customizeArea: {
+      ...en_US_customizeArea,
     },
   },
 };

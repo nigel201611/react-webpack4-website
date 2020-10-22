@@ -1,7 +1,7 @@
 /*
  * @Author: ,: nigel
  * @Date: ,: 2020-09-17 14:22:07
- * @LastEditTime: ,: 2020-10-21 17:36:01
+ * @LastEditTime: ,: 2020-10-22 16:35:58
  */
 /*
  * @name: 防抖函数
@@ -81,4 +81,24 @@ export function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
+}
+
+/**
+ * @name: uuid
+ * @msg: 生产唯一id
+ * @param {}
+ * @return:string
+ */
+export function uuid() {
+  let date = new Date();
+  let y = date.getFullYear();
+  let m = date.getMonth() + 1;
+  m = m < 10 ? "0" + m : m;
+  let d = date.getDate();
+  d = d < 10 ? "0" + d : d;
+  let h = date.getHours();
+  let minute = date.getMinutes();
+  let second = date.getSeconds();
+  let str = y + m + d + h + minute + second;
+  return str + Math.random().toString(36).substr(2);
 }

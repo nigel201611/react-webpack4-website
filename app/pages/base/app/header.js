@@ -71,8 +71,6 @@ class Header extends Component {
     let currentNav = key.length == 1 ? key : key.substr(0, 1);
     this.props.dispatch(setCurrentNav(currentNav));
     window.sessionStorage.setItem("currentNavItem", key);
-    console.log(key);
-
     let anchorName = props.name;
     let path = props.path;
     let documentElement = document.documentElement || document.body;

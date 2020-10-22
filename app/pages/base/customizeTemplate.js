@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-21 18:31:40
+ * @LastEditTime: ,: 2020-10-22 15:06:43
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import { Icon, message, Table, Steps, Button } from "antd";
 import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
 import "@styles/customizeTemplate.less";
 import UploadComp from "@components/UploadComp/UploadComp";
+import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
 import { expressBill } from "@apis/expressOcr";
 
 const { Step } = Steps;
@@ -272,21 +273,11 @@ class CustomizeTemp extends Component {
         break;
       case 1:
         steps[current].content = (
-          <div className="usercustomize_area">
-            <div className="img_background_wrap">
-              <div
-                ref={this.customizeZoneRef}
-                className="img-wrap"
-                style={{
-                  background: `url(${imageUrl}) no-repeat 0 0`,
-                  backgroundSize: "cover",
-                  width: bill_width + "px",
-                  height: bill_height + "px",
-                  transform: "rotate(0)",
-                }}
-              />
-            </div>
-          </div>
+          <CustomizeArea
+            imageUrl={imageUrl}
+            bill_height={bill_height}
+            bill_width={bill_width}
+          ></CustomizeArea>
         );
         break;
     }

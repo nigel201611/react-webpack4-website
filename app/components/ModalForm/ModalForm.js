@@ -13,8 +13,7 @@ const ModalForm = Form.create({ name: "form_in_modal" })(
   // eslint-disable-next-line
   class extends Component {
     render() {
-      const { t } = this.props;
-      const { visible, onCancel, onCreate, form } = this.props;
+      const { visible, onCancel, onCreate, form, t } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal

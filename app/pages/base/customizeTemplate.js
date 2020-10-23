@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 15:06:46
+ * @LastEditTime: ,: 2020-10-23 16:12:51
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -14,12 +14,12 @@ import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
 const { Step } = Steps;
 const steps = [
   {
-    title: "上传",
+    title: "upload",
     content: "First-content",
     icon: <PictureOutlined />,
   },
   {
-    title: "自定区域",
+    title: "customize-area",
     content: "Second-content",
     icon: <UngroupOutlined />,
   },
@@ -234,6 +234,7 @@ class CustomizeTemp extends Component {
   };
 
   render() {
+    const { t } = this.props;
     const {
       imageUrl,
       current,
@@ -248,9 +249,7 @@ class CustomizeTemp extends Component {
           style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
           type={loading ? "loading" : "inbox"}
         />
-        <div className="ant-upload-text">
-          支持JPG/JPEG/PNG,limit 5MB,图片清晰，文字尽可能呈水平
-        </div>
+        <div className="ant-upload-text">{t("upload-tips")}</div>
       </div>
     );
     switch (current) {
@@ -281,19 +280,14 @@ class CustomizeTemp extends Component {
         <section className="page-wrap">
           <div className="page-banner">
             <div className="page-title">
-              <h1>自定OCR模板</h1>
-              <p>
-                1 上传运单图片或其他格式图片; 2
-                按住鼠标左键在图片上拖动鼠标绘制不同‘识别选区’; 3
-                保存模板，之后可以去‘执行OCR’页面选择
-                同格式图片进行识别，模板的自定为后面同类型图片识别提升工作效率。
-              </p>
+              <h1>{t("banner-title")}</h1>
+              <p>{t("banner-desc")}</p>
             </div>
           </div>
           <div className="page-main">
             <Steps current={current}>
               {steps.map((item) => (
-                <Step key={item.title} title={item.title} icon={item.icon} />
+                <Step key={item.title} title={t(item.title)} icon={item.icon} />
               ))}
             </Steps>
             <div className="steps-content">{steps[current].content}</div>
@@ -301,13 +295,13 @@ class CustomizeTemp extends Component {
               {current === 1 && (
                 <>
                   <Button type="primary" onClick={this.prev}>
-                    返回上传
+                    {t("back-upload")}
                   </Button>
                   <Button type="primary" onClick={this.handleClearArea}>
-                    清除区域
+                    {t("clear-area")}
                   </Button>
                   <Button type="primary" onClick={this.saveCustTemplate}>
-                    保存模板
+                    {t("save-template")}
                   </Button>
                 </>
               )}

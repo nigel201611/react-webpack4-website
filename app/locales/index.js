@@ -18,6 +18,10 @@ import zh_CN_modalForm from "@locales/zh_CN/modalForm";
 import ja_JP_modalForm from "@locales/ja_JP/modalForm";
 import en_US_modalForm from "@locales/en_US/modalForm";
 
+import zh_CN_customizeTemp from "@locales/zh_CN/customizeTemp";
+import ja_JP_customizeTemp from "@locales/ja_JP/customizeTemp";
+import en_US_customizeTemp from "@locales/en_US/customizeTemp";
+
 export default {
   zh_CN: {
     home: {
@@ -34,6 +38,9 @@ export default {
     },
     modalForm: {
       ...zh_CN_modalForm,
+    },
+    customizeTemp: {
+      ...zh_CN_customizeTemp,
     },
   },
   ja_JP: {
@@ -52,6 +59,9 @@ export default {
     modalForm: {
       ...ja_JP_modalForm,
     },
+    customizeTemp: {
+      ...ja_JP_customizeTemp,
+    },
   },
   en_US: {
     home: {
@@ -68,6 +78,9 @@ export default {
     },
     modalForm: {
       ...en_US_modalForm,
+    },
+    customizeTemp: {
+      ...en_US_customizeTemp,
     },
   },
 };

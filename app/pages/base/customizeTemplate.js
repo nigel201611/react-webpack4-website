@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-22 18:54:27
+ * @LastEditTime: ,: 2020-10-23 15:06:46
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -62,7 +62,6 @@ class CustomizeTemp extends Component {
   constructor(props, context) {
     super(props);
     this.customizeZoneRef = React.createRef();
-    this.imgElemRef = React.createRef();
     this.customizeAreaRef = React.createRef();
     this.state = {
       loading: false,
@@ -71,14 +70,13 @@ class CustomizeTemp extends Component {
       current: 0, //当前步骤索引
       bill_width: "680", //運單默認寬度
       bill_height: "400", //運單默認高度
+      uploadImgType: "image/jpeg",
     };
   }
 
   componentDidMount() {
     this.fixSizeW = 2048; //控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
     this.fixSizeH = 2048;
-    this.myCanvas = document.createElement("canvas");
-    this.myCtx = this.myCanvas.getContext("2d");
     this.OriginImageUrl = ""; //保存用户上传未处理的图片数据
     this.calibrating = false; //控制图片校准标识，防止过频
   }
@@ -119,8 +117,8 @@ class CustomizeTemp extends Component {
       return;
     }
     let imgElem = new Image();
-    let myCanvas = this.myCanvas;
-    let myCtx = this.myCtx;
+    let myCanvas = document.createElement("canvas");
+    let myCtx = myCanvas.getContext("2d");
     imgElem.src = this.OriginImageUrl;
     this.calibrating = true;
     imgElem.onload = () => {
@@ -169,9 +167,13 @@ class CustomizeTemp extends Component {
     }
     if (info.file.status === "done") {
       // 对上传成功，如果尺寸过大做些控制
-      this.OriginImageUrl = URL.createObjectURL(info.file.originFileObj);
+      let fileObj = info.file.originFileObj;
+      this.OriginImageUrl = URL.createObjectURL(fileObj);
+      this.setState({
+        uploadImgType: fileObj.type,
+      });
       //上传成功调用校准接口校准下图片，file.raw
-      this.calibrationImage(info.file.originFileObj);
+      this.calibrationImage(fileObj);
     }
     if (info.file.status === "error") {
       this.setState({ loading: false });
@@ -222,31 +224,24 @@ class CustomizeTemp extends Component {
       data: Object.assign([], tableData),
     });
   }
-  /**
-   * @name: handleClearArea
-   * @msg:清除用户所有自定区域
-   * @param {}
-   * @return:
-   */
   handleClearArea = () => {
     //清除盒子下新增的子节点
-    let oBox = this.imgOriginRef.current;
-    oBox.innerHTML = "";
-    this.editImageArr = [];
-    this.TemplateData = [];
+    this.customizeAreaRef.current.clearArea();
   };
 
   saveCustTemplate = () => {
-    console.log(this.customizeAreaRef);
-    this.customizeAreaRef.saveCustomize();
-  };
-
-  customizeAreaRef = (customizeAreaRef) => {
-    this.customizeAreaRef = customizeAreaRef;
+    this.customizeAreaRef.current.saveCustomize();
   };
 
   render() {
-    const { imageUrl, current, bill_width, bill_height, loading } = this.state;
+    const {
+      imageUrl,
+      current,
+      bill_width,
+      bill_height,
+      loading,
+      uploadImgType,
+    } = this.state;
     const uploadButton = (
       <div>
         <Icon
@@ -275,9 +270,8 @@ class CustomizeTemp extends Component {
             imageUrl={imageUrl}
             bill_height={bill_height}
             bill_width={bill_width}
-            imgElem={this.imgElemRef}
-            wrappedComponentRef={this.customizeAreaRef}
-            // ref={this.customizeAreaRef}
+            uploadImgType={uploadImgType}
+            ref={this.customizeAreaRef}
           ></CustomizeArea>
         );
         break;
@@ -297,13 +291,6 @@ class CustomizeTemp extends Component {
             </div>
           </div>
           <div className="page-main">
-            <img
-              ref={this.imgElemRef}
-              className="imgElem"
-              height={bill_height}
-              width={bill_width}
-              src={imageUrl}
-            />
             <Steps current={current}>
               {steps.map((item) => (
                 <Step key={item.title} title={item.title} icon={item.icon} />

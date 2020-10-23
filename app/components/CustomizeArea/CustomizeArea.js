@@ -1,10 +1,10 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: ,: 2020-10-22 18:51:15
+ * @LastEditTime: ,: 2020-10-23 15:43:00
  */
 import React, { Component } from "react";
-import { ModalForm } from "@components/ModalForm/ModalForm";
+import ModalForm from "@components/ModalForm/ModalForm";
 import { notification } from "antd";
 import { uuid } from "@utils/common";
 import { saveTemplate } from "@apis/userTemplate";
@@ -14,6 +14,7 @@ class CustomizeArea extends Component {
   constructor(props) {
     super(props);
     this.customizeZoneRef = React.createRef();
+    this.imgElemRef = React.createRef();
     this.state = {
       cusAreaModalVisible: false,
       isSaving: false, //标识当前是否处于保存模板数据中，并且给出保存动效
@@ -21,6 +22,7 @@ class CustomizeArea extends Component {
   }
 
   componentDidMount() {
+    this.uploadImgType = this.props.uploadImgType;
     this.origin = {
       x: 0,
       y: 0,
@@ -42,16 +44,47 @@ class CustomizeArea extends Component {
     this.blockItem = null; //标识当前根据id找到的自定区域块数据
     this.type = "expressbill"; //标识当前识别类型
     this.customBlockForm = {
+      //用于再次编辑区域，回显表单数据
       name: "", //自定区域名称
       OCR_engine: "expressbill", //当前ocr引擎类型,默认运单
     };
+    this.myCanvas = document.createElement("canvas");
+    this.myCtx = this.myCanvas.getContext("2d");
     this.addEditableFunc();
+    this.initEvent();
   }
 
   componentWillUnmount() {
     //卸载该组件前判断当前用户是否由自定区域，是否已经保存，如果保存了直接离开，没保存，弹窗让用户确认
     console.log("componentWillUnmount");
   }
+  // 初始化一些事件
+  initEvent = () => {
+    let oBox = this.customizeZoneRef.current;
+    //rect_item
+    oBox.onclick = (ev) => {
+      let { target } = ev;
+      if (target.className.indexOf("rect_item") > -1) {
+        //可以重新打开自动区域编辑模态框
+        this.curId = target.id;
+        this.blockItem = this.TemplateData.find(function (item) {
+          return item.block_id == target.id;
+        });
+        // 根据自定区域id找到对应数据，然后回显到编辑的表单中
+        this.customBlockForm.name = this.blockItem.name;
+        this.customBlockForm.OCR_engine = this.blockItem.ocr_engine;
+        const { form } = this.formRef.props;
+        form.setFieldsValue({
+          ...this.customBlockForm,
+        });
+        this.curDiv = target;
+        this.setState({
+          cusAreaModalVisible: true,
+        });
+        this.editCustomBlockFlag = true;
+      }
+    };
+  };
 
   /**
    * @name: addEditableFunc
@@ -165,6 +198,12 @@ class CustomizeArea extends Component {
    * @return {*}
    */
   handleCancel = () => {
+    // 取消，需要清理本次绘制的自定区域
+    let oBox = this.customizeZoneRef.current;
+    // 判断下取消是二次修改
+    if (!this.editCustomBlockFlag) {
+      oBox.removeChild(this.curDiv);
+    }
     this.setState({ cusAreaModalVisible: false });
   };
 
@@ -180,7 +219,7 @@ class CustomizeArea extends Component {
       if (err) {
         return;
       }
-      console.log("Received values of form: ", values);
+      // console.log("Received values of form: ", values);
       this.customBlockForm = values;
       // 用户编辑完自定区域后，进行相关数据的收集
       this.getUserInputData();
@@ -206,7 +245,7 @@ class CustomizeArea extends Component {
     // 裁剪图片
     ctx.drawImage(image, x, y, width, height, 0, 0, width, height);
     // 将canvas转化base64
-    return canvas.toDataURL("image/jpeg", 1.0);
+    return canvas.toDataURL(this.uploadImgType, 1.0);
   };
 
   getUserInputData = () => {
@@ -225,7 +264,6 @@ class CustomizeArea extends Component {
     // 如果用户是新增，那么就添加到TemplatedData中,否则修改原有区域数据即可
     this.TemplateData.push(blockItem);
     this.editImageArr.push(pointsInfo);
-    console.log(this.TemplateData);
   };
 
   changeCurDivBg = (curDiv, OCR_engine) => {
@@ -259,7 +297,6 @@ class CustomizeArea extends Component {
     //处理保存的数据
     //保存为模板数据到数据库
     //判斷當前保存模板是新增還是修改,如果temp_id存在則爲修改，否則新增
-    console.log("saveCustomize");
     let oBox = this.customizeZoneRef.current;
     let temp_id = oBox.getAttribute("data-temp_id");
     // editImageArr有数据，说明用户在当前模板自定了区域数据
@@ -273,12 +310,12 @@ class CustomizeArea extends Component {
         };
       });
       // 用户原图转换base64
-      let imgElem = this.props.imgElem;
-      let { width, height } = imgElem.current;
+      let imgElem = this.imgElemRef.current;
+      let { width, height } = imgElem;
       this.myCanvas.width = width;
       this.myCanvas.height = height;
       this.myCtx.drawImage(imgElem, 0, 0, width, height);
-      let imgbase64 = this.myCanvas.toDataURL("image/jpeg", 1.0);
+      let imgbase64 = this.myCanvas.toDataURL(this.uploadImgType, 1.0);
       // 模板数据
       let templateData = {
         temp_id: temp_id || uuid(),
@@ -319,7 +356,13 @@ class CustomizeArea extends Component {
             }
           }
         },
-        () => {
+        (res) => {
+          // errmsg: "Invalid login status,Please log in first"
+          // errno: 401
+          notification["error"]({
+            message: this.props.t("tip-text"),
+            description: res.errmsg,
+          });
           this.setState({
             isSaving: false,
           });
@@ -344,12 +387,32 @@ class CustomizeArea extends Component {
   saveFormRef = (formRef) => {
     this.formRef = formRef;
   };
+  /**
+   * @name: handleClearArea
+   * @msg:清除用户所有自定区域
+   * @param {}
+   * @return:
+   */
+  clearArea = () => {
+    //清除盒子下新增的子节点
+    let oBox = this.customizeZoneRef.current;
+    oBox.innerHTML = "";
+    this.editImageArr = [];
+    this.TemplateData = [];
+  };
 
   render() {
     let { imageUrl, bill_width, bill_height } = this.props;
     let { cusAreaModalVisible } = this.state;
     return (
       <div className="usercustomize_area">
+        <img
+          ref={this.imgElemRef}
+          className="imgElem"
+          height={bill_height}
+          width={bill_width}
+          src={imageUrl}
+        />
         <ModalForm
           wrappedComponentRef={this.saveFormRef}
           visible={cusAreaModalVisible}
@@ -374,4 +437,6 @@ class CustomizeArea extends Component {
   }
 }
 
-export default withTranslation("customizeArea")(CustomizeArea);
+export default withTranslation("customizeArea", { withRef: true })(
+  CustomizeArea
+);

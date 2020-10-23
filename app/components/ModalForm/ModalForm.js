@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Modal, Form, Input, Select } from "antd";
+import { withTranslation } from "react-i18next";
 const { Option } = Select;
 const btnList = [
   { text: "address_bill_dectect", type: "expressbill" },
@@ -8,22 +9,25 @@ const btnList = [
   { text: "T_general", type: "T_general" },
   { text: "G_general", type: "G_general" },
 ];
-export const ModalForm = Form.create({ name: "form_in_modal" })(
+const ModalForm = Form.create({ name: "form_in_modal" })(
   // eslint-disable-next-line
   class extends Component {
     render() {
+      const { t } = this.props;
       const { visible, onCancel, onCreate, form } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal
           visible={visible}
-          title="自定区域编辑"
-          okText="确认"
+          title={t("modal-title")}
+          okText={t("confirm")}
           onCancel={onCancel}
           onOk={onCreate}
+          mask={true}
+          maskClosable={false}
         >
           <Form layout="vertical">
-            <Form.Item label="区域名称">
+            <Form.Item label={t("area-name")}>
               {getFieldDecorator("name", {
                 rules: [
                   {
@@ -33,7 +37,7 @@ export const ModalForm = Form.create({ name: "form_in_modal" })(
                 ],
               })(<Input placeholder="Please input a custom area name" />)}
             </Form.Item>
-            <Form.Item label="OCR引擎">
+            <Form.Item label={t("ocr-engine")}>
               {getFieldDecorator("OCR_engine", {
                 rules: [
                   {
@@ -46,7 +50,7 @@ export const ModalForm = Form.create({ name: "form_in_modal" })(
                   {btnList.map((item) => {
                     return (
                       <Option key={item.type} value={item.type}>
-                        {item.text}
+                        {t(item.text)}
                       </Option>
                     );
                   })}
@@ -59,3 +63,4 @@ export const ModalForm = Form.create({ name: "form_in_modal" })(
     }
   }
 );
+export default withTranslation("modalForm", { withRef: true })(ModalForm);

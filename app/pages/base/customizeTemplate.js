@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 16:33:17
+ * @LastEditTime: ,: 2020-10-23 17:53:30
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -82,6 +82,12 @@ class CustomizeTemp extends Component {
     this.calibrating = false; //控制图片校准标识，防止过频
   }
 
+  componentWillUnmount() {
+    URL.revokeObjectURL(this.OriginImageUrl);
+    this.customizeZoneRef = null;
+    this.customizeAreaRef = null;
+  }
+
   next() {
     const current = this.state.current + 1;
     this.setState({ current });
@@ -89,7 +95,6 @@ class CustomizeTemp extends Component {
 
   prev = () => {
     const current = this.state.current - 1;
-    console.log(current);
     this.setState({ current });
   };
 

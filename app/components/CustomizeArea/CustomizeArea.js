@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: ,: 2020-10-23 16:31:56
+ * @LastEditTime: ,: 2020-10-23 17:53:57
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
@@ -57,6 +57,11 @@ class CustomizeArea extends Component {
   componentWillUnmount() {
     //卸载该组件前判断当前用户是否由自定区域，是否已经保存，如果保存了直接离开，没保存，弹窗让用户确认
     console.log("componentWillUnmount");
+    let oBox = this.customizeZoneRef.current;
+    oBox.onclick = null;
+    oBox.onmousedown = null;
+    this.customizeZoneRef = null;
+    this.imgElemRef = null;
   }
   // 初始化一些事件
   initEvent = () => {
@@ -332,15 +337,14 @@ class CustomizeArea extends Component {
         (res) => {
           this.isRequesting = false;
           this.props.setSaveStatus(false);
-          let { status, data } = res;
-          console.log(res);
-          if (status == 200) {
-            if (data.data > 0) {
+          let { errno, errmsg, data } = res;
+          if (errno == 0) {
+            if (data > 0) {
               notification["success"]({
                 message: this.props.t("tip-text"),
                 description: this.props.t("save-succ"),
               });
-            } else if (data.data == -1) {
+            } else if (data == -1) {
               //提示已经超过保存模板数量限制，最多保存10个模板，请删除旧再试
               notification["warning"]({
                 message: this.props.t("tip-text"),

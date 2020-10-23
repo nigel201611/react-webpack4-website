@@ -27,11 +27,9 @@ class Header extends Component {
       currentNavItem: "1",
       navList: navList,
     };
-    this.handleLogout = this.handleLogout.bind(this);
-    this.navigateToMyTemplate = this.navigateToMyTemplate.bind(this);
   }
   // 登出
-  handleLogout() {
+  handleLogout = () => {
     const self = this;
     confirm({
       title: self.props.t("tip"),
@@ -47,14 +45,15 @@ class Header extends Component {
         });
       },
     });
-  }
-  handleLogin() {
+  };
+  handleLogin = () => {
     hashHistory.push("/login");
-  }
+  };
 
-  navigateToMyTemplate() {
-    console.log("我的模板");
-  }
+  navigateToMyTemplate = (event) => {
+    event.preventDefault();
+    hashHistory.push("/myTemplate");
+  };
 
   handleChangeLang = ({ key }) => {
     this.props.i18n.changeLanguage(key);
@@ -130,7 +129,7 @@ class Header extends Component {
           </a>
         </Menu.Item>
         <Menu.Item>
-          <a href="#" onClick={this.navigateToMyTemplate}>
+          <a href="#" onClick={this.navigateToMyTemplate.bind(this)}>
             {this.props.t("myTemplate")}
           </a>
         </Menu.Item>

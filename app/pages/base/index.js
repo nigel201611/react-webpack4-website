@@ -6,6 +6,7 @@ import app from "./app";
 import expressOcr from "./expressOcr";
 import tengxunOcr from "./tengxunOcr";
 import googleOcr from "./googleOcr";
+import myTemplate from "./myTemplate";
 import customizeTemplate from "./customizeTemplate";
 
 export {
@@ -18,4 +19,5 @@ export {
   tengxunOcr,
   googleOcr,
   customizeTemplate,
+  myTemplate,
 };

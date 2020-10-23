@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-19 14:16:52
+ * @LastEditTime: ,: 2020-10-23 17:16:46
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -165,7 +165,7 @@ class GoogleOcr extends Component {
         this.clearCanvasContent();
         this.googleGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        message.warning(this.props.t("input_url-tip"));
+        message.warning(t("input_url-tip"));
       }
     } else {
       // 上面上传转换得到的imageUrl是临时图片链接，需要再计算一次，牺牲计算减少内存使用
@@ -401,6 +401,7 @@ class GoogleOcr extends Component {
     );
   };
   render() {
+    const { t } = this.props;
     const {
       imageUrl,
       isRequesting,
@@ -429,10 +430,8 @@ class GoogleOcr extends Component {
         <section className="tx-wrap">
           <div className="tx-banner">
             <div className="tx-title">
-              <h1>G-通用识别</h1>
-              <p>
-                'G-通用识别'使用G-通用引擎准确识别对应图片数据，针对印刷、手写、英文等字符
-              </p>
+              <h1>{t("banner-title")}</h1>
+              <p>{t("banner-desc")}</p>
             </div>
           </div>
           <div className="tx-main">
@@ -449,7 +448,7 @@ class GoogleOcr extends Component {
                 >
                   <Button type="primary">
                     <Icon type={this.state.loading ? "loading" : "upload"} />
-                    {this.props.t("upload-btn-text")}
+                    {t("upload-btn-text")}
                   </Button>
                 </Upload>
                 <div className="url_input">
@@ -457,7 +456,7 @@ class GoogleOcr extends Component {
                     value={input_url}
                     onChange={this.handleInputUrlChange.bind(this)}
                     allowClear={true}
-                    placeholder={this.props.t("input_url_tip")}
+                    placeholder={t("input_url_tip")}
                   />
                 </div>
                 <Button
@@ -465,7 +464,7 @@ class GoogleOcr extends Component {
                   type="primary"
                   onClick={this.handleAnalyse}
                 >
-                  {this.props.t("analyse-btn")}
+                  {t("analyse-btn")}
                 </Button>
               </Row>
               <Row gutter={16} className="ocr-result">

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: ,: 2020-10-23 15:50:40
+ * @LastEditTime: ,: 2020-10-23 16:31:56
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
@@ -17,7 +17,6 @@ class CustomizeArea extends Component {
     this.imgElemRef = React.createRef();
     this.state = {
       cusAreaModalVisible: false,
-      isSaving: false, //标识当前是否处于保存模板数据中，并且给出保存动效
     };
   }
 
@@ -52,6 +51,7 @@ class CustomizeArea extends Component {
     this.myCtx = this.myCanvas.getContext("2d");
     this.addEditableFunc();
     this.initEvent();
+    this.isRequesting = false;
   }
 
   componentWillUnmount() {
@@ -323,16 +323,15 @@ class CustomizeArea extends Component {
         image: imgbase64, //用户上传的原图片base64数据
       };
       // 保存templateData到数据库中
-      this.setState({
-        isSaving: true,
-      });
+      if (this.isRequesting) {
+        return;
+      }
+      this.props.setSaveStatus(true);
       saveTemplate(
         templateData,
         (res) => {
-          //保存成功给出提示
-          this.setState({
-            isSaving: false,
-          });
+          this.isRequesting = false;
+          this.props.setSaveStatus(false);
           let { status, data } = res;
           console.log(res);
           if (status == 200) {
@@ -359,12 +358,11 @@ class CustomizeArea extends Component {
         (res) => {
           // errmsg: "Invalid login status,Please log in first"
           // errno: 401
+          this.isRequesting = false;
+          this.props.setSaveStatus(false);
           notification["error"]({
             message: this.props.t("tip-text"),
             description: res.errmsg,
-          });
-          this.setState({
-            isSaving: false,
           });
         }
       );

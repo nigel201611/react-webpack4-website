@@ -38,6 +38,7 @@ const ModalForm = Form.create({ name: "form_in_modal" })(
             </Form.Item>
             <Form.Item label={t("ocr-engine")}>
               {getFieldDecorator("OCR_engine", {
+                initialValue: "expressbill",
                 rules: [
                   {
                     required: true,

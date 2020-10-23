@@ -22,8 +22,23 @@ import zh_CN_customizeTemp from "@locales/zh_CN/customizeTemp";
 import ja_JP_customizeTemp from "@locales/ja_JP/customizeTemp";
 import en_US_customizeTemp from "@locales/en_US/customizeTemp";
 
+import zh_CN_expressOcr from "@locales/zh_CN/expressOcr";
+import ja_JP_expressOcr from "@locales/ja_JP/expressOcr";
+import en_US_expressOcr from "@locales/en_US/expressOcr";
+
+import zh_CN_tengxunOcr from "@locales/zh_CN/tengxunOcr";
+import ja_JP_tengxunOcr from "@locales/ja_JP/tengxunOcr";
+import en_US_tengxunOcr from "@locales/en_US/tengxunOcr";
+
+import zh_CN_googleOcr from "@locales/zh_CN/googleOcr";
+import ja_JP_googleOcr from "@locales/ja_JP/googleOcr";
+import en_US_googleOcr from "@locales/en_US/googleOcr";
+
 export default {
   zh_CN: {
+    googleOcr: {
+      ...zh_CN_googleOcr,
+    },
     home: {
       ...zh_CN_home, //主页中文信息
     },
@@ -42,8 +57,17 @@ export default {
     customizeTemp: {
       ...zh_CN_customizeTemp,
     },
+    expressOcr: {
+      ...zh_CN_expressOcr,
+    },
+    tengxunOcr: {
+      ...zh_CN_tengxunOcr,
+    },
   },
   ja_JP: {
+    googleOcr: {
+      ...ja_JP_googleOcr,
+    },
     home: {
       ...ja_JP_home,
     },
@@ -62,8 +86,17 @@ export default {
     customizeTemp: {
       ...ja_JP_customizeTemp,
     },
+    expressOcr: {
+      ...ja_JP_expressOcr,
+    },
+    tengxunOcr: {
+      ...ja_JP_tengxunOcr,
+    },
   },
   en_US: {
+    googleOcr: {
+      ...en_US_googleOcr,
+    },
     home: {
       ...en_US_home,
     },
@@ -81,6 +114,12 @@ export default {
     },
     customizeTemp: {
       ...en_US_customizeTemp,
+    },
+    expressOcr: {
+      ...en_US_expressOcr,
+    },
+    tengxunOcr: {
+      ...en_US_tengxunOcr,
     },
   },
 };

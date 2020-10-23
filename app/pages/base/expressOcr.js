@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 18:51:15
+ * @LastEditTime: ,: 2020-10-23 16:43:02
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -180,15 +180,14 @@ class ExpressOcr extends Component {
   }
   componentDidMount() {}
   render() {
+    const { t } = this.props;
     const uploadButton = (
       <div>
         <Icon
           style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
           type={this.state.loading ? "loading" : "inbox"}
         />
-        <div className="ant-upload-text">
-          支持JPG/JPEG/PNG,limit 5MB,图片清晰，文字尽可能呈水平
-        </div>
+        <div className="ant-upload-text">{t("upload-tip")}</div>
       </div>
     );
     const { imageUrl, isRequesting, data } = this.state;
@@ -197,10 +196,8 @@ class ExpressOcr extends Component {
         <section className="express-wrap">
           <div className="express-banner">
             <div className="express-title">
-              <h1>日文运单识别</h1>
-              <p>
-                '日文运单识别'上传日文运单图片，识别对应邮编、地址、姓名数据
-              </p>
+              <h1>{t("banner-title")}</h1>
+              <p>{t("banner-desc")}</p>
             </div>
           </div>
           <div className="express-main">

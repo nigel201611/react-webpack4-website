@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-19 11:49:24
+ * @LastEditTime: ,: 2020-10-23 17:07:24
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -413,6 +413,7 @@ class TengxunOcr extends Component {
     this.clearCanvasContent();
   }
   render() {
+    const { t } = this.props;
     const {
       imageUrl,
       isRequesting,
@@ -442,34 +443,32 @@ class TengxunOcr extends Component {
         <section className="tx-wrap">
           <div className="tx-banner">
             <div className="tx-title">
-              <h1>T-通用识别</h1>
-              <p>
-                'T-通用识别'使用T-通用引擎准确识别对应图片数据，针对印刷、手写、英文等字符
-              </p>
-            </div>
-          </div>
-          <div className="tx-main">
-            <Spin spinning={isRequesting}>
-              <Row className="btnList">
+              <h1>{t("banner-title")}</h1>
+              <p>{t("banner-desc")}</p>
+              <div className="btnList">
                 <Button
                   onClick={this.handleClickSelector.bind(this, 1)}
                   type={currentBtn === 1 ? "primary" : ""}
                 >
-                  日文英文体验
+                  {t("Jp-en-experience")}
                 </Button>
                 <Button
                   onClick={this.handleClickSelector.bind(this, 2)}
                   type={currentBtn === 2 ? "primary" : ""}
                 >
-                  日文英文多角度体验
+                  {t("multi-angle-experience")}
                 </Button>
                 <Button
                   onClick={this.handleClickSelector.bind(this, 3)}
                   type={currentBtn === 3 ? "primary" : ""}
                 >
-                  其他语种体验
+                  {t("experience-in-other")}
                 </Button>
-              </Row>
+              </div>
+            </div>
+          </div>
+          <div className="tx-main">
+            <Spin spinning={isRequesting}>
               <Row className="imgList">{imgList}</Row>
               <Row className="input_form">
                 <Upload
@@ -482,7 +481,7 @@ class TengxunOcr extends Component {
                 >
                   <Button type="primary">
                     <Icon type={this.state.loading ? "loading" : "upload"} />
-                    {this.props.t("upload-btn-text")}
+                    {t("upload-btn-text")}
                   </Button>
                 </Upload>
                 <div className="url_input">
@@ -490,7 +489,7 @@ class TengxunOcr extends Component {
                     value={input_url}
                     onChange={this.handleInputUrlChange.bind(this)}
                     allowClear={true}
-                    placeholder={this.props.t("input_url_tip")}
+                    placeholder={t("input_url_tip")}
                   />
                 </div>
                 <Button
@@ -498,7 +497,7 @@ class TengxunOcr extends Component {
                   type="primary"
                   onClick={this.handleAnalyse}
                 >
-                  {this.props.t("analyse-btn")}
+                  {t("analyse-btn")}
                 </Button>
               </Row>
               <Row gutter={16} className="ocr-result">

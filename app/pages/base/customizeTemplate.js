@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 16:12:51
+ * @LastEditTime: ,: 2020-10-23 16:33:17
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -71,6 +71,7 @@ class CustomizeTemp extends Component {
       bill_width: "680", //運單默認寬度
       bill_height: "400", //運單默認高度
       uploadImgType: "image/jpeg",
+      saving: false,
     };
   }
 
@@ -229,6 +230,12 @@ class CustomizeTemp extends Component {
     this.customizeAreaRef.current.clearArea();
   };
 
+  setSaveStatus = (status) => {
+    this.setState({
+      saving: status,
+    });
+  };
+
   saveCustTemplate = () => {
     this.customizeAreaRef.current.saveCustomize();
   };
@@ -242,6 +249,7 @@ class CustomizeTemp extends Component {
       bill_height,
       loading,
       uploadImgType,
+      saving,
     } = this.state;
     const uploadButton = (
       <div>
@@ -270,6 +278,7 @@ class CustomizeTemp extends Component {
             bill_height={bill_height}
             bill_width={bill_width}
             uploadImgType={uploadImgType}
+            setSaveStatus={this.setSaveStatus}
             ref={this.customizeAreaRef}
           ></CustomizeArea>
         );
@@ -300,7 +309,11 @@ class CustomizeTemp extends Component {
                   <Button type="primary" onClick={this.handleClearArea}>
                     {t("clear-area")}
                   </Button>
-                  <Button type="primary" onClick={this.saveCustTemplate}>
+                  <Button
+                    type="primary"
+                    loading={saving}
+                    onClick={this.saveCustTemplate}
+                  >
                     {t("save-template")}
                   </Button>
                 </>

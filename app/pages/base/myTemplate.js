@@ -1,13 +1,16 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 18:56:15
+ * @LastEditTime: 2020-10-26 16:32:56
  */
 import React, { Component } from "react";
+import { hashHistory } from "react-router";
 import { withTranslation } from "react-i18next";
-import { Table, Divider, notification } from "antd";
+import { notification, List, Icon, Modal } from "antd";
+const { confirm } = Modal;
 import "@styles/myTemplate.less";
 import { selectTemplate, deleteTemplate } from "@apis/userTemplate";
+
 class MyTemplate extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -19,48 +22,52 @@ class MyTemplate extends Component {
   }
 
   componentDidMount() {
-    this.columns = [
-      {
-        title: "template_id",
-        dataIndex: "temp_id",
-        key: "temp_id",
-        align: "left",
-      },
-      {
-        title: "template_image",
-        dataIndex: "image",
-        key: "image",
-        align: "left",
-        render: (text, record) => (
-          <span>
-            <img class="template_image" src={record.image} />
-          </span>
-        ),
-      },
-      //   {
-      //     title: "blockItem",
-      //     dataIndex: "blockItem",
-      //     key: "blockItem",
-      //     // render: (text, record) => <p>{record.blockItem}</p>,
-      //   },
-      {
-        title: "user_action",
-        key: "action",
-        align: "left",
-        render: (text, record) => (
-          <span>
-            <a>编辑</a>
-            <Divider type="vertical" />
-            <a>删除</a>
-          </span>
-        ),
-      },
-    ];
-
     this.selectUserTemplate();
   }
 
   componentWillUnmount() {}
+
+  handleEdit(index) {
+    let templateData = this.state.tableData[index];
+    hashHistory.push({ pathname: "/customizeTemp", state: { templateData } });
+  }
+  handleDelete(index) {
+    const { t } = this.props;
+    const { tableData } = this.state;
+    const self = this;
+    confirm({
+      title: t("tips"),
+      content: t("confirm_text"),
+      onOk() {
+        let temp_id = tableData[index].temp_id;
+        deleteTemplate({ temp_id: temp_id }, (res) => {
+          console.log(res);
+          let { errno, data } = res;
+          if (errno === 0) {
+            if (data == 1) {
+              // 删除成功
+              tableData.splice(index, 1);
+              self.setState({
+                tableData,
+              });
+              notification["success"]({
+                message: t("tips"),
+                description: t("cancel_succ"),
+              });
+            } else {
+              //提示用户删除失败，检查网络是否正常
+              notification["error"]({
+                message: t("tips"),
+                description: t("cancel_fail"),
+              });
+            }
+          } else {
+            //提示没有模板数据
+          }
+        });
+      },
+    });
+  }
 
   /**
    * @name: selectUserTemplate
@@ -95,11 +102,19 @@ class MyTemplate extends Component {
             });
           } else {
             //提示没有模板数据
+            notification["warning"]({
+              message: this.props.t("tips"),
+              description: this.props.t("no_data"),
+            });
           }
         }
         // this.tableData
       },
       (err) => {
+        notification["error"]({
+          message: this.props.t("tips"),
+          description: err.errmsg,
+        });
         this.setState({
           isRequesting: false,
         });
@@ -109,10 +124,75 @@ class MyTemplate extends Component {
 
   render() {
     const { tableData } = this.state;
+    const { t } = this.props;
     return (
       <div className="container">
         <div className="main">
-          <Table columns={this.columns} dataSource={tableData} />
+          <List
+            itemLayout="vertical"
+            size="large"
+            className="templateLIst"
+            pagination={{
+              onChange: (page) => {
+                console.log(page);
+              },
+              pageSize: 4,
+            }}
+            dataSource={tableData}
+            renderItem={(item, index) => (
+              <List.Item
+                key={item.temp_id}
+                actions={[
+                  <span key="list-vertical-edit">
+                    <Icon type="edit" style={{ marginRight: 8 }} />
+                    <span
+                      className="action-button"
+                      onClick={this.handleEdit.bind(this, index)}
+                    >
+                      {t("edit")}
+                    </span>
+                  </span>,
+                  <span key="list-vertical-delete">
+                    <Icon type="delete" style={{ marginRight: 8 }} />
+                    <span
+                      className="action-button"
+                      onClick={this.handleDelete.bind(this, index)}
+                    >
+                      {t("delete")}
+                    </span>
+                  </span>,
+                ]}
+                extra={
+                  <div
+                    className="template-image"
+                    style={{
+                      backgroundImage: `url(${item.image})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: "contain",
+                    }}
+                  ></div>
+                }
+              >
+                <List.Item.Meta
+                  title={t("temp_id") + item.temp_id}
+                  description={t("temp_name") + item.name ? item.item : ""}
+                />
+                {item.blockItem.map((block, index) => {
+                  return (
+                    <p key={block.block_id}>
+                      {"(" + (index + 1) + ")"}
+                      <span>
+                        {t("ocr_engine")}:{block.ocr_engine}
+                      </span>{" "}
+                      <span>
+                        {t("area_name")}:{block.name}
+                      </span>
+                    </p>
+                  );
+                })}
+              </List.Item>
+            )}
+          />
         </div>
       </div>
     );

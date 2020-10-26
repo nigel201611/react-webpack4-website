@@ -1,7 +1,7 @@
 /*
  * @Author: ,: nigel
  * @Date: ,: 2020-09-17 14:22:07
- * @LastEditTime: ,: 2020-10-22 16:35:58
+ * @LastEditTime: 2020-10-26 16:34:41
  */
 /*
  * @name: 防抖函数
@@ -101,4 +101,14 @@ export function uuid() {
   let second = date.getSeconds();
   let str = y + m + d + h + minute + second;
   return str + Math.random().toString(36).substr(2);
+}
+
+export function convertImgElemByCanvas(imgElem, myCanvas, uploadImgType) {
+  let { width, height } = imgElem;
+  myCanvas.width = width;
+  myCanvas.height = height;
+  let myCtx = myCanvas.getContext("2d");
+  myCtx.drawImage(imgElem, 0, 0, width, height);
+  let imgbase64 = myCanvas.toDataURL(uploadImgType, 1.0);
+  return imgbase64;
 }

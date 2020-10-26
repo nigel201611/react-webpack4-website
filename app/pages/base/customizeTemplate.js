@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 17:53:30
+ * @LastEditTime: 2020-10-26 15:58:15
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -25,38 +25,38 @@ const steps = [
   },
 ];
 
-const columns = [
-  {
-    title: "Fields",
-    dataIndex: "fields",
-    key: "fields",
-    align: "left",
-    width: 100,
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Result",
-    dataIndex: "result",
-    align: "left",
-    key: "result",
-    render: (text, record) => (
-      <p
-        id={"border_" + record.fields}
-        className={record.result ? "border_" + record.fields : ""}
-      >
-        <span>{text}</span>
-      </p>
-    ),
-  },
-  {
-    title: "Confidence",
-    dataIndex: "confidence",
-    align: "left",
-    key: "confidence",
-    width: 120,
-    render: (text) => (text ? <span>{text}%</span> : ""),
-  },
-];
+// const columns = [
+//   {
+//     title: "Fields",
+//     dataIndex: "fields",
+//     key: "fields",
+//     align: "left",
+//     width: 100,
+//     render: (text) => <a>{text}</a>,
+//   },
+//   {
+//     title: "Result",
+//     dataIndex: "result",
+//     align: "left",
+//     key: "result",
+//     render: (text, record) => (
+//       <p
+//         id={"border_" + record.fields}
+//         className={record.result ? "border_" + record.fields : ""}
+//       >
+//         <span>{text}</span>
+//       </p>
+//     ),
+//   },
+//   {
+//     title: "Confidence",
+//     dataIndex: "confidence",
+//     align: "left",
+//     key: "confidence",
+//     width: 120,
+//     render: (text) => (text ? <span>{text}%</span> : ""),
+//   },
+// ];
 class CustomizeTemp extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -80,12 +80,38 @@ class CustomizeTemp extends Component {
     this.fixSizeH = 2048;
     this.OriginImageUrl = ""; //保存用户上传未处理的图片数据
     this.calibrating = false; //控制图片校准标识，防止过频
+    this.templateData =
+      (this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.templateData) ||
+      null; //是否有从路由跳转传来参数
+    this.handleMyTemplateEdit(this.templateData);
   }
 
   componentWillUnmount() {
     URL.revokeObjectURL(this.OriginImageUrl);
     this.customizeZoneRef = null;
     this.customizeAreaRef = null;
+  }
+  // 从我的模板通过编辑按钮，跳转过来处理
+  handleMyTemplateEdit(templateData) {
+    if (templateData && JSON.stringify(templateData) != "{}") {
+      //调用自定区域组件方法根据数据绘制自定区域
+      let image = templateData.image;
+      let imageElem = new Image();
+      imageElem.onload = () => {
+        let bill_width = imageElem.width;
+        let bill_height = imageElem.height;
+        this.setState(
+          { current: 1, imageUrl: templateData.image, bill_width, bill_height },
+          () => {
+            let customizeArea = this.customizeAreaRef.current;
+            customizeArea.handleEditTemplate(templateData);
+          }
+        );
+      };
+      imageElem.src = image;
+    }
   }
 
   next() {

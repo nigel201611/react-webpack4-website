@@ -34,8 +34,15 @@ import zh_CN_googleOcr from "@locales/zh_CN/googleOcr";
 import ja_JP_googleOcr from "@locales/ja_JP/googleOcr";
 import en_US_googleOcr from "@locales/en_US/googleOcr";
 
+import zh_CN_myTemplate from "@locales/zh_CN/myTemplate";
+import ja_JP_myTemplate from "@locales/ja_JP/myTemplate";
+import en_US_myTemplate from "@locales/en_US/myTemplate";
+
 export default {
   zh_CN: {
+    myTemplate: {
+      ...zh_CN_myTemplate,
+    },
     googleOcr: {
       ...zh_CN_googleOcr,
     },
@@ -65,6 +72,9 @@ export default {
     },
   },
   ja_JP: {
+    myTemplate: {
+      ...ja_JP_myTemplate,
+    },
     googleOcr: {
       ...ja_JP_googleOcr,
     },
@@ -94,6 +104,9 @@ export default {
     },
   },
   en_US: {
+    myTemplate: {
+      ...en_US_myTemplate,
+    },
     googleOcr: {
       ...en_US_googleOcr,
     },

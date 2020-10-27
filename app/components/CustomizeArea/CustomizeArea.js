@@ -1,13 +1,14 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-10-26 18:26:47
+ * @LastEditTime: 2020-10-27 18:40:53
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
 import { notification } from "antd";
 import { uuid, convertImgElemByCanvas } from "@utils/common";
 import { saveTemplate } from "@apis/userTemplate";
+import { performOcr } from "@apis/performOcr";
 import { withTranslation } from "react-i18next";
 import "./CustomizeArea.less";
 class CustomizeArea extends Component {
@@ -49,7 +50,8 @@ class CustomizeArea extends Component {
     this.myCtx = this.myCanvas.getContext("2d");
     this.oBox = this.customizeZoneRef.current;
     this.editCustomTemplateData = null; //用户重新编辑时，保存一份模板数据
-
+    this.requestParams = []; //保存请求参数
+    this.resDetectDataArr = []; //保存识别后，经过处理的数据结果
     this.shouldDisableEditFunc(this.props);
     this.isRequesting = false;
   }
@@ -507,6 +509,169 @@ class CustomizeArea extends Component {
     this.editImageArr = [];
     this.customizeAreaData = [];
   };
+
+  /**
+   * @name: requestOcrEngine
+   * @msg: 根据用户自定区域调用引擎识别
+   * @param {}
+   * @return:
+   */
+  requestOcrEngine() {
+    this.requestParams = []; //请求参数
+    this.resDetectDataArr = []; //返回数据
+    if (this.customizeAreaData.length) {
+      for (let i = 0; i < this.customizeAreaData.length; i++) {
+        let item = this.customizeAreaData[i];
+        let itemImage = item.image;
+        let obj = {};
+        obj.image = itemImage.substring(itemImage.indexOf(",") + 1);
+        let nowTime = Date.now() + "";
+        obj.session_id = nowTime;
+        if (item.ocr_engine == "postcode") {
+          obj.options = {
+            scene: "postcode",
+          };
+        }
+        obj.type = "nri_" + item.ocr_engine;
+        obj.app_id = nowTime; //管理员分配,字符串,比userDataImage里的type多了nri前缀
+        this.requestParams.push(obj);
+      }
+      this.wrapOcrEngine();
+    }
+  }
+  /**
+   * @name: wrapOcrEngine
+   * @msg: ocr引擎请求统一封装
+   * @param {}
+   * @return:
+   */
+  wrapOcrEngine() {
+    this.props.setRequestStatus(true);
+    performOcr(
+      this.requestParams,
+      (res) => {
+        this.props.setRequestStatus(false);
+        let { errno, data } = res;
+        if (errno == 0) {
+          let resDataArr = data;
+          // 遍历处理相关数据
+          for (let i = 0; i < resDataArr.length; i++) {
+            let item = resDataArr[i];
+            let resObj = {};
+            if (item.type != "nri_T_general" && item.type != "nri_G_general") {
+              //针对腾讯优图通用返回不一样数据结构处理
+              resObj.type = item.type;
+              resObj.text = item.items;
+              resObj.code = item.items.length != 0 ? 0 : -1; //如果有数据，code=0
+              //计算平均准确度
+              let avg_confidence = 0.0;
+              if (item.items && item.items.length != 0) {
+                item.items.forEach((value) => {
+                  avg_confidence += Number(value.itemconf);
+                  value.itemconf = Number(value.itemconf).toFixed(2);
+                });
+                avg_confidence = (avg_confidence / item.items.length).toFixed(
+                  2
+                );
+              }
+              resObj.confidence = avg_confidence;
+            } else if (item.type == "nri_T_general") {
+              //处理腾讯通用印刷识别
+              resObj.type = item.type;
+              resObj.text = item.items;
+              resObj.code = item.items.length != 0 ? 0 : -1; //如果有数据，code=0
+              //计算平均准确度
+              let avg_confidence = 0.0;
+              item.items.forEach((value) => {
+                avg_confidence += Number(value.itemconf);
+                value.itemconf = Number(value.itemconf).toFixed(2);
+              });
+              if (item.items.length != 0) {
+                avg_confidence = (avg_confidence / item.items.length).toFixed(
+                  2
+                );
+              }
+              resObj.confidence = avg_confidence * 100;
+            }
+            // 处理谷歌通用印刷体识别
+            if (item.type == "nri_G_general") {
+              resObj.type = item.type;
+              resObj.text = this.handleGoogleOcrData(item);
+              // 平均值
+              let avg_confidence = 0.0;
+              resObj.text.forEach((value) => {
+                avg_confidence += Number(value.itemconf);
+                value.itemconf = Number(value.itemconf).toFixed(2);
+              });
+              if (resObj.text.length != 0) {
+                avg_confidence = (avg_confidence / resObj.text.length).toFixed(
+                  2
+                );
+              }
+              resObj.confidence = avg_confidence * 100;
+              //获取针对该页面的一个总的confidence
+              if (resObj.text.length != 0) {
+                resObj.code = 0; //有数据
+              } else if (resObj.text.length == 0) {
+                resObj.code = 1; //无数据
+              } else {
+                resObj.code = -1; //报错
+              }
+            }
+            resObj.imgUrl = this.customizeAreaData[i].image;
+            this.resDetectDataArr.push(resObj);
+          }
+          // 执行OCR识别得到的数据，通过props方法参数返回
+          console.log(this.resDetectDataArr);
+        }
+      },
+      () => {
+        this.props.setRequestStatus(false);
+        this.result = this.props.t("recognition-fail");
+      }
+    );
+  }
+  // 处理谷歌通用印刷体识别
+  handleGoogleOcrData(resData) {
+    let responses = resData.responses || [];
+    // 确认返回的responses有数据
+    const googleItems = [];
+    if (responses.length && JSON.stringify(responses[0]) != "{}") {
+      // 默认至于单个请求体，或者一个页面的请求
+      let firstPage_response = responses[0] || {};
+      let pagesArr = firstPage_response.fullTextAnnotation.pages;
+      // pages里保存了blocks，blocks保存了识别出来的每行文字信息或者段落信息，以及对应的每行坐标
+      //从blocks取出每行文字以及对应的confidence
+      let blocksArr = pagesArr[0].blocks; //由于发送的请求只有一个，所以默认取第一个blocks
+      //从blocksArr中获取该页面每行文字信息和坐标
+      for (let i = 0; i < blocksArr.length; i++) {
+        let block = blocksArr[i];
+        let obj = {
+          itemstring: "",
+          itemconf: "",
+        };
+        // confidence
+        if (block["property"] && block["property"]["detectedLanguages"]) {
+          // block["property"]["detectedLanguages"][0].confidence || 1; //没有默认给个1?
+          obj.itemconf =
+            block["property"]["detectedLanguages"][0].confidence || 0;
+        }
+        // 里面保存了每段或者每行的所有字符，将他们串联起来，保存到itemstring里
+        let paragraphs = block.paragraphs[0];
+        let words = paragraphs.words;
+        obj.itemstring = words.reduce((total, word) => {
+          let symbols = word.symbols;
+          symbols.forEach((element) => {
+            total += element.text;
+          });
+          return total;
+        }, "");
+        googleItems.push(obj);
+        //使用canvas绘制识别出的文本行在原图中矩形框
+      }
+    }
+    return googleItems;
+  }
 
   render() {
     let { imageUrl, bill_width, bill_height } = this.props;

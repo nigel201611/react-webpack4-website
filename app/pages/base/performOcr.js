@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-27 17:30:33
+ * @LastEditTime: 2020-10-27 18:38:33
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -74,6 +74,7 @@ class PerformOcr extends Component {
     this.state = {
       loading: false,
       isRequesting: false,
+      performOcrRequesting: false, //标识当前是否正在执行OCR识别
       imageUrl: "",
       current: 0, //当前步骤索引
       bill_width: "680", //運單默認寬度
@@ -319,10 +320,15 @@ class PerformOcr extends Component {
       saving: status,
     });
   };
+  setRequestStatus = (status) => {
+    this.setState({
+      performOcrRequesting: status,
+    });
+  };
 
   performOcr = () => {
     console.log("performOcr");
-    // this.customizeAreaRef.current.saveCustomize();
+    this.customizeAreaRef.current.requestOcrEngine();
   };
   /*
    * @name: showTemplate
@@ -386,6 +392,7 @@ class PerformOcr extends Component {
       modalListVisible,
       templateDataArr,
       templateIndex,
+      performOcrRequesting,
     } = this.state;
     const uploadButton = (
       <div>
@@ -416,6 +423,7 @@ class PerformOcr extends Component {
               bill_width={bill_width}
               uploadImgType={uploadImgType}
               setSaveStatus={this.setSaveStatus}
+              setRequestStatus={this.setRequestStatus}
               disableEditFunc={true}
               ref={this.customizeAreaRef}
             ></CustomizeArea>
@@ -472,7 +480,7 @@ class PerformOcr extends Component {
                   </Button>
                   <Button
                     type="primary"
-                    loading={saving}
+                    loading={performOcrRequesting}
                     onClick={this.performOcr}
                   >
                     {t("save-template")}

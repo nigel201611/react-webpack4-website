@@ -1,6 +1,4 @@
-const login = require('./login')
-const logout = require('./logout')
-const staff = require('./staff')
-const menu = require('./menu')
+const login = require("./login");
+const logout = require("./logout");
 
-module.exports = { login, logout, staff, menu }
+module.exports = { login, logout };

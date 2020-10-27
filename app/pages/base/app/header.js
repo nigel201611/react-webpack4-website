@@ -29,7 +29,8 @@ class Header extends Component {
     };
   }
   // 登出
-  handleLogout = () => {
+  handleLogout = (event) => {
+    event.preventDefault();
     const self = this;
     confirm({
       title: self.props.t("tip"),
@@ -46,14 +47,15 @@ class Header extends Component {
       },
     });
   };
-  handleLogin = () => {
+  handleLogin = (event) => {
+    event.preventDefault();
     hashHistory.push("/login");
   };
 
-  navigateToMyTemplate = (event) => {
-    event.preventDefault();
-    hashHistory.push("/myTemplate");
-  };
+  // navigateToMyTemplate = (event) => {
+  //   event.preventDefault();
+  //   hashHistory.push("/myTemplate");
+  // };
 
   handleChangeLang = ({ key }) => {
     this.props.i18n.changeLanguage(key);
@@ -74,7 +76,7 @@ class Header extends Component {
     let path = props.path;
     let documentElement = document.documentElement || document.body;
     documentElement.scrollTop = 0;
-    hashHistory.replace(path);
+    hashHistory.push(path);
     if (anchorName && path === "/home") {
       setTimeout(() => {
         // let documentElement = document.documentElement || document.body;
@@ -124,15 +126,15 @@ class Header extends Component {
     const userinfoMenu = (
       <Menu>
         <Menu.Item>
-          <a href="#" onClick={this.handleLogout}>
+          <a href="#" onClick={this.handleLogout.bind(this)}>
             {this.props.t("logOut")}
           </a>
         </Menu.Item>
-        <Menu.Item>
+        {/* <Menu.Item>
           <a href="#" onClick={this.navigateToMyTemplate.bind(this)}>
             {this.props.t("myTemplate")}
           </a>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     );
     const languageMenu = (
@@ -212,7 +214,7 @@ class Header extends Component {
                         </a>
                       </Dropdown>
                     ) : (
-                      <a onClick={this.handleLogin}>
+                      <a onClick={this.handleLogin.bind(this)}>
                         {this.props.t("login")}{" "}
                         <i className="iconfont icon-login"></i>
                       </a>

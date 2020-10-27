@@ -1,3 +1,8 @@
+/*
+ * @Author: nigel
+ * @Date: 2020-09-17 19:46:51
+ * @LastEditTime: 2020-10-26 18:18:44
+ */
 //i18n.js
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";

@@ -8,6 +8,7 @@ import tengxunOcr from "./tengxunOcr";
 import googleOcr from "./googleOcr";
 import myTemplate from "./myTemplate";
 import customizeTemplate from "./customizeTemplate";
+import performOcr from "./performOcr";
 
 export {
   developing,
@@ -20,4 +21,5 @@ export {
   googleOcr,
   customizeTemplate,
   myTemplate,
+  performOcr,
 };

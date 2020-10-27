@@ -1,0 +1,52 @@
+@import "./theme.less";
+.page-container {
+  width: 100%;
+  margin: 0 0 40px 0;
+  position: relative;
+  overflow: hidden;
+  .page-banner {
+    text-align: left;
+    height: 232px;
+    background: url("../images/banner/banner_ocr.jpg") no-repeat 0 center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    .page-title {
+      width: @page-content-width;
+      margin: 24px auto 0;
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px 0;
+        // color: #ffffff;
+      }
+      p {
+        font-size: 18px;
+        // color: #eeeeee;
+      }
+    }
+  }
+  .page-main {
+    width: @page-content-width;
+    margin: 0 auto;
+    padding: 40px 0 0 0;
+    .steps-content {
+      min-height: 200px;
+      text-align: center;
+      margin: 20px 0 0 0;
+    }
+    .imgElem {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      transform-origin: 50% 50%;
+      opacity: 0;
+    }
+    .steps-action {
+      margin-top: 24px;
+      text-align: right;
+    }
+  }
+}

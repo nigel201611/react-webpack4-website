@@ -16,25 +16,13 @@ import Footer from "./app/footer";
 export default class App extends Component {
   constructor(props, context) {
     super(props);
-    // this.state = {
-    //   currentNav: 1,
-    // };
-    // this.setCurrentNavCallback = this.setCurrentNavCallback.bind(this);
   }
-  // setCurrentNavCallback(index) {
-  //   this.setState({
-  //     currentNav: index,
-  //   });
-  // }
   render() {
-    const { location, children } = this.props;
     return (
       <ConfigProvider locale={enUS}>
         <div id="container">
           <Header></Header>
           <div className="main_wrap">{this.props.children}</div>
-          {/* <Main setCurrentNav={this.setCurrentNavCallback}></Main> */}
-
           <Footer></Footer>
         </div>
       </ConfigProvider>

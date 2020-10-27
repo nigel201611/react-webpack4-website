@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-10-26 15:48:13
+ * @LastEditTime: 2020-10-26 18:26:47
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
@@ -49,8 +49,8 @@ class CustomizeArea extends Component {
     this.myCtx = this.myCanvas.getContext("2d");
     this.oBox = this.customizeZoneRef.current;
     this.editCustomTemplateData = null; //用户重新编辑时，保存一份模板数据
-    this.addEditableFunc();
-    this.initEvent();
+
+    this.shouldDisableEditFunc(this.props);
     this.isRequesting = false;
   }
 
@@ -63,6 +63,20 @@ class CustomizeArea extends Component {
     this.customizeZoneRef = null;
     this.imgElemRef = null;
   }
+  /*
+   * @name: shouldDisableEditFunc
+   * @msg: 根据传递的属性是否启用绘制区域功能 disableEditFunc:true--禁用编辑区域功能
+   * @param {*}
+   * @return {*}
+   */
+  shouldDisableEditFunc = (props) => {
+    // 根据传递的属性是否启用绘制区域功能
+    const { disableEditFunc } = props;
+    if (!disableEditFunc) {
+      this.addEditableFunc();
+      this.initEvent();
+    }
+  };
   // 初始化一些事件
   initEvent = () => {
     let oBox = this.customizeZoneRef.current;

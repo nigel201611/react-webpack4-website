@@ -38,101 +38,62 @@ import zh_CN_myTemplate from "@locales/zh_CN/myTemplate";
 import ja_JP_myTemplate from "@locales/ja_JP/myTemplate";
 import en_US_myTemplate from "@locales/en_US/myTemplate";
 
+import zh_CN_notfound from "@locales/zh_CN/notfound";
+import ja_JP_notfound from "@locales/ja_JP/notfound";
+import en_US_notfound from "@locales/en_US/notfound";
+
+import zh_CN_performOcr from "@locales/zh_CN/performOcr";
+import ja_JP_performOcr from "@locales/ja_JP/performOcr";
+import en_US_performOcr from "@locales/en_US/performOcr";
+
+import zh_CN_modalList from "@locales/zh_CN/modalList";
+import ja_JP_modalList from "@locales/ja_JP/modalList";
+import en_US_modalList from "@locales/en_US/modalList";
+
 export default {
   zh_CN: {
-    myTemplate: {
-      ...zh_CN_myTemplate,
-    },
-    googleOcr: {
-      ...zh_CN_googleOcr,
-    },
-    home: {
-      ...zh_CN_home, //主页中文信息
-    },
-    header: {
-      ...zh_CN_header,
-    },
-    login: {
-      ...zh_CN_login,
-    },
-    customizeArea: {
-      ...zh_CN_customizeArea,
-    },
-    modalForm: {
-      ...zh_CN_modalForm,
-    },
-    customizeTemp: {
-      ...zh_CN_customizeTemp,
-    },
-    expressOcr: {
-      ...zh_CN_expressOcr,
-    },
-    tengxunOcr: {
-      ...zh_CN_tengxunOcr,
-    },
+    modalList: { ...zh_CN_modalList },
+    performOcr: { ...zh_CN_performOcr },
+    notfound: { ...zh_CN_notfound },
+    myTemplate: { ...zh_CN_myTemplate },
+    googleOcr: { ...zh_CN_googleOcr },
+    home: { ...zh_CN_home },
+    header: { ...zh_CN_header },
+    login: { ...zh_CN_login },
+    customizeArea: { ...zh_CN_customizeArea },
+    modalForm: { ...zh_CN_modalForm },
+    customizeTemp: { ...zh_CN_customizeTemp },
+    expressOcr: { ...zh_CN_expressOcr },
+    tengxunOcr: { ...zh_CN_tengxunOcr },
   },
   ja_JP: {
-    myTemplate: {
-      ...ja_JP_myTemplate,
-    },
-    googleOcr: {
-      ...ja_JP_googleOcr,
-    },
-    home: {
-      ...ja_JP_home,
-    },
-    header: {
-      ...ja_JP_header,
-    },
-    login: {
-      ...ja_JP_login,
-    },
-    customizeArea: {
-      ...ja_JP_customizeArea,
-    },
-    modalForm: {
-      ...ja_JP_modalForm,
-    },
-    customizeTemp: {
-      ...ja_JP_customizeTemp,
-    },
-    expressOcr: {
-      ...ja_JP_expressOcr,
-    },
-    tengxunOcr: {
-      ...ja_JP_tengxunOcr,
-    },
+    modalList: { ...ja_JP_modalList },
+    performOcr: { ...ja_JP_performOcr },
+    notfound: { ...ja_JP_notfound },
+    myTemplate: { ...ja_JP_myTemplate },
+    googleOcr: { ...ja_JP_googleOcr },
+    home: { ...ja_JP_home },
+    header: { ...ja_JP_header },
+    login: { ...ja_JP_login },
+    customizeArea: { ...ja_JP_customizeArea },
+    modalForm: { ...ja_JP_modalForm },
+    customizeTemp: { ...ja_JP_customizeTemp },
+    expressOcr: { ...ja_JP_expressOcr },
+    tengxunOcr: { ...ja_JP_tengxunOcr },
   },
   en_US: {
-    myTemplate: {
-      ...en_US_myTemplate,
-    },
-    googleOcr: {
-      ...en_US_googleOcr,
-    },
-    home: {
-      ...en_US_home,
-    },
-    header: {
-      ...en_US_header,
-    },
-    login: {
-      ...en_US_login,
-    },
-    customizeArea: {
-      ...en_US_customizeArea,
-    },
-    modalForm: {
-      ...en_US_modalForm,
-    },
-    customizeTemp: {
-      ...en_US_customizeTemp,
-    },
-    expressOcr: {
-      ...en_US_expressOcr,
-    },
-    tengxunOcr: {
-      ...en_US_tengxunOcr,
-    },
+    modalList: { ...en_US_modalList },
+    performOcr: { ...en_US_performOcr },
+    notfound: { ...en_US_notfound },
+    myTemplate: { ...en_US_myTemplate },
+    googleOcr: { ...en_US_googleOcr },
+    home: { ...en_US_home },
+    header: { ...en_US_header },
+    login: { ...en_US_login },
+    customizeArea: { ...en_US_customizeArea },
+    modalForm: { ...en_US_modalForm },
+    customizeTemp: { ...en_US_customizeTemp },
+    expressOcr: { ...en_US_expressOcr },
+    tengxunOcr: { ...en_US_tengxunOcr },
   },
 };

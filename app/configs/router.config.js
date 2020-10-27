@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 17:46:43
+ * @LastEditTime: 2020-10-26 17:32:41
  */
 import React from "react";
 import {
@@ -23,6 +23,7 @@ export default () => (
       <Route path="/G_GeneralOcr" component={base.googleOcr} />
       <Route path="/customizeTemp" component={base.customizeTemplate} />
       <Route path="/myTemplate" component={base.myTemplate} />
+      <Route path="/performOcr" component={base.performOcr} />
       <Route path="/developing" component={base.developing} />
     </Route>
 

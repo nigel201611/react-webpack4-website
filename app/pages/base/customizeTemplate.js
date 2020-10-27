@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-26 15:58:15
+ * @LastEditTime: 2020-10-27 10:59:13
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -25,38 +25,6 @@ const steps = [
   },
 ];
 
-// const columns = [
-//   {
-//     title: "Fields",
-//     dataIndex: "fields",
-//     key: "fields",
-//     align: "left",
-//     width: 100,
-//     render: (text) => <a>{text}</a>,
-//   },
-//   {
-//     title: "Result",
-//     dataIndex: "result",
-//     align: "left",
-//     key: "result",
-//     render: (text, record) => (
-//       <p
-//         id={"border_" + record.fields}
-//         className={record.result ? "border_" + record.fields : ""}
-//       >
-//         <span>{text}</span>
-//       </p>
-//     ),
-//   },
-//   {
-//     title: "Confidence",
-//     dataIndex: "confidence",
-//     align: "left",
-//     key: "confidence",
-//     width: 120,
-//     render: (text) => (text ? <span>{text}%</span> : ""),
-//   },
-// ];
 class CustomizeTemp extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -112,11 +80,6 @@ class CustomizeTemp extends Component {
       };
       imageElem.src = image;
     }
-  }
-
-  next() {
-    const current = this.state.current + 1;
-    this.setState({ current });
   }
 
   prev = () => {
@@ -212,50 +175,6 @@ class CustomizeTemp extends Component {
       message.error(`${info.file.name} file upload failed.`);
     }
   };
-
-  handleTableData(data) {
-    let tableData = [];
-    if (data.data && data.data.code == 0) {
-      let ocrResponse = data.data.data;
-      if (!ocrResponse.address && !ocrResponse.name && !ocrResponse.postcode) {
-        tableData = [];
-      } else {
-        tableData = [
-          {
-            key: "1",
-            fields: "postcode",
-            result: ocrResponse.postcode && ocrResponse.postcode["text"],
-            confidence: ocrResponse.postcode && ocrResponse.postcode["score"],
-          },
-          {
-            key: "2",
-            fields: "address",
-            result: ocrResponse.address && ocrResponse.address["text"],
-            confidence: ocrResponse.address && ocrResponse.address["score"],
-          },
-          {
-            key: "3",
-            fields: "name",
-            result: ocrResponse.name && ocrResponse.name["text"],
-            confidence: ocrResponse.name && ocrResponse.name["score"],
-          },
-        ];
-      }
-    } else {
-      that.tableData = [
-        {
-          key: "1",
-          fields: "error code",
-          result: "something error ",
-          confidence: 0,
-        },
-      ];
-    }
-
-    this.setState({
-      data: Object.assign([], tableData),
-    });
-  }
   handleClearArea = () => {
     //清除盒子下新增的子节点
     this.customizeAreaRef.current.clearArea();

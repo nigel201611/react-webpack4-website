@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-27 18:38:33
+ * @LastEditTime: 2020-10-28 15:55:44
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -12,6 +12,7 @@ import "@styles/performOcr.less";
 import UploadComp from "@components/UploadComp/UploadComp";
 import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
 import ModalList from "@components/ModalList/ModalList";
+import TableList from "@components/TableList/TableList";
 
 const { Step } = Steps;
 const steps = [
@@ -33,38 +34,6 @@ const steps = [
   },
 ];
 
-// const columns = [
-//   {
-//     title: "Fields",
-//     dataIndex: "fields",
-//     key: "fields",
-//     align: "left",
-//     width: 100,
-//     render: (text) => <a>{text}</a>,
-//   },
-//   {
-//     title: "Result",
-//     dataIndex: "result",
-//     align: "left",
-//     key: "result",
-//     render: (text, record) => (
-//       <p
-//         id={"border_" + record.fields}
-//         className={record.result ? "border_" + record.fields : ""}
-//       >
-//         <span>{text}</span>
-//       </p>
-//     ),
-//   },
-//   {
-//     title: "Confidence",
-//     dataIndex: "confidence",
-//     align: "left",
-//     key: "confidence",
-//     width: 120,
-//     render: (text) => (text ? <span>{text}%</span> : ""),
-//   },
-// ];
 class PerformOcr extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -80,10 +49,10 @@ class PerformOcr extends Component {
       bill_width: "680", //運單默認寬度
       bill_height: "400", //運單默認高度
       uploadImgType: "image/jpeg",
-      saving: false,
       templateDataArr: [], //模板对象数据
       modalListVisible: false, //控制modalList显示
       templateIndex: 0, //用户选择的模板索引，默认第一个
+      responseData: [], //保存执行ocr结果数据
     };
   }
 
@@ -105,7 +74,13 @@ class PerformOcr extends Component {
    */
   prev = () => {
     const current = this.state.current - 1;
-    this.setState({ current });
+    const { templateDataArr } = this.state;
+    this.setState({ current }, () => {
+      if (current === 1 && templateDataArr.length) {
+        this.handleClearArea();
+        this.hanldeDrawCustomArea(templateDataArr[0].blockItem);
+      }
+    });
   };
 
   beforeUpload = (file) => {
@@ -236,10 +211,6 @@ class PerformOcr extends Component {
                 // 绘制区域前，先清理之前的
                 this.handleClearArea();
                 this.hanldeDrawCustomArea(templateDataArr[0].blockItem);
-                // if (templateDataArr && templateDataArr.length === 1) {
-                //   this.handleClearArea();
-                //   this.hanldeDrawCustomArea(templateDataArr[0].blockItem);
-                // }
               }
             );
           } else {
@@ -264,49 +235,6 @@ class PerformOcr extends Component {
     );
   };
 
-  handleTableData(data) {
-    let tableData = [];
-    if (data.data && data.data.code == 0) {
-      let ocrResponse = data.data.data;
-      if (!ocrResponse.address && !ocrResponse.name && !ocrResponse.postcode) {
-        tableData = [];
-      } else {
-        tableData = [
-          {
-            key: "1",
-            fields: "postcode",
-            result: ocrResponse.postcode && ocrResponse.postcode["text"],
-            confidence: ocrResponse.postcode && ocrResponse.postcode["score"],
-          },
-          {
-            key: "2",
-            fields: "address",
-            result: ocrResponse.address && ocrResponse.address["text"],
-            confidence: ocrResponse.address && ocrResponse.address["score"],
-          },
-          {
-            key: "3",
-            fields: "name",
-            result: ocrResponse.name && ocrResponse.name["text"],
-            confidence: ocrResponse.name && ocrResponse.name["score"],
-          },
-        ];
-      }
-    } else {
-      that.tableData = [
-        {
-          key: "1",
-          fields: "error code",
-          result: "something error ",
-          confidence: 0,
-        },
-      ];
-    }
-
-    this.setState({
-      data: Object.assign([], tableData),
-    });
-  }
   handleClearArea = () => {
     //清除盒子下新增的子节点
     this.customizeAreaRef.current.clearArea();
@@ -315,19 +243,31 @@ class PerformOcr extends Component {
     this.customizeAreaRef.current.drawCustomizeArea(blockItems);
   };
 
-  setSaveStatus = (status) => {
-    this.setState({
-      saving: status,
-    });
-  };
   setRequestStatus = (status) => {
     this.setState({
       performOcrRequesting: status,
     });
   };
+  /*
+   * @name: setResponseData
+   * @msg: 获取识别结果数据
+   * @param {*}
+   * @return {*}
+   */
+  setResponseData = (responseData) => {
+    // responseData = responseData.map((item) => {
+    //   item.text = item.text.map((value, index) => {
+    //     value.id = index;
+    //   });
+    //   return item;
+    // });
+    this.setState({
+      responseData,
+      current: 2,
+    });
+  };
 
   performOcr = () => {
-    console.log("performOcr");
     this.customizeAreaRef.current.requestOcrEngine();
   };
   /*
@@ -337,7 +277,6 @@ class PerformOcr extends Component {
    * @return {*}
    */
   showTemplate = () => {
-    console.log("showTemplate");
     this.setState({
       modalListVisible: true,
     });
@@ -387,12 +326,12 @@ class PerformOcr extends Component {
       bill_height,
       loading,
       uploadImgType,
-      saving,
       isRequesting,
       modalListVisible,
       templateDataArr,
       templateIndex,
       performOcrRequesting,
+      responseData,
     } = this.state;
     const uploadButton = (
       <div>
@@ -422,8 +361,8 @@ class PerformOcr extends Component {
               bill_height={bill_height}
               bill_width={bill_width}
               uploadImgType={uploadImgType}
-              setSaveStatus={this.setSaveStatus}
               setRequestStatus={this.setRequestStatus}
+              setResponseData={this.setResponseData}
               disableEditFunc={true}
               ref={this.customizeAreaRef}
             ></CustomizeArea>
@@ -431,7 +370,9 @@ class PerformOcr extends Component {
         );
         break;
       case 2:
-        steps[current].content = "显示识别结果";
+        steps[current].content = (
+          <TableList tableData={responseData}></TableList>
+        );
         break;
     }
     return (
@@ -441,6 +382,34 @@ class PerformOcr extends Component {
             <div className="page-title">
               <h1>{t("banner-title")}</h1>
               <p>{t("banner-desc")}</p>
+              <span className="steps-action">
+                {current === 1 && (
+                  <>
+                    <Button onClick={this.prev}>{t("back-upload")}</Button>
+                    <Button
+                      type="primary"
+                      disabled={!templateDataArr.length}
+                      onClick={this.showTemplate}
+                    >
+                      {t("show-template")}
+                    </Button>
+                    <Button
+                      type="primary"
+                      loading={performOcrRequesting}
+                      onClick={this.performOcr}
+                    >
+                      {t("save-template")}
+                    </Button>
+                  </>
+                )}
+                {current === 2 && (
+                  <>
+                    <Button type="primary" onClick={this.prev}>
+                      {t("stepback")}
+                    </Button>
+                  </>
+                )}
+              </span>
             </div>
           </div>
           <div className="page-main">
@@ -465,29 +434,6 @@ class PerformOcr extends Component {
               ))}
             </Steps>
             <div className="steps-content">{steps[current].content}</div>
-            <div className="steps-action">
-              {current === 1 && (
-                <>
-                  <Button type="primary" onClick={this.prev}>
-                    {t("back-upload")}
-                  </Button>
-                  <Button
-                    type="primary"
-                    disabled={!templateDataArr.length}
-                    onClick={this.showTemplate}
-                  >
-                    {t("show-template")}
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={performOcrRequesting}
-                    onClick={this.performOcr}
-                  >
-                    {t("save-template")}
-                  </Button>
-                </>
-              )}
-            </div>
           </div>
         </section>
       </div>

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Cards from "@components/Card/Card";
-import { connect } from "react-redux";
 import { Row, Col } from "antd";
 import { withTranslation } from "react-i18next";
 import "@styles/home.less";

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-26 16:32:56
+ * @LastEditTime: 2020-10-28 10:14:18
  */
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
@@ -131,7 +131,7 @@ class MyTemplate extends Component {
           <List
             itemLayout="vertical"
             size="large"
-            className="templateLIst"
+            className="templateList"
             pagination={{
               onChange: (page) => {
                 console.log(page);

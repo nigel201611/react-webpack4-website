@@ -5,4 +5,5 @@ export default {
   temp_name: "模板名称:",
   ocr_engine: "OCR引擎",
   area_name: "区域标识",
+  choice: "选择",
 };

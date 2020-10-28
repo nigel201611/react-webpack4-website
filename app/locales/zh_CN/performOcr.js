@@ -10,4 +10,5 @@ export default {
   "select-template": "选择模板",
   "selectTemp-desc": "如果当前只有一个模板，默认使用该模板",
   "show-template": "查看模板",
+  stepback: "上一步",
 };

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { ConfigProvider } from "antd";
 import { connect } from "react-redux";
-// ...省略若干行
 // import zhCN from 'antd/es/locale/zh_CN';
 // import jp from 'antd/es/locale/ja_JP';
 import enUS from "antd/es/locale/en_US";

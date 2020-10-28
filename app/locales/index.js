@@ -50,8 +50,13 @@ import zh_CN_modalList from "@locales/zh_CN/modalList";
 import ja_JP_modalList from "@locales/ja_JP/modalList";
 import en_US_modalList from "@locales/en_US/modalList";
 
+import zh_CN_tableList from "@locales/zh_CN/tableList";
+import ja_JP_tableList from "@locales/ja_JP/tableList";
+import en_US_tableList from "@locales/en_US/tableList";
+
 export default {
   zh_CN: {
+    tableList: { ...zh_CN_tableList },
     modalList: { ...zh_CN_modalList },
     performOcr: { ...zh_CN_performOcr },
     notfound: { ...zh_CN_notfound },
@@ -67,6 +72,7 @@ export default {
     tengxunOcr: { ...zh_CN_tengxunOcr },
   },
   ja_JP: {
+    tableList: { ...ja_JP_tableList },
     modalList: { ...ja_JP_modalList },
     performOcr: { ...ja_JP_performOcr },
     notfound: { ...ja_JP_notfound },
@@ -82,6 +88,7 @@ export default {
     tengxunOcr: { ...ja_JP_tengxunOcr },
   },
   en_US: {
+    tableList: { ...en_US_tableList },
     modalList: { ...en_US_modalList },
     performOcr: { ...en_US_performOcr },
     notfound: { ...en_US_notfound },

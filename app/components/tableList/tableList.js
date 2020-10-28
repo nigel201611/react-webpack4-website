@@ -1,72 +1,69 @@
 /*
- 如果要使用不回行的table，那么就要设置table的className为nowrap，并且不能对td设置特定的宽度，且scroll={{ y: true, x: true }}的X值必须为true
-*/
+ * @Author: nigel
+ * @Date: 2020-09-14 10:59:58
+ * @LastEditTime: 2020-10-28 16:16:01
+ */
 
-import React, { Component } from 'react'
-import { Table, Pagination } from 'antd'
+import React, { Component } from "react";
+import { withTranslation } from "react-i18next";
+import { Table } from "antd";
+import "./TableList.less";
+const columns = [
+  {
+    title: "Index",
+    align: "left",
+    dataIndex: "index",
+    key: "index",
+    width: 100,
+    render: (text) => <span>{text}</span>,
+  },
+  {
+    title: "Result",
+    dataIndex: "itemstring",
+    align: "left",
+    key: "itemstring",
+    render: (text) => (text ? <span>{text}</span> : ""),
+  },
+  {
+    title: "Confidence",
+    dataIndex: "itemconf",
+    align: "left",
+    key: "itemconf",
+    width: 120,
+    render: (text) => (text ? <span>{text}%</span> : ""),
+  },
+];
 
-export default class TableList extends Component {
-  componentDidMount() {
-    this.tableWidthAdaptive()
-  }
+// 声明组件  并对外输出
+function TableList(props) {
+  const { tableData, t } = props;
+  console.log(tableData);
+  return (
+    <div className="result_wrap">
+      {tableData.map((item, index) => {
+        return (
+          <div key={index} className="text item">
+            <p className="item-desc">
+              {t(item.type)}{" "}
+              <img
+                className={"block_bg" + " border_" + item.type}
+                src={item.imgUrl}
+              />
+            </p>
 
-  componentWillUnmount() {
-    clearInterval(this.t)
-  }
-
-  // 动态计算td的宽度
-  tableWidthAdaptive = () => {
-    if (this.props.className && this.props.className.indexOf('nowrap') > -1) {
-      this.t = setInterval(() => { // 通过定时器循环的方式，看看真实节点是否加载到dom中了
-        const tds = document.querySelector('.ant-table-row') && document.querySelector('.ant-table-row').querySelectorAll('td')
-        const ths = document.querySelectorAll('.ant-table-header th')
-        if (tds && tds.length) {
-          clearInterval(this.t)
-          for (let i = 0; i < tds.length; i += 1) {
-            const tdw = tds[i].offsetWidth
-            const thw = ths[i].offsetWidth
-            const w = (tdw > thw) ? tdw : thw
-            tds[i].style.minWidth = `${w}px`
-            ths[i].style.minWidth = `${w}px`
-          }
-        }
-      }, 100)
-    }
-  }
-
-  render() {
-    const {
-      currentPage,
-      pageSize,
-      totalCount,
-      onShowSizeChange,
-      onChange,
-      columns,
-    } = this.props
-    const hasMultiHead = columns.filter(one => !!one.children).length > 0
-    return (
-      <div className={`table-content ${hasMultiHead ? 'clear-overlap-border' : ''}`}>
-        <Table
-          pagination={false}
-          bordered
-          rowKey="id"
-          // rowClassName={this.props.rowClassName}
-          {...this.props}
-        />
-        { currentPage ?
-          <Pagination
-            total={totalCount || 0}
-            showSizeChanger // 是否可以改变pageSize
-            showQuickJumper={false}// 是否可以快速跳转某一页
-            onShowSizeChange={onShowSizeChange}
-            onChange={onChange}
-            showTotal={_totalCount => `共 ${_totalCount} 条`}
-            current={currentPage || 1}
-            pageSize={pageSize || 10}
-            {...this.props}
-          /> : null
-        }
-      </div>
-    )
-  }
+            {item.code === 0 && (
+              <Table
+                rowKey={(record) => record.index}
+                dataSource={item.text}
+                columns={columns}
+                pagination={false}
+              />
+            )}
+            {item.code === -1 && t("reuslt-error")}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
+export default withTranslation("tableList")(TableList);

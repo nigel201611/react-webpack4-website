@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-24 13:48:01
+ * @LastEditTime: 2020-10-28 11:14:13
  */
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -12,7 +12,7 @@ import { regExpConfig } from "@reg";
 import { login } from "@actions/common";
 // import md5 from "md5";
 import QueuiAnim from "rc-queue-anim";
-import Ship from "@components/ship/ship";
+import Ship from "@components/Ship/Ship";
 import "@styles/login.less";
 
 const FormItem = Form.Item;

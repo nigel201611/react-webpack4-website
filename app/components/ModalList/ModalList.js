@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-10-27 14:54:04
- * @LastEditTime: 2020-10-27 17:26:40
+ * @LastEditTime: 2020-10-28 13:57:00
  */
 import React, { Component } from "react";
 import { Modal, Checkbox } from "antd";
@@ -30,6 +30,7 @@ class ModalList extends Component {
         mask={true}
         maskClosable={false}
         footer={null}
+        width={600}
       >
         <ul className="templateList">
           {tableData.map((item, index) => {
@@ -48,7 +49,7 @@ class ModalList extends Component {
                   {item.blockItem.map((block, index2) => {
                     return (
                       <p key={block.block_id}>
-                        {"(" + (index2 + 1) + ")"}
+                        {"(" + (index2 + 1) + ")  "}
                         <span>
                           {t("ocr_engine")}:{block.ocr_engine}
                         </span>
@@ -77,7 +78,7 @@ class ModalList extends Component {
                   data-index={index}
                   className="checkbox"
                 >
-                  选择
+                  {t("choice")}
                 </Checkbox>
               </li>
             );

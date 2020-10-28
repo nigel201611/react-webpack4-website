@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-10-27 18:40:53
+ * @LastEditTime: 2020-10-28 15:28:35
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
@@ -509,7 +509,6 @@ class CustomizeArea extends Component {
     this.editImageArr = [];
     this.customizeAreaData = [];
   };
-
   /**
    * @name: requestOcrEngine
    * @msg: 根据用户自定区域调用引擎识别
@@ -518,7 +517,6 @@ class CustomizeArea extends Component {
    */
   requestOcrEngine() {
     this.requestParams = []; //请求参数
-    this.resDetectDataArr = []; //返回数据
     if (this.customizeAreaData.length) {
       for (let i = 0; i < this.customizeAreaData.length; i++) {
         let item = this.customizeAreaData[i];
@@ -537,6 +535,12 @@ class CustomizeArea extends Component {
         this.requestParams.push(obj);
       }
       this.wrapOcrEngine();
+    } else {
+      //给出提示
+      notification["warning"]({
+        message: this.props.t("tip-text"),
+        description: this.props.t("no-cur-area"),
+      });
     }
   }
   /**
@@ -547,6 +551,7 @@ class CustomizeArea extends Component {
    */
   wrapOcrEngine() {
     this.props.setRequestStatus(true);
+
     performOcr(
       this.requestParams,
       (res) => {
@@ -554,7 +559,24 @@ class CustomizeArea extends Component {
         let { errno, data } = res;
         if (errno == 0) {
           let resDataArr = data;
-          // 遍历处理相关数据
+          const resDetectDataArr = []; //返回数据
+          //处理相关数据
+          function handleItemValue(items, noNeedMulti) {
+            //计算平均准确度
+            let avg_confidence = 0.0;
+            if (items && items.length != 0) {
+              items.forEach((value, index) => {
+                value.index = index;
+                value.itemconf = noNeedMulti
+                  ? value.itemconf.toFixed(2)
+                  : (value.itemconf * 100).toFixed(2);
+                avg_confidence += value.itemconf;
+              });
+              avg_confidence = (avg_confidence / items.length).toFixed(2);
+            }
+            return avg_confidence;
+          }
+
           for (let i = 0; i < resDataArr.length; i++) {
             let item = resDataArr[i];
             let resObj = {};
@@ -562,53 +584,23 @@ class CustomizeArea extends Component {
               //针对腾讯优图通用返回不一样数据结构处理
               resObj.type = item.type;
               resObj.text = item.items;
-              resObj.code = item.items.length != 0 ? 0 : -1; //如果有数据，code=0
+              resObj.code = item.items.length > 0 ? 0 : -1; //如果有数据，code=0
               //计算平均准确度
-              let avg_confidence = 0.0;
-              if (item.items && item.items.length != 0) {
-                item.items.forEach((value) => {
-                  avg_confidence += Number(value.itemconf);
-                  value.itemconf = Number(value.itemconf).toFixed(2);
-                });
-                avg_confidence = (avg_confidence / item.items.length).toFixed(
-                  2
-                );
-              }
-              resObj.confidence = avg_confidence;
+              resObj.confidence = handleItemValue(item.items, true);
             } else if (item.type == "nri_T_general") {
               //处理腾讯通用印刷识别
               resObj.type = item.type;
               resObj.text = item.items;
               resObj.code = item.items.length != 0 ? 0 : -1; //如果有数据，code=0
               //计算平均准确度
-              let avg_confidence = 0.0;
-              item.items.forEach((value) => {
-                avg_confidence += Number(value.itemconf);
-                value.itemconf = Number(value.itemconf).toFixed(2);
-              });
-              if (item.items.length != 0) {
-                avg_confidence = (avg_confidence / item.items.length).toFixed(
-                  2
-                );
-              }
-              resObj.confidence = avg_confidence * 100;
+              resObj.confidence = handleItemValue(item.items);
             }
             // 处理谷歌通用印刷体识别
             if (item.type == "nri_G_general") {
               resObj.type = item.type;
               resObj.text = this.handleGoogleOcrData(item);
               // 平均值
-              let avg_confidence = 0.0;
-              resObj.text.forEach((value) => {
-                avg_confidence += Number(value.itemconf);
-                value.itemconf = Number(value.itemconf).toFixed(2);
-              });
-              if (resObj.text.length != 0) {
-                avg_confidence = (avg_confidence / resObj.text.length).toFixed(
-                  2
-                );
-              }
-              resObj.confidence = avg_confidence * 100;
+              resObj.confidence = handleItemValue(item.items);
               //获取针对该页面的一个总的confidence
               if (resObj.text.length != 0) {
                 resObj.code = 0; //有数据
@@ -619,15 +611,15 @@ class CustomizeArea extends Component {
               }
             }
             resObj.imgUrl = this.customizeAreaData[i].image;
-            this.resDetectDataArr.push(resObj);
+            resDetectDataArr.push(resObj);
           }
           // 执行OCR识别得到的数据，通过props方法参数返回
-          console.log(this.resDetectDataArr);
+          this.props.setResponseData(resDetectDataArr);
         }
       },
       () => {
         this.props.setRequestStatus(false);
-        this.result = this.props.t("recognition-fail");
+        // this.result = this.props.t("recognition-fail");
       }
     );
   }

@@ -5,4 +5,5 @@ export default {
   temp_name: "テンプレート名:",
   ocr_engine: "OCRエンジン",
   area_name: "エリアの識別",
+  choice: "選択",
 };

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-18 11:09:17
+ * @LastEditTime: 2020-10-29 17:58:19
  */
 
 const path = require("path");
@@ -21,10 +21,12 @@ const webpackConfigBase = {
   },
   output: {
     path: resolve("../dist"),
-    filename: devMode ? "js/[name].[hash].js" : "js/[name].[contenthash].js",
+    filename: devMode
+      ? "static/js/[name].[hash].js"
+      : "static/js/[name].[contenthash].js",
     chunkFilename: devMode
-      ? "chunks/[name].[hash:4].js"
-      : "chunks/[name].[contenthash].js",
+      ? "static/chunks/[name].[hash:4].js"
+      : "static/chunks/[name].[contenthash].js",
     publicPath: "/",
   },
   resolve: {
@@ -149,7 +151,7 @@ const webpackConfigBase = {
         loader: "url-loader",
         options: {
           limit: 8192,
-          // name: '[name].[hash:4].[ext]',
+          name: "static/img/[name].[ext]",
           // outputPath: '/img'
         },
       },
@@ -158,7 +160,7 @@ const webpackConfigBase = {
         loader: "url-loader",
         options: {
           limit: 8192,
-          name: "font/[name].[hash:4].[ext]",
+          name: "static/font/[name].[hash:4].[ext]",
         },
       },
     ],
@@ -169,10 +171,12 @@ const webpackConfigBase = {
     // new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|fr|hu/),
 
     new MiniCssExtractPlugin({
-      filename: devMode ? "css/style.css" : "css/style.[contenthash].css",
+      filename: devMode
+        ? "static/css/style.css"
+        : "static/css/style.[contenthash].css",
       chunkFilename: devMode
-        ? "css/style.[id].css"
-        : "css/style.[contenthash].[id].css",
+        ? "static/css/style.[id].css"
+        : "static/css/style.[contenthash].[id].css",
     }),
 
     new HappyPack({

@@ -9,6 +9,7 @@ import "@styles/base.less";
 import Header from "./app/header";
 // import Main from "./home";
 import Footer from "./app/footer";
+import ErrorBoundary from "./ErrorBoundary";
 @connect((state) => ({
   currentNav: state.config.currentNav,
 }))
@@ -19,11 +20,13 @@ export default class App extends Component {
   render() {
     return (
       <ConfigProvider locale={enUS}>
-        <div id="container">
-          <Header></Header>
-          <div className="main_wrap">{this.props.children}</div>
-          <Footer></Footer>
-        </div>
+        <ErrorBoundary>
+          <div id="container">
+            <Header></Header>
+            <div className="main_wrap">{this.props.children}</div>
+            <Footer></Footer>
+          </div>
+        </ErrorBoundary>
       </ConfigProvider>
     );
   }

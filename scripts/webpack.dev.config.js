@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-22 14:13:12
+ * @LastEditTime: 2020-10-29 16:32:38
  */
 
 const path = require("path");
@@ -53,8 +53,19 @@ const webpackConfigDev = {
     // 将打包后的资源注入到html文件内
     new HtmlWebpackPlugin({
       template: resolve("../app/index.html"),
-      dlls: [],
+      dlls: [
+        // "./resource/dll/vendor.dll.js",
+        //  "./resource/dll/redux.dll.js"
+      ],
     }),
+    // new webpack.DllReferencePlugin({
+    //   context: __dirname,
+    //   manifest: require("../app/resource/dll/vendor.manifest.json"),
+    // }),
+    // new webpack.DllReferencePlugin({
+    //   context: __dirname,
+    //   manifest: require("../app/resource/dll/redux.manifest.json"),
+    // }),
     new CleanWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     // new ReactRefreshWebpackPlugin(),

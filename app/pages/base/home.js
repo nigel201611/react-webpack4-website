@@ -20,14 +20,18 @@ class Home extends Component {
   }
 
   componentWillUnmount() {
-    window.onscroll = null;
+    // window.onscroll = null;
+    window.removeEventListener("scroll", () => this.handleScroll());
   }
 
   init() {
-    window.onscroll = () => debounce(this.handleScroll(), 600);
+    // window.onscroll = () => debounce(this.handleScroll(), 600);
+    window.addEventListener("scroll", () => this.handleScroll());
+    // window.onscroll = () => this.handleScroll();
   }
 
   handleScroll() {
+    console.log("scroll");
     let ocrTitleElem = this.ocrTitleRef.current;
     let aiTitleElem = this.aiTitleRef.current;
     let iotTitleElem = this.iotTitleRef.current;

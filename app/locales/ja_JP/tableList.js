@@ -6,4 +6,6 @@ export default {
   nri_name: "文字（短文・単行）",
   nri_T_general: "T-汎用OCR",
   nri_G_general: "G-汎用OCR",
+  result: "識別結果",
+  confidence: "信頼度",
 };

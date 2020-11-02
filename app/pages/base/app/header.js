@@ -76,7 +76,12 @@ class Header extends Component {
     let path = props.path;
     let documentElement = document.documentElement || document.body;
     documentElement.scrollTop = 0;
-    hashHistory.push(path);
+    // this.currentPath === "" && path === "/home" 第一次進入home页，由于home会有几个菜单对应/home，重复push '/home'会报错
+    if (this.currentPath !== path) {
+      this.currentPath = path;
+      hashHistory.push(path);
+    }
+
     if (anchorName && path === "/home") {
       setTimeout(() => {
         // let documentElement = document.documentElement || document.body;
@@ -117,6 +122,7 @@ class Header extends Component {
     this.setState({
       currentNavItem,
     });
+    this.currentPath = ""; //用于保存當前或者上一個path
   }
   render() {
     const { navList, currentNav, currentNavItem } = this.state;
@@ -173,7 +179,11 @@ class Header extends Component {
                         key={item.text}
                       >
                         {item.children != undefined && item.children.length ? (
-                          <SubMenu key={item.id} title={this.props.t(item.nav)}>
+                          <SubMenu
+                            popupClassName="subMenu"
+                            key={item.id}
+                            title={this.props.t(item.nav)}
+                          >
                             {item.children.map((child) => {
                               return (
                                 <Menu.Item key={child.id} path={child.path}>

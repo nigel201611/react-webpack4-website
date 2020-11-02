@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-28 10:14:18
+ * @LastEditTime: 2020-10-30 17:28:45
  */
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
@@ -41,7 +41,7 @@ class MyTemplate extends Component {
       onOk() {
         let temp_id = tableData[index].temp_id;
         deleteTemplate({ temp_id: temp_id }, (res) => {
-          console.log(res);
+          // console.log(res);
           let { errno, data } = res;
           if (errno === 0) {
             if (data == 1) {
@@ -134,7 +134,7 @@ class MyTemplate extends Component {
             className="templateList"
             pagination={{
               onChange: (page) => {
-                console.log(page);
+                // console.log(page);
               },
               pageSize: 4,
             }}

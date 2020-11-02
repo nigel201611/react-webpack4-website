@@ -152,6 +152,7 @@
     "identity-obj-proxy": "^3.0.0",
     "immutable": "~3.8.1",
     "lint-staged": "^7.3.0",
+    "lodash": "^4.17.20",
     "md5": "^2.2.1",
     "prop-types": "^15.7.2",
     "rc-queue-anim": "^1.4.1",

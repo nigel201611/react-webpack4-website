@@ -6,4 +6,6 @@ export default {
   nri_name: "Name recognition",
   nri_T_general: "T general",
   nri_G_general: "G general",
+  result: "Identification results",
+  confidence: "Confidence",
 };

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-28 15:55:44
+ * @LastEditTime: 2020-11-02 15:35:12
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -74,11 +74,12 @@ class PerformOcr extends Component {
    */
   prev = () => {
     const current = this.state.current - 1;
-    const { templateDataArr } = this.state;
+    const { templateDataArr, templateIndex } = this.state;
+    // 返回上一步，应该显示用户之前选择的模板
     this.setState({ current }, () => {
       if (current === 1 && templateDataArr.length) {
         this.handleClearArea();
-        this.hanldeDrawCustomArea(templateDataArr[0].blockItem);
+        this.hanldeDrawCustomArea(templateDataArr[templateIndex].blockItem);
       }
     });
   };

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 17:07:24
+ * @LastEditTime: 2020-11-02 14:00:54
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -168,7 +168,7 @@ class TengxunOcr extends Component {
   init(url) {
     // 判断是否有网络图片地址，有的话以网络图片优先
     let { input_url, imageUrl } = this.state;
-    if (input_url != "") {
+    if (input_url !== "") {
       let http_image_pattern = /^(http:\/\/|https:\/\/){1}.+\.(jpg|jpeg|png|bmp|pdf)$/gi;
       if (http_image_pattern.test(input_url)) {
         //目前对网络图片的框图有些问题，估计没有读取到正确的宽高
@@ -181,10 +181,6 @@ class TengxunOcr extends Component {
         this.clearCanvasContent();
         this.tengxunGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        // this.$notify({
-        //   title: this.props.t("tip-text"),
-        //   message: this.props.t("input_url-tip"),
-        // });
         message.warning(this.props.t("input_url-tip"));
       }
     } else {
@@ -273,12 +269,12 @@ class TengxunOcr extends Component {
     let dHeight = this.box_h;
     if (
       source_w > source_h ||
-      (source_w == source_h && this.box_w < this.box_h)
+      (source_w === source_h && this.box_w < this.box_h)
     ) {
       dHeight = (source_h * dWidth) / source_w;
     } else if (
       source_w < source_h ||
-      (source_w == source_h && this.box_w > this.box_h)
+      (source_w === source_h && this.box_w > this.box_h)
     ) {
       dWidth = (source_w * dHeight) / source_h;
     }
@@ -313,12 +309,12 @@ class TengxunOcr extends Component {
     }
   }
   clearCanvasContent() {
-    let imgOrigin = this.imgOriginRef.current;
-    let source_w = imgOrigin.width;
-    let source_h = imgOrigin.height;
-    this.myCanvasRef.current.width = source_w;
-    this.myCanvasRef.current.height = source_h;
-    this.myCtx.clearRect(0, 0, source_w, source_h);
+    // let imgOrigin = this.imgOriginRef.current;
+    // let source_w = imgOrigin.width;
+    // let source_h = imgOrigin.height;
+    // this.myCanvasRef.current.width = source_w;
+    // this.myCanvasRef.current.height = source_h;
+    this.myCtx.clearRect(0, 0, this.img_width, this.img_height);
   }
   // 图片对象转base64
   getBase64Image(img) {
@@ -362,6 +358,8 @@ class TengxunOcr extends Component {
     //清理下canvas
     //消除用戶自己輸入遠程圖片鏈接
     this.clearCanvasContent();
+    // 图片对应宽高一样需要改
+    // 计算图片宽高 img_height
     this.setState(
       {
         input_url: "",
@@ -504,8 +502,8 @@ class TengxunOcr extends Component {
                 <img
                   ref={this.imgOriginRef}
                   className="imgOrigin"
-                  height={img_height}
-                  width={img_width}
+                  // height={img_height}
+                  // width={img_width}
                   src={imageUrl}
                 />
                 <div ref={this.imgEditRef} className="ocr_image" style={imgObj}>

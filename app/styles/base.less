@@ -94,6 +94,8 @@ body {
   color: @text-color;
   -webkit-font-smoothing: antialiased !important;
   height: 100%;
+  margin: 0;
+  position: relative;
 }
 
 table {
@@ -912,6 +914,9 @@ body {
   // overflow: hidden;
   -webkit-transition: opacity 0.5s linear 1.5s;
   transition: opacity 0.5s linear 1.5s;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: space-between;
 }
 
 #content-container {
@@ -1736,9 +1741,9 @@ body button + button,
 
 .main_wrap {
   width: 100%;
+  position: relative;
   min-height: 100%;
   padding-bottom: 60px;
   font-size: 14px;
-  position: relative;
   top: @g-header-height;
 }

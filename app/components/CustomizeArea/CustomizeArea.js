@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-10-28 15:28:35
+ * @LastEditTime: 2020-11-02 11:00:15
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
@@ -39,7 +39,7 @@ class CustomizeArea extends Component {
     this.curDiv = null; //保存当前绘制的框图
     this.editCustomBlockFlag = false; //标识是否修改自定区域，true-修改，false-新建
     this.curId = ""; //标识当前修改的id
-    this.blockItem = null; //标识当前根据id找到的自定区域块数据
+    this.blockItem = null; //根据id找到的自定区域块数据
     this.type = "expressbill"; //标识当前识别类型
     this.customBlockForm = {
       //用于再次编辑区域，回显表单数据

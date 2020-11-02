@@ -1,7 +1,7 @@
 /*
  * @Author: ,: nigel
  * @Date: ,: 2020-09-17 14:22:07
- * @LastEditTime: 2020-10-26 16:34:41
+ * @LastEditTime: 2020-11-02 11:33:43
  */
 /*
  * @name: 防抖函数
@@ -11,7 +11,7 @@
  */
 export function debounce(func, wait, immediate = true) {
   let timeout;
-  return function () {
+  return () => {
     let context = this;
     let args = arguments;
     if (timeout) clearTimeout(timeout);

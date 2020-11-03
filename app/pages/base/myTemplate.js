@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-30 17:28:45
+ * @LastEditTime: 2020-11-03 10:23:14
  */
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
@@ -174,13 +174,13 @@ class MyTemplate extends Component {
                 }
               >
                 <List.Item.Meta
-                  title={t("temp_id") + item.temp_id}
+                  title={t("temp_name") + " " + item.temp_name}
                   description={t("temp_name") + item.name ? item.item : ""}
                 />
                 {item.blockItem.map((block, index) => {
                   return (
                     <p key={block.block_id}>
-                      {"(" + (index + 1) + ")"}
+                      {"(" + (index + 1) + ")" + " "}
                       <span>
                         {t("ocr_engine")}:{block.ocr_engine}
                       </span>{" "}

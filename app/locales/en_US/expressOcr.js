@@ -4,4 +4,10 @@ export default {
   "banner-title": "Identification of Japanese waybill",
   "banner-desc":
     "'Japanese waybill recognition' uploads the Japanese waybill image to identify the corresponding postcode, address and name data",
+  fields: "Field name",
+  result: "Identification results",
+  confidence: "Confidence",
+  postcode: "postcode",
+  address: "address",
+  name: "name",
 };

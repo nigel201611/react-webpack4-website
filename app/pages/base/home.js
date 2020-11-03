@@ -5,7 +5,7 @@ import { Row, Col } from "antd";
 import { withTranslation } from "react-i18next";
 import "@styles/home.less";
 import { debounce, getElemOffsetTop } from "@utils/common";
-import { setCurrentNav } from "@actions/common";
+import { setCurrentNavItem } from "@actions/common";
 @connect((state) => ({}))
 class Home extends Component {
   static defaultProps = {};
@@ -46,7 +46,7 @@ class Home extends Component {
         [ocrTitleElem, aiTitleElem, iotTitleElem, cardsElem],
         "mainMod"
       );
-      self.judgeWhichSection();
+      // self.judgeWhichSection();
     }
     debounce(scroll, 600)();
   };
@@ -55,22 +55,18 @@ class Home extends Component {
     let ocrSectionElem = document.getElementById("ocr_category_content");
     let iotSectionElem = document.getElementById("iot_category_content");
     let aiSectionElem = document.getElementById("ai_category_content");
-    let scrollTop =
-      document.documentElement.scrollTop || document.body.scrollTop;
-    let winH =
-      document.documentElement.offsetHeight || document.body.offsetHeight;
+    let scrollTopH = this.getScrollTopAndH(this.rootElem);
     let index = "1";
-    if (getElemOffsetTop(ocrSectionElem) < scrollTop + winH) {
+    if (getElemOffsetTop(ocrSectionElem) < scrollTopH) {
       index = "2";
     }
-    if (getElemOffsetTop(iotSectionElem) < scrollTop + winH) {
+    if (getElemOffsetTop(iotSectionElem) < scrollTopH) {
       index = "3";
     }
-    if (getElemOffsetTop(aiSectionElem) < scrollTop + winH) {
+    if (getElemOffsetTop(aiSectionElem) < scrollTopH) {
       index = "4";
     }
-    // console.log(index);
-    this.props.dispatch(setCurrentNav(index));
+    this.props.dispatch(setCurrentNavItem(index));
   }
 
   getScrollTopAndH(elem) {

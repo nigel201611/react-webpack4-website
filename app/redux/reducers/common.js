@@ -19,9 +19,18 @@ const currentNavState = () => ({});
 export const currentNav = handleActions(
   {
     "set current nav"(state, action) {
-      // return { ...state, currentNav: action.payload };
       return action.payload;
     },
   },
   currentNavState()
+);
+
+const currentNavItemState = () => ({});
+export const currentNavItem = handleActions(
+  {
+    "set current nav item"(state, action) {
+      return action.payload;
+    },
+  },
+  currentNavItemState()
 );

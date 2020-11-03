@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: ,: 2020-10-23 16:43:02
+ * @LastEditTime: 2020-11-02 15:54:56
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -15,38 +15,6 @@ function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
-const columns = [
-  {
-    title: "Fields",
-    dataIndex: "fields",
-    key: "fields",
-    align: "left",
-    width: 100,
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Result",
-    dataIndex: "result",
-    align: "left",
-    key: "result",
-    render: (text, record) => (
-      <p
-        id={"border_" + record.fields}
-        className={record.result ? "border_" + record.fields : ""}
-      >
-        <span>{text}</span>
-      </p>
-    ),
-  },
-  {
-    title: "Confidence",
-    dataIndex: "confidence",
-    align: "left",
-    key: "confidence",
-    width: 120,
-    render: (text) => (text ? <span>{text}%</span> : ""),
-  },
-];
 class ExpressOcr extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -123,6 +91,7 @@ class ExpressOcr extends Component {
 
   handleTableData(data) {
     let tableData = [];
+    let { t } = this.props;
     if (data.data && data.data.code == 0) {
       let ocrResponse = data.data.data;
       if (!ocrResponse.address && !ocrResponse.name && !ocrResponse.postcode) {
@@ -131,19 +100,19 @@ class ExpressOcr extends Component {
         tableData = [
           {
             key: "1",
-            fields: "postcode",
+            fields: t("postcode"),
             result: ocrResponse.postcode && ocrResponse.postcode["text"],
             confidence: ocrResponse.postcode && ocrResponse.postcode["score"],
           },
           {
             key: "2",
-            fields: "address",
+            fields: t("address"),
             result: ocrResponse.address && ocrResponse.address["text"],
             confidence: ocrResponse.address && ocrResponse.address["score"],
           },
           {
             key: "3",
-            fields: "name",
+            fields: t("name"),
             result: ocrResponse.name && ocrResponse.name["text"],
             confidence: ocrResponse.name && ocrResponse.name["score"],
           },
@@ -181,6 +150,38 @@ class ExpressOcr extends Component {
   componentDidMount() {}
   render() {
     const { t } = this.props;
+    const columns = [
+      {
+        title: t("fields"),
+        dataIndex: "fields",
+        key: "fields",
+        align: "left",
+        width: 140,
+        render: (text) => <a>{text}</a>,
+      },
+      {
+        title: t("result"),
+        dataIndex: "result",
+        align: "left",
+        key: "result",
+        render: (text, record) => (
+          <p
+            id={"border_" + record.fields}
+            className={record.result ? "border_" + record.fields : ""}
+          >
+            <span>{text}</span>
+          </p>
+        ),
+      },
+      {
+        title: t("confidence"),
+        dataIndex: "confidence",
+        align: "left",
+        key: "confidence",
+        width: 120,
+        render: (text) => (text ? <span>{text}%</span> : ""),
+      },
+    ];
     const uploadButton = (
       <div>
         <Icon

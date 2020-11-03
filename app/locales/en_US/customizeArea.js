@@ -6,4 +6,7 @@ export default {
   "save-fail":
     "Failed to save. Please try to check the network and save again~",
   "no-cur-area": "There is currently no custom area diagram~",
+  "modal-title": "Save template name",
+  confirm: "Confirm",
+  temp_name: "Template name:",
 };

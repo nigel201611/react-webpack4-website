@@ -21,9 +21,9 @@ export default [
       },
       {
         id: "2_2",
-        text: "自定OCR模板",
-        path: "/customizeTemp",
-        nav: "customizeTemplate",
+        text: "我的模板",
+        path: "/myTemplate",
+        nav: "myTemplate",
         parentId: "2",
       },
       {
@@ -35,9 +35,9 @@ export default [
       },
       {
         id: "2_4",
-        text: "我的模板",
-        path: "/myTemplate",
-        nav: "myTemplate",
+        text: "自定OCR模板",
+        path: "/customizeTemp",
+        nav: "customizeTemplate",
         parentId: "2",
       },
       {

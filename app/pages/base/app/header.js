@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from "react";
 import { hashHistory } from "react-router";
 import { connect } from "react-redux";
-import { setCurrentNav } from "@actions/common";
+import { setCurrentNav, setCurrentNavItem } from "@actions/common";
 import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
 
@@ -15,7 +15,7 @@ const { confirm } = Modal;
 
 @connect((state) => {
   return {
-    currentNav: state.currentNav,
+    currentNavItem: state.currentNavItem,
   };
 })
 class Header extends Component {
@@ -23,8 +23,6 @@ class Header extends Component {
   constructor(props, context) {
     super(props);
     this.state = {
-      currentNav: this.props.currentNav,
-      currentNavItem: "1",
       navList: navList,
     };
   }
@@ -67,18 +65,22 @@ class Header extends Component {
   handleClick = (e) => {
     let { key, item } = e;
     let { props } = item;
-    this.setState({ currentNavItem: key });
-    //保存当前nav索引到sessionStorage
-    let currentNav = key.length == 1 ? key : key.substr(0, 1);
-    this.props.dispatch(setCurrentNav(currentNav));
+    // currentNav主菜单显示效果，同时也为了响应滚动条变化
+    // let currentNav = key.length == 1 ? key : key.substr(0, 1);
+    // this.props.dispatch(setCurrentNav(currentNav));
+    this.props.dispatch(setCurrentNavItem(key));
     window.sessionStorage.setItem("currentNavItem", key);
     let anchorName = props.name;
     let path = props.path;
-    let documentElement = document.documentElement || document.body;
-    documentElement.scrollTop = 0;
+    // let documentElement = document.documentElement || document.body;
+    // documentElement.scrollTop = 0;
     // this.currentPath === "" && path === "/home" 第一次進入home页，由于home会有几个菜单对应/home，重复push '/home'会报错
-    if (this.currentPath !== path) {
-      this.currentPath = path;
+    // console.log(path);
+
+    if (this.currentPath === path) {
+      // this.currentPath = path;
+      hashHistory.replace(path);
+    } else {
       hashHistory.push(path);
     }
 
@@ -116,16 +118,17 @@ class Header extends Component {
   componentDidMount() {
     let currentNavItem = window.sessionStorage.getItem("currentNavItem") || "1";
     // 由于用户可能单击某个子菜单，currentNav只记录第一级菜单索引
-    let currentNav =
-      currentNavItem.length == 1 ? currentNavItem : currentNavItem.substr(0, 1);
-    this.props.dispatch(setCurrentNav(currentNav));
-    this.setState({
-      currentNavItem,
-    });
+    // 设置currentNav作用是为了响应滚动条变化
+    // let currentNav =
+    //   currentNavItem.length == 1 ? currentNavItem : currentNavItem.substr(0, 1);
+    // this.props.dispatch(setCurrentNav(currentNav));
+    // 设置当前菜单
+    this.props.dispatch(setCurrentNavItem(currentNavItem));
     this.currentPath = ""; //用于保存當前或者上一個path
   }
   render() {
-    const { navList, currentNav, currentNavItem } = this.state;
+    const { navList } = this.state;
+    let { currentNavItem } = this.props;
     const userinfo = JSON.parse(sessionStorage.getItem("userInfo")) || {};
     let name = "";
     userinfo && userinfo.username && (name = userinfo.username);
@@ -197,9 +200,6 @@ class Header extends Component {
                             key={item.id}
                             name={item.name}
                             path={item.path}
-                            // className={
-                            //   this.props.currentNav === item.id ? "active" : ""
-                            // }
                           >
                             {this.props.t(item.nav)}
                           </Menu.Item>

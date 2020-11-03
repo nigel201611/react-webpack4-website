@@ -1,10 +1,11 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-11-02 11:00:15
+ * @LastEditTime: 2020-11-03 14:55:14
  */
 import React, { Component } from "react";
 import ModalForm from "@components/ModalForm/ModalForm";
+import TempNameFormModal from "./tempNameFormModal";
 import { notification } from "antd";
 import { uuid, convertImgElemByCanvas } from "@utils/common";
 import { saveTemplate } from "@apis/userTemplate";
@@ -18,6 +19,7 @@ class CustomizeArea extends Component {
     this.imgElemRef = React.createRef();
     this.state = {
       cusAreaModalVisible: false,
+      tempNameModalVisible: false, //控制编辑模板名字弹出框显示和隐藏
     };
   }
 
@@ -64,6 +66,12 @@ class CustomizeArea extends Component {
     document.onmouseup = null;
     this.customizeZoneRef = null;
     this.imgElemRef = null;
+    this.editCustomTemplateData = null;
+    this.blockItem = null; //根据id找到的自定区域块数据
+    this.requestParams = null; //保存请求参数
+    this.resDetectDataArr = null; //保存识别后，经过处理的数据结果
+    this.editImageArr = null; //保存自定区域起点和宽高{x:0,y:0,width:100,height:100}
+    this.customizeAreaData = null;
   }
   /*
    * @name: shouldDisableEditFunc
@@ -292,6 +300,39 @@ class CustomizeArea extends Component {
     });
   };
   /*
+   * @name:
+   * @msg:保存模板时，取消编辑模板名称
+   * @param {*}
+   * @return {*}
+   */
+  onTempNameCancel = () => {
+    console.log("onTempNameCancel");
+    this.setState({ tempNameModalVisible: false });
+  };
+  /*
+   * @name:
+   * @msg: 保存模板时，确认编辑模板名称
+   * @param {*}
+   * @return {*}
+   */
+  onTempNameConfirm = () => {
+    console.log("onTempNameConfirm");
+    const { form } = this.tempNameformRef.props;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      let temp_name = values.temp_name;
+      this.saveCustomize(temp_name);
+      form.resetFields();
+      this.setState({ tempNameModalVisible: false });
+    });
+    // 用户确认编辑名称后，调用 saveCustomize
+  };
+  tempNameFormRef = (tempNameformRef) => {
+    this.tempNameformRef = tempNameformRef;
+  };
+  /*
    * @name: 自定区域编辑取消
    * @msg: 取消自定区域编辑
    * @param {*}
@@ -306,7 +347,6 @@ class CustomizeArea extends Component {
     }
     this.setState({ cusAreaModalVisible: false });
   };
-
   /*
    * @name: 自定区域编辑确认
    * @msg: 自定区域编辑确认，新建区域或者编辑区域数据
@@ -396,19 +436,30 @@ class CustomizeArea extends Component {
     curDiv.style.background = curDivBg;
   };
 
+  confirmSaveTemplate = () => {
+    console.log("保存模板时显示编辑模板名字弹出框");
+    // 修改
+    if (this.editCustomTemplateData) {
+      this.saveCustomize(this.editCustomTemplateData.temp_name);
+    } else {
+      //新增，弹出框
+      this.setState({ tempNameModalVisible: true });
+    }
+  };
+
   /**
    * @name: saveCustomize
    * @msg: 保存当前自定区域模板数据
    * 用户也可以对保存的模板重新编辑，查看，删除
    * @return:
    */
-  saveCustomize = () => {
+  saveCustomize = (temp_name) => {
     //处理保存的数据
     //保存为模板数据到数据库
     //判斷當前保存模板是新增還是修改,如果temp_id存在則爲修改，否則新增
     //重新编辑模板数据的时候，不需要重新转换原图数据
     let oBox = this.customizeZoneRef.current;
-    let temp_id = oBox.getAttribute("data-temp_id");
+    let temp_id = oBox.getAttribute("data-temp_id") || uuid();
     // editImageArr有数据，说明用户在当前模板自定了区域数据
     if (this.editImageArr.length) {
       let blockData = this.customizeAreaData.map((item) => {
@@ -421,7 +472,8 @@ class CustomizeArea extends Component {
       });
       // 模板数据
       let templateData = {
-        temp_id: temp_id || uuid(),
+        temp_id: temp_id,
+        temp_name: temp_name || "temp_name_" + temp_id,
         blockItem: blockData,
         image: this.editCustomTemplateData
           ? this.editCustomTemplateData.image
@@ -667,7 +719,7 @@ class CustomizeArea extends Component {
 
   render() {
     let { imageUrl, bill_width, bill_height } = this.props;
-    let { cusAreaModalVisible } = this.state;
+    let { cusAreaModalVisible, tempNameModalVisible } = this.state;
     return (
       <div className="usercustomize_area">
         <img
@@ -683,6 +735,13 @@ class CustomizeArea extends Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
         />
+
+        <TempNameFormModal
+          wrappedComponentRef={this.tempNameFormRef}
+          visible={tempNameModalVisible}
+          onTempNameCancel={this.onTempNameCancel}
+          onTempNameConfirm={this.onTempNameConfirm}
+        ></TempNameFormModal>
         <div className="img_background_wrap">
           <div
             ref={this.customizeZoneRef}

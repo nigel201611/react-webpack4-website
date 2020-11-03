@@ -26,17 +26,17 @@ export default {
     // },
     {
       id: 3,
-      image: "../images/home/customTemplate.jpg",
-      title: "自定OCR模板",
-      desc:
-        "'自定OCR模板'可定制想要的模板，并在'执行OCR'中选择同样格式图片，识别得到自己想要的数据",
-    },
-    {
-      id: 4,
       image: "../images/home/executeocr.jpg",
       title: "执行OCR",
       desc:
         " '执行OCR'根据自定好的模板，选择上传同样模板格式图片，识别得到自己想要的图片数据",
+    },
+    {
+      id: 4,
+      image: "../images/home/customTemplate.jpg",
+      title: "自定OCR模板",
+      desc:
+        "'自定OCR模板'可定制想要的模板，并在'执行OCR'中选择同样格式图片，识别得到自己想要的数据",
     },
     {
       id: 5,

@@ -6,4 +6,7 @@ export default {
   "save-fail":
     "保存に失敗しました。ネットワークが正常であることを確認して、再保存してください",
   "no-cur-area": "エリアが選択されていません。",
+  "modal-title": "テンプレート名を保存",
+  confirm: "確認",
+  temp_name: "テンプレート名:",
 };

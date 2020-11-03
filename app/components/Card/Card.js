@@ -1,13 +1,18 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-11-02 14:25:44
+ * @LastEditTime: 2020-11-02 17:49:02
  */
 import { hashHistory } from "react-router";
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Row, Col } from "antd";
+import { setCurrentNavItem, setCurrentNav } from "@actions/common";
 import "./Card.less";
 // 声明组件  并对外输出
+@connect((state) => ({
+  currentNavItem: state.currentNavItem,
+}))
 export default class Card extends Component {
   constructor(props) {
     super(props);
@@ -17,15 +22,16 @@ export default class Card extends Component {
     // 这里的路径数据也可以通过props传过来
     const map = new Map([
       [1, { path: "/expressOcr", nav: "2_1" }],
-      [2, { path: "/expressOcr", nav: "" }],
-      [3, { path: "/customizeTemp", nav: "2_3" }],
-      [4, { path: "/performOcr", nav: "2_4" }],
+      [2, { path: "/expressOcr", nav: "2_1" }],
+      [3, { path: "/performOcr", nav: "2_3" }],
+      [4, { path: "/customizeTemp", nav: "2_4" }],
       [5, { path: "/T_GeneralOcr", nav: "2_5" }],
       [6, { path: "/G_GeneralOcr", nav: "2_6" }],
     ]);
     let pathInfo = map.get(id);
-    console.log(pathInfo);
     window.sessionStorage.setItem("currentNavItem", pathInfo.nav);
+    this.props.dispatch(setCurrentNavItem(pathInfo.nav));
+    this.props.dispatch(setCurrentNav(pathInfo.nav.substr(0, 1)));
     hashHistory.push(pathInfo.path);
   };
   render() {

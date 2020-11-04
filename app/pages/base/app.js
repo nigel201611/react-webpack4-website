@@ -17,6 +17,9 @@ export default class App extends Component {
   constructor(props, context) {
     super(props);
   }
+  // componentDidMount() {
+  //   console.log(this.props.location);
+  // }
   render() {
     return (
       <ConfigProvider locale={enUS}>

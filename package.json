@@ -165,6 +165,7 @@
     "react-redux": "~5.0.6",
     "react-router": "3.2.0",
     "react-router-redux": "~4.0.5",
+    "react-transition-group": "^4.4.1",
     "redux": "~3.7.2",
     "redux-actions": "~2.2.1",
     "redux-mock-store": "^1.5.3",

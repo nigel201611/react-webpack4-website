@@ -1,9 +1,11 @@
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import { hashHistory } from "react-router";
+import { CSSTransition } from "react-transition-group";
 import { connect } from "react-redux";
 import { setCurrentNav, setCurrentNavItem } from "@actions/common";
 import { withTranslation } from "react-i18next";
 import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
+import HorizontalLoginForm from "./horizontalLoginForm";
 
 const { SubMenu } = Menu;
 import { logout } from "@apis/common";
@@ -24,6 +26,8 @@ class Header extends Component {
     super(props);
     this.state = {
       navList: navList,
+      showLoginBox: false,
+      name: "", //用户登录名
     };
   }
   // 登出
@@ -37,7 +41,12 @@ class Header extends Component {
         logout({}, (result) => {
           if (result.errno === 0) {
             sessionStorage.clear();
-            hashHistory.push("/login");
+            self.setState({
+              name: "",
+              showLoginBox: false,
+            });
+            self.props.dispatch(setCurrentNavItem("1"));
+            hashHistory.replace("/");
           } else {
             message.warning(result.msg);
           }
@@ -47,7 +56,10 @@ class Header extends Component {
   };
   handleLogin = (event) => {
     event.preventDefault();
-    hashHistory.push("/login");
+    // hashHistory.push("/login");
+    this.setState({
+      showLoginBox: true,
+    });
   };
 
   // navigateToMyTemplate = (event) => {
@@ -65,35 +77,23 @@ class Header extends Component {
   handleClick = (e) => {
     let { key, item } = e;
     let { props } = item;
-    // currentNav主菜单显示效果，同时也为了响应滚动条变化
-    // let currentNav = key.length == 1 ? key : key.substr(0, 1);
-    // this.props.dispatch(setCurrentNav(currentNav));
     this.props.dispatch(setCurrentNavItem(key));
     window.sessionStorage.setItem("currentNavItem", key);
     let anchorName = props.name;
     let path = props.path;
-    // let documentElement = document.documentElement || document.body;
-    // documentElement.scrollTop = 0;
-    // this.currentPath === "" && path === "/home" 第一次進入home页，由于home会有几个菜单对应/home，重复push '/home'会报错
-    // console.log(path);
-
-    if (this.currentPath === path) {
-      // this.currentPath = path;
+    if (this.currentPath === path || this.currentPath === "") {
       hashHistory.replace(path);
     } else {
       hashHistory.push(path);
     }
-
+    this.currentPath = path;
     if (anchorName && path === "/home") {
       setTimeout(() => {
-        // let documentElement = document.documentElement || document.body;
-        // documentElement.scrollTop = 0;
         let anchorElement = document.getElementById(anchorName);
         if (anchorElement) {
           anchorElement.scrollIntoView({
             behavior: "smooth",
             block: key == "2" ? "start" : key == "3" ? "center" : "start",
-            // inline: "start",
           });
         }
       }, 0);
@@ -115,23 +115,30 @@ class Header extends Component {
       }
     }
   };
+  getUserName() {
+    let name = "";
+    const userinfo = JSON.parse(sessionStorage.getItem("userInfo")) || {};
+    userinfo && userinfo.username && (name = userinfo.username);
+    this.setState({
+      name,
+    });
+  }
+  setUserName = (name) => {
+    this.setState({
+      name,
+    });
+  };
   componentDidMount() {
     let currentNavItem = window.sessionStorage.getItem("currentNavItem") || "1";
-    // 由于用户可能单击某个子菜单，currentNav只记录第一级菜单索引
-    // 设置currentNav作用是为了响应滚动条变化
-    // let currentNav =
-    //   currentNavItem.length == 1 ? currentNavItem : currentNavItem.substr(0, 1);
-    // this.props.dispatch(setCurrentNav(currentNav));
     // 设置当前菜单
     this.props.dispatch(setCurrentNavItem(currentNavItem));
     this.currentPath = ""; //用于保存當前或者上一個path
+    this.getUserName();
   }
   render() {
-    const { navList } = this.state;
+    const { navList, showLoginBox, name } = this.state;
     let { currentNavItem } = this.props;
-    const userinfo = JSON.parse(sessionStorage.getItem("userInfo")) || {};
-    let name = "";
-    userinfo && userinfo.username && (name = userinfo.username);
+
     const userinfoMenu = (
       <Menu>
         <Menu.Item>
@@ -164,7 +171,7 @@ class Header extends Component {
       <header id="navbar">
         <div id="navbar-container" className="boxed">
           <Row className="row">
-            <Col span={20}>
+            <Col span={16}>
               <div className="navbar-brand">
                 <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
@@ -210,7 +217,7 @@ class Header extends Component {
                 </ul>
               </div>
             </Col>
-            <Col span={4} className="col">
+            <Col span={8} className="col">
               <div className="right">
                 <ul>
                   <li>
@@ -223,6 +230,10 @@ class Header extends Component {
                           {name} <i className="iconfont icon-login"></i>
                         </a>
                       </Dropdown>
+                    ) : showLoginBox ? (
+                      <HorizontalLoginForm
+                        setUserName={this.setUserName}
+                      ></HorizontalLoginForm>
                     ) : (
                       <a onClick={this.handleLogin.bind(this)}>
                         {this.props.t("login")}{" "}

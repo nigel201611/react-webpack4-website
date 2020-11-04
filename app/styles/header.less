@@ -13,9 +13,28 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    min-width: 1500px; //防止pc版，窄屏幕换行
+    .right {
+      height: 60px;
+      line-height: 60px;
+      .ant-form {
+        line-height: 60px;
+        height: 60px;
+        .ant-form-item {
+          margin: 10px 16px 0 0;
+        }
+      }
+      ul {
+        height: 60px;
+        line-height: 60px;
+        li {
+          margin: 0;
+        }
+      }
+    }
     .brand-title {
       display: inline-block;
-      margin: 0 0 0 200px;
+      // margin: 0 0 0 200px;
       line-height: @g-header-height;
       .brand-text {
         display: block;
@@ -37,7 +56,7 @@
     }
     .navList {
       overflow: hidden;
-      margin: 0 0 0 400px;
+      margin: 0 0 0 140px;
       font-size: 16px;
       li {
         margin: 0 40px 0 0;

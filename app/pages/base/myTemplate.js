@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-03 18:45:59
+ * @LastEditTime: 2020-11-04 14:26:55
  */
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
@@ -22,16 +22,12 @@ class MyTemplate extends Component {
   }
 
   componentDidMount() {
-    console.log("mytemplate componentDidMount");
     this.selectUserTemplate();
   }
-  componentDidUpdate(prevProps) {
-    // console.log(props);
-    // let oldId = prevProps.params.invoiceId
-    // let newId = this.props.params.invoiceId
-    // if (newId !== oldId) this.fetchInvoice();
-  }
 
+  UNSAFE_componentWillReceiveProps() {
+    this.selectUserTemplate();
+  }
   componentWillUnmount() {}
 
   handleEdit(index) {

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-02 15:35:12
+ * @LastEditTime: 2020-11-04 14:40:27
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -415,7 +415,6 @@ class PerformOcr extends Component {
           </div>
           <div className="page-main">
             <ModalList
-              // wrappedComponentRef={this.modalListRef}
               ref={this.modalListRef}
               templateIndex={templateIndex}
               changeTemplateIndex={this.changeTemplateIndex}

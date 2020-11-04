@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-10-27 14:54:04
- * @LastEditTime: 2020-10-28 13:57:00
+ * @LastEditTime: 2020-11-04 14:50:33
  */
 import React, { Component } from "react";
 import { Modal, Checkbox } from "antd";
@@ -45,7 +45,7 @@ class ModalList extends Component {
                 }
               >
                 <span className="item-desc">
-                  {item.temp_id}
+                  {t("temp_name") + " " + item.temp_name}
                   {item.blockItem.map((block, index2) => {
                     return (
                       <p key={block.block_id}>

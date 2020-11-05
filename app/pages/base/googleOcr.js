@@ -3,29 +3,29 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: ,: 2020-10-23 17:16:46
  */
-import React, { Component } from "react";
-import { withTranslation } from "react-i18next";
-import { Spin, Icon, message, Upload, Row, Table, Button, Input } from "antd";
-import "@styles/tengxunOcr.less";
-import { googleOcr } from "@apis/googleOcr";
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { Spin, Icon, message, Upload, Row, Table, Button, Input } from 'antd';
+import '@styles/tengxunOcr.less';
+import { googleOcr } from '@apis/googleOcr';
 
 const columns = [
   {
-    title: "#",
-    dataIndex: "index",
-    key: "index",
-    align: "left",
+    title: '#',
+    dataIndex: 'index',
+    key: 'index',
+    align: 'left',
     width: 100,
   },
   {
-    title: "Result",
-    dataIndex: "itemstring",
-    key: "itemstring",
-    align: "left",
+    title: 'Result',
+    dataIndex: 'itemstring',
+    key: 'itemstring',
+    align: 'left',
     render: (text, record) => (
       <p
-        id={"border_" + record.fields}
-        className={record.result ? "border_" + record.fields : ""}
+        id={`border_${record.fields}`}
+        className={record.result ? `border_${record.fields}` : ''}
       >
         <span>{text}</span>
       </p>
@@ -33,16 +33,16 @@ const columns = [
   },
 ];
 const imgArrOrigin = [
-  { url: require("@images/ocr_common03.jpg") },
-  { url: require("@images/ocr_common04.jpg") },
-  { url: require("@images/ocr_common05.jpg") },
-  { url: require("@images/ocr_common06.jpg") },
-  { url: require("@images/worddetect_3.jpg") },
-  { url: require("@images/worddetect_4.jpg") },
+  { url: require('@images/ocr_common03.jpg') },
+  { url: require('@images/ocr_common04.jpg') },
+  { url: require('@images/ocr_common05.jpg') },
+  { url: require('@images/ocr_common06.jpg') },
+  { url: require('@images/worddetect_3.jpg') },
+  { url: require('@images/worddetect_4.jpg') },
 ];
 function getBase64(imagefile, callback) {
   const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
+  reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(imagefile);
 }
 class GoogleOcr extends Component {
@@ -56,40 +56,40 @@ class GoogleOcr extends Component {
       isRequesting: false,
       imgArr: imgArrOrigin,
       imageUrl: imgArrOrigin[0].url,
-      img_height: "",
-      img_width: "",
+      img_height: '',
+      img_width: '',
       imgObj: {
         backgroundImage: `url(${imgArrOrigin[0].url})`,
       },
-      input_url: "",
-      curentIndex: 0, //当前激活要识别的图片索引
+      input_url: '',
+      curentIndex: 0, // 当前激活要识别的图片索引
       tableData: [],
     };
   }
 
   componentDidMount() {
-    this.imgOptions = {}; //中引文体验，多角度，其他语种体验不同选项
+    this.imgOptions = {}; // 中引文体验，多角度，其他语种体验不同选项
     this.box_w = 400;
     this.box_h = 410;
-    this.myCtx = this.myCanvasRef.current.getContext("2d");
+    this.myCtx = this.myCanvasRef.current.getContext('2d');
   }
 
   beforeUpload = (file) => {
     const isJpgOrPng =
-      file.type === "image/jpeg" ||
-      file.type === "image/png" ||
-      file.type === "image/jpg";
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG/JPG file!");
+      message.error('You can only upload JPG/PNG/JPG file!');
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error("Image must smaller than 5MB!");
+      message.error('Image must smaller than 5MB!');
     }
 
     if (isLt5M && isJpgOrPng) {
       this.setState({
-        imageUrl: "",
+        imageUrl: '',
         tableData: [],
       });
       this.clearCanvasContent();
@@ -102,23 +102,23 @@ class GoogleOcr extends Component {
   };
 
   handleUploadChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       if (this.state.isRequesting) {
         return;
       }
 
       getBase64(info.file.originFileObj, (imageUrl) => {
-        let image = new Image();
+        const image = new Image();
         image.onload = () => {
-          //限制图片宽
+          // 限制图片宽
           this.img_width = image.width;
           this.img_height = image.height;
-          //这里使用createObjectURL来创建临时图片链接，是为了防止base64格式数据太大，给浏览器造成负担
-          let imgUrl = URL.createObjectURL(info.file.originFileObj);
+          // 这里使用createObjectURL来创建临时图片链接，是为了防止base64格式数据太大，给浏览器造成负担
+          const imgUrl = URL.createObjectURL(info.file.originFileObj);
           this.setState(
             {
               loading: false,
@@ -131,13 +131,13 @@ class GoogleOcr extends Component {
             },
             () => {
               this.init();
-            }
+            },
           );
         };
         image.src = imageUrl;
       });
     }
-    if (info.file.status === "error") {
+    if (info.file.status === 'error') {
       this.setState({ loading: false });
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -151,11 +151,11 @@ class GoogleOcr extends Component {
    */
   init(url) {
     // 判断是否有网络图片地址，有的话以网络图片优先
-    let { input_url, imageUrl } = this.state;
-    if (input_url != "") {
-      let http_image_pattern = /^(http:\/\/|https:\/\/){1}.+\.(jpg|jpeg|png|bmp|pdf)$/gi;
+    const { input_url, imageUrl } = this.state;
+    if (input_url != '') {
+      const http_image_pattern = /^(http:\/\/|https:\/\/){1}.+\.(jpg|jpeg|png|bmp|pdf)$/gi;
       if (http_image_pattern.test(input_url)) {
-        //目前对网络图片的框图有些问题，估计没有读取到正确的宽高
+        // 目前对网络图片的框图有些问题，估计没有读取到正确的宽高
         this.setState({
           imageUrl: url,
           imgObj: {
@@ -165,13 +165,13 @@ class GoogleOcr extends Component {
         this.clearCanvasContent();
         this.googleGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        message.warning(t("input_url-tip"));
+        message.warning(t('input_url-tip'));
       }
     } else {
       // 上面上传转换得到的imageUrl是临时图片链接，需要再计算一次，牺牲计算减少内存使用
       // imageUrl可能是临时图片链接，可能是初始化时赋值的图片路径
       this.getImageToBase64Data(imageUrl).then((params) => {
-        //默认第一张图,调用接口返回数据
+        // 默认第一张图,调用接口返回数据
         this.googleGeneralOcr(params, this.imgOptions);
       });
     }
@@ -198,60 +198,58 @@ class GoogleOcr extends Component {
           isRequesting: false,
         });
         if (res.errno === 0) {
-          let resData = res.data;
-          let { errorcode } = resData;
+          const resData = res.data;
+          const { errorcode } = resData;
           if (errorcode === 0) {
-            let responses = resData.responses || [];
+            const responses = resData.responses || [];
             // 确认返回的responses有数据
             if (responses.length) {
               // 默认至于单个请求体，或者一个页面的请求
-              let firstPage_response = responses[0] || {};
-              let pagesArr = firstPage_response.fullTextAnnotation.pages;
+              const firstPage_response = responses[0] || {};
+              const pagesArr = firstPage_response.fullTextAnnotation.pages;
               // pages里保存了blocks，blocks保存了识别出来的每行文字信息或者段落信息，以及对应的每行坐标
-              //从blocks取出每行文字以及对应的confidence
-              let blocksArr = pagesArr[0].blocks; //由于发送的请求只有一个，所以默认取第一个blocks
-              //从blocksArr中获取该页面每行文字信息和坐标
-              let coordpointArr = [];
+              // 从blocks取出每行文字以及对应的confidence
+              const blocksArr = pagesArr[0].blocks; // 由于发送的请求只有一个，所以默认取第一个blocks
+              // 从blocksArr中获取该页面每行文字信息和坐标
+              const coordpointArr = [];
               let items = [];
               for (let i = 0; i < blocksArr.length; i++) {
-                let block = blocksArr[i];
-                let obj = {
-                  itemstring: "",
-                  itemconf: "",
+                const block = blocksArr[i];
+                const obj = {
+                  itemstring: '',
+                  itemconf: '',
                   coordpoint: [],
                 };
                 // confidence
-                obj.itemconf = block["property"]
-                  ? block["property"]["detectedLanguages"].confidence
-                  : "";
+                obj.itemconf = block.property
+                  ? block.property.detectedLanguages.confidence
+                  : '';
                 // 该行对应坐标
-                obj.coordpoint = block["boundingBox"].vertices || [];
+                obj.coordpoint = block.boundingBox.vertices || [];
                 // 里面保存了每段或者每行的所有字符，将他们串联起来，保存到itemstring里
-                let paragraphs = block.paragraphs[0];
-                let words = paragraphs.words;
+                const paragraphs = block.paragraphs[0];
+                const words = paragraphs.words;
                 obj.itemstring = words.reduce((total, word) => {
-                  let symbols = word.symbols;
+                  const symbols = word.symbols;
                   symbols.forEach((element) => {
                     total += element.text;
                   });
                   return total;
-                }, "");
+                }, '');
                 items.push(obj);
-                //canvas绘制识别出的文本行在原图中矩形框需要的坐标
-                let coordpoint = obj.coordpoint.reduce((total, item) => {
-                  let { x, y } = item;
+                // canvas绘制识别出的文本行在原图中矩形框需要的坐标
+                const coordpoint = obj.coordpoint.reduce((total, item) => {
+                  const { x, y } = item;
                   return total.concat(x, y);
                 }, []);
                 coordpointArr.push({ x: coordpoint });
               }
-              items = items.map((item, index) => {
-                return Object.assign({}, item, { index: index, key: index });
-              });
+              items = items.map((item, index) => Object.assign({}, item, { index: index, key: index }));
               this.setState({
                 tableData: items,
               });
               this.drawRectangleByCanvas(coordpointArr);
-              //获取针对该页面的一个总的confidence
+              // 获取针对该页面的一个总的confidence
               // let avgConfidence =
               //   pagesArr[0].property["detectedLanguages"][0].confidence;
             }
@@ -262,22 +260,22 @@ class GoogleOcr extends Component {
         // console.warn(error);
         message.warning(res.errmsg);
         this.setState({ isRequesting: false });
-      }
+      },
     );
   }
-  //绘制canvas框图
+  // 绘制canvas框图
   drawRectangleByCanvas(coordpointArr) {
-    let imgOrigin = this.imgOriginRef.current;
+    const imgOrigin = this.imgOriginRef.current;
     let source_w = imgOrigin.width;
     let source_h = imgOrigin.height;
-    //如果有网络图片,要注意计算网络图片宽高,网络图片有个加载过程
-    let { input_url } = this.state;
+    // 如果有网络图片,要注意计算网络图片宽高,网络图片有个加载过程
+    const { input_url } = this.state;
     if (input_url) {
-      let imgElem = new Image();
+      const imgElem = new Image();
       imgElem.onload = () => {
         source_w = imgElem.width;
         source_h = imgElem.height;
-        //绘制框图
+        // 绘制框图
         this.drawRectangle(source_w, source_h, coordpointArr);
       };
       imgElem.src = input_url;
@@ -310,13 +308,13 @@ class GoogleOcr extends Component {
     let scaleY = 1;
     scaleX = dWidth / source_w;
     scaleY = dHeight / source_h;
-    //控制canvas画布大小
+    // 控制canvas画布大小
     this.myCanvasRef.current.width = dWidth;
     this.myCanvasRef.current.height = dHeight;
     this.myCtx.clearRect(0, 0, dWidth, dHeight);
     this.myCtx.scale(scaleX, scaleY);
     for (let i = 0; i < coordpointArr.length; i++) {
-      let item = coordpointArr[i].x;
+      const item = coordpointArr[i].x;
       let x1 = item[0],
         y1 = item[1],
         x2 = item[2],
@@ -325,7 +323,7 @@ class GoogleOcr extends Component {
         y3 = item[5],
         x4 = item[6],
         y4 = item[7];
-      this.myCtx.strokeStyle = "#00a4ff";
+      this.myCtx.strokeStyle = '#00a4ff';
       this.myCtx.lineWidth = 4;
       this.myCtx.beginPath();
       this.myCtx.moveTo(x1, y1);
@@ -337,58 +335,58 @@ class GoogleOcr extends Component {
     }
   }
   clearCanvasContent() {
-    let imgOrigin = this.imgOriginRef.current;
-    let source_w = imgOrigin.width;
-    let source_h = imgOrigin.height;
+    const imgOrigin = this.imgOriginRef.current;
+    const source_w = imgOrigin.width;
+    const source_h = imgOrigin.height;
     this.myCanvasRef.current.width = source_w;
     this.myCanvasRef.current.height = source_h;
     this.myCtx.clearRect(0, 0, source_w, source_h);
   }
   // 图片对象转base64
   getBase64Image(img) {
-    let canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
-    let ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
-    let ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
-    let dataURL = canvas.toDataURL("image/" + ext);
+    const ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase();
+    const dataURL = canvas.toDataURL(`image/${ext}`);
     return dataURL;
   }
-  //根据图片路径url新建图片对象，转换base64
+  // 根据图片路径url新建图片对象，转换base64
   getImageToBase64Data(url) {
-    //转换图片为base64
+    // 转换图片为base64
     return new Promise((resolve, reject) => {
-      let imgElem = new Image();
+      const imgElem = new Image();
       imgElem.onload = () => {
-        let img_base64 = this.getBase64Image(imgElem);
-        //构造接口请求参数，前端只需要传image或者url即可
-        let pramas = {
+        const img_base64 = this.getBase64Image(imgElem);
+        // 构造接口请求参数，前端只需要传image或者url即可
+        const pramas = {
           image: img_base64,
-          url: "",
+          url: '',
         };
-        //返回接口请求需要的参数
+        // 返回接口请求需要的参数
         this.img_width = imgElem.width;
         this.img_height = imgElem.height;
         resolve(pramas);
       };
       imgElem.onerror = () => {
-        reject(new Error("Could not load image at " + url));
+        reject(new Error(`Could not load image at ${url}`));
       };
       imgElem.src = url;
     });
   }
-  //处理用户单击选择图片
+  // 处理用户单击选择图片
   handleClickImg = (image, index) => {
     if (this.state.isRequesting) {
       return;
     }
-    //清理下canvas
-    //消除用戶自己輸入遠程圖片鏈接
+    // 清理下canvas
+    // 消除用戶自己輸入遠程圖片鏈接
     this.clearCanvasContent();
     this.setState(
       {
-        input_url: "",
+        input_url: '',
         curentIndex: index,
         imageUrl: image,
         imgObj: {
@@ -397,7 +395,7 @@ class GoogleOcr extends Component {
       },
       () => {
         this.init();
-      }
+      },
     );
   };
   render() {
@@ -413,25 +411,23 @@ class GoogleOcr extends Component {
       imgObj,
       input_url,
     } = this.state;
-    const imgList = imgArr.map((item, index) => {
-      return (
-        <img
-          key={index}
-          src={item.url}
-          className={
-            curentIndex == index ? "pic-item pic-item_active" : "pic-item"
-          }
-          onClick={this.handleClickImg.bind(this, item.url, index)}
-        />
-      );
-    });
+    const imgList = imgArr.map((item, index) => (
+      <img
+        key={index}
+        src={item.url}
+        className={
+          curentIndex == index ? 'pic-item pic-item_active' : 'pic-item'
+        }
+        onClick={this.handleClickImg.bind(this, item.url, index)}
+      />
+    ));
     return (
       <div className="tx-container">
         <section className="tx-wrap">
           <div className="tx-banner">
             <div className="tx-title">
-              <h1>{t("banner-title")}</h1>
-              <p>{t("banner-desc")}</p>
+              <h1>{t('banner-title')}</h1>
+              <p>{t('banner-desc')}</p>
             </div>
           </div>
           <div className="tx-main">
@@ -447,16 +443,16 @@ class GoogleOcr extends Component {
                   onChange={this.handleUploadChange}
                 >
                   <Button type="primary">
-                    <Icon type={this.state.loading ? "loading" : "upload"} />
-                    {t("upload-btn-text")}
+                    <Icon type={this.state.loading ? 'loading' : 'upload'} />
+                    {t('upload-btn-text')}
                   </Button>
                 </Upload>
                 <div className="url_input">
                   <Input
                     value={input_url}
                     onChange={this.handleInputUrlChange.bind(this)}
-                    allowClear={true}
-                    placeholder={t("input_url_tip")}
+                    allowClear
+                    placeholder={t('input_url_tip')}
                   />
                 </div>
                 <Button
@@ -464,7 +460,7 @@ class GoogleOcr extends Component {
                   type="primary"
                   onClick={this.handleAnalyse}
                 >
-                  {t("analyse-btn")}
+                  {t('analyse-btn')}
                 </Button>
               </Row>
               <Row gutter={16} className="ocr-result">
@@ -494,4 +490,4 @@ class GoogleOcr extends Component {
   }
 }
 
-export default withTranslation("googleOcr")(GoogleOcr);
+export default withTranslation('googleOcr')(GoogleOcr);

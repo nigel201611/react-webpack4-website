@@ -1,17 +1,18 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-11-03 14:55:14
+ * @LastEditTime: 2020-11-05 11:10:39
  */
 import React, { Component } from "react";
-import ModalForm from "@components/ModalForm/ModalForm";
-import TempNameFormModal from "./tempNameFormModal";
+import { withTranslation } from "react-i18next";
 import { notification } from "antd";
+import ModalForm from "@components/ModalForm/ModalForm";
 import { uuid, convertImgElemByCanvas } from "@utils/common";
 import { saveTemplate } from "@apis/userTemplate";
 import { performOcr } from "@apis/performOcr";
-import { withTranslation } from "react-i18next";
+import TempNameFormModal from "./tempNameFormModal";
 import "./CustomizeArea.less";
+
 class CustomizeArea extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +20,7 @@ class CustomizeArea extends Component {
     this.imgElemRef = React.createRef();
     this.state = {
       cusAreaModalVisible: false,
-      tempNameModalVisible: false, //控制编辑模板名字弹出框显示和隐藏
+      tempNameModalVisible: false, // 控制编辑模板名字弹出框显示和隐藏
     };
   }
 
@@ -28,49 +29,49 @@ class CustomizeArea extends Component {
     this.origin = {
       x: 0,
       y: 0,
-    }; //鼠标刚开始按下的点
-    this.editImageArr = []; //保存自定区域起点和宽高{x:0,y:0,width:100,height:100}
-    this.customizeAreaData = []; //保存自定区域数据，模板里可能包含多个自定区域数据 blockItem:[{"block_id":"20200901181925pwxa1jykfid","name":"地址","ocr_engine":"expressbill","block":{"x":93,"y":176,"width":235,"height":113}}]
-    this.curPoints = null; //当前用户自定区域数据{x,y,width,height}
-    this.startXY = { x: 0, y: 0 }; //保存用户按下鼠标起点x,y注意和offsetX区别
-    this.endXY = { x: 0, y: 0 }; //保存用户按下鼠标终点x,y注意和offsetX区别，和startXY一起用于准确计算宽高
+    }; // 鼠标刚开始按下的点
+    this.editImageArr = []; // 保存自定区域起点和宽高{x:0,y:0,width:100,height:100}
+    this.customizeAreaData = []; // 保存自定区域数据，模板里可能包含多个自定区域数据 blockItem:[{"block_id":"20200901181925pwxa1jykfid","name":"地址","ocr_engine":"expressbill","block":{"x":93,"y":176,"width":235,"height":113}}]
+    this.curPoints = null; // 当前用户自定区域数据{x,y,width,height}
+    this.startXY = { x: 0, y: 0 }; // 保存用户按下鼠标起点x,y注意和offsetX区别
+    this.endXY = { x: 0, y: 0 }; // 保存用户按下鼠标终点x,y注意和offsetX区别，和startXY一起用于准确计算宽高
     this.dragInfoWidthHeight = {
       width: 0,
       height: 0,
     };
-    this.curDiv = null; //保存当前绘制的框图
-    this.editCustomBlockFlag = false; //标识是否修改自定区域，true-修改，false-新建
-    this.curId = ""; //标识当前修改的id
-    this.blockItem = null; //根据id找到的自定区域块数据
-    this.type = "expressbill"; //标识当前识别类型
+    this.curDiv = null; // 保存当前绘制的框图
+    this.editCustomBlockFlag = false; // 标识是否修改自定区域，true-修改，false-新建
+    this.curId = ""; // 标识当前修改的id
+    this.blockItem = null; // 根据id找到的自定区域块数据
+    this.type = "expressbill"; // 标识当前识别类型
     this.customBlockForm = {
-      //用于再次编辑区域，回显表单数据
-      name: "", //自定区域名称
-      OCR_engine: "expressbill", //当前ocr引擎类型,默认运单
+      // 用于再次编辑区域，回显表单数据
+      name: "", // 自定区域名称
+      OCR_engine: "expressbill", // 当前ocr引擎类型,默认运单
     };
     this.myCanvas = document.createElement("canvas");
     this.myCtx = this.myCanvas.getContext("2d");
     this.oBox = this.customizeZoneRef.current;
-    this.editCustomTemplateData = null; //用户重新编辑时，保存一份模板数据
-    this.requestParams = []; //保存请求参数
-    this.resDetectDataArr = []; //保存识别后，经过处理的数据结果
+    this.editCustomTemplateData = null; // 用户重新编辑时，保存一份模板数据
+    this.requestParams = []; // 保存请求参数
+    this.resDetectDataArr = []; // 保存识别后，经过处理的数据结果
     this.shouldDisableEditFunc(this.props);
     this.isRequesting = false;
   }
 
   componentWillUnmount() {
-    //卸载该组件前判断当前用户是否由自定区域，是否已经保存，如果保存了直接离开，没保存，弹窗让用户确认
-    let oBox = this.customizeZoneRef.current;
+    // 卸载该组件前判断当前用户是否由自定区域，是否已经保存，如果保存了直接离开，没保存，弹窗让用户确认
+    const oBox = this.customizeZoneRef.current;
     oBox.onclick = null;
     oBox.onmousedown = null;
     document.onmouseup = null;
     this.customizeZoneRef = null;
     this.imgElemRef = null;
     this.editCustomTemplateData = null;
-    this.blockItem = null; //根据id找到的自定区域块数据
-    this.requestParams = null; //保存请求参数
-    this.resDetectDataArr = null; //保存识别后，经过处理的数据结果
-    this.editImageArr = null; //保存自定区域起点和宽高{x:0,y:0,width:100,height:100}
+    this.blockItem = null; // 根据id找到的自定区域块数据
+    this.requestParams = null; // 保存请求参数
+    this.resDetectDataArr = null; // 保存识别后，经过处理的数据结果
+    this.editImageArr = null; // 保存自定区域起点和宽高{x:0,y:0,width:100,height:100}
     this.customizeAreaData = null;
   }
   /*
@@ -89,21 +90,21 @@ class CustomizeArea extends Component {
   };
   // 初始化一些事件
   initEvent = () => {
-    let oBox = this.customizeZoneRef.current;
-    //rect_item
+    const oBox = this.customizeZoneRef.current;
+    // rect_item
     oBox.onclick = (ev) => {
-      let { target } = ev;
+      const { target } = ev;
       if (target.className.indexOf("rect_item") > -1) {
-        //可以重新打开自动区域编辑模态框
+        // 可以重新打开自动区域编辑模态框
         this.curId = target.id;
         // 当前修改的区域数据
-        this.blockItem = this.customizeAreaData.find(function (item) {
-          return item.block_id == target.id;
-        });
+        this.blockItem = this.customizeAreaData.find(
+          (item) => item.block_id == target.id
+        );
         if (this.blockItem) {
           // 根据自定区域id找到对应数据，然后回显到编辑的表单中
-          let name = this.blockItem.name;
-          let OCR_engine = this.blockItem.ocr_engine;
+          const name = this.blockItem.name;
+          const OCR_engine = this.blockItem.ocr_engine;
           this.customBlockForm.name = name;
           this.customBlockForm.OCR_engine = OCR_engine;
           const { form } = this.formRef.props;
@@ -129,18 +130,18 @@ class CustomizeArea extends Component {
    * @return:
    */
   addEditableFunc() {
-    let oBox = this.customizeZoneRef.current;
-    //鼠标按下，获取初始点
+    const oBox = this.customizeZoneRef.current;
+    // 鼠标按下，获取初始点
     oBox.onmousedown = (ev) => {
-      //事件延迟性，如果用户框选了区域后，再次选择识别类型下拉框，这里的this.type还是上次的，并没有及时获取到
-      //那么需要提示用户选择对应类型
+      // 事件延迟性，如果用户框选了区域后，再次选择识别类型下拉框，这里的this.type还是上次的，并没有及时获取到
+      // 那么需要提示用户选择对应类型
       ev = ev || window.event;
-      let { target } = ev;
+      const { target } = ev;
       if (target.className == "img-wrap") {
-        //1.获取按下的点
-        let x1 = ev.offsetX;
-        let y1 = ev.offsetY;
-        //记录鼠标按下的点
+        // 1.获取按下的点
+        const x1 = ev.offsetX;
+        const y1 = ev.offsetY;
+        // 记录鼠标按下的点
         this.origin = {
           x: x1,
           y: y1,
@@ -153,8 +154,8 @@ class CustomizeArea extends Component {
         // 初始化当前拖拽尺寸
         this.dragInfoWidthHeight = { width: 0, height: 0 };
         this.editCustomBlockFlag = false;
-        //2.创建div
-        let oDiv = document.createElement("div");
+        // 2.创建div
+        const oDiv = document.createElement("div");
         this.curDiv = oDiv;
         oDiv.setAttribute("class", "rect_item");
         oBox.onmousemove = (e) => {
@@ -167,18 +168,18 @@ class CustomizeArea extends Component {
           let x1 = this.origin.x,
             y1 = this.origin.y;
           // 鼠标移动的点处理，为啥往右下移动过程中，横坐标会变小,offsetX有问题
-          let width = Math.abs(this.endXY.x - this.startXY.x);
-          let height = Math.abs(this.endXY.y - this.startXY.y);
-          //对width和height做限制至少大于25
+          const width = Math.abs(this.endXY.x - this.startXY.x);
+          const height = Math.abs(this.endXY.y - this.startXY.y);
+          // 对width和height做限制至少大于25
           this.dragInfoWidthHeight = {
             width,
             height,
           };
-          //3.设置div的样式,2,61分别矫正位置用
-          oDiv.style.left = x1 + "px";
-          oDiv.style.top = y1 + "px";
-          oDiv.style.width = width + "px";
-          oDiv.style.height = height + "px";
+          // 3.设置div的样式,2,61分别矫正位置用
+          oDiv.style.left = `${x1}px`;
+          oDiv.style.top = `${y1}px`;
+          oDiv.style.width = `${width}px`;
+          oDiv.style.height = `${height}px`;
           oDiv.style.border = "2px solid #409EFF";
           oDiv.style.background = "rgba(64,158,255,0.4)";
           oDiv.style.position = "absolute";
@@ -193,23 +194,23 @@ class CustomizeArea extends Component {
             y1 = this.origin.y;
           // 记录用户自定义区域的原点和宽高
           // 对width和height做限制,至少大于25
-          let { width, height } = this.dragInfoWidthHeight;
-          //处理用户点击下也会触发
+          const { width, height } = this.dragInfoWidthHeight;
+          // 处理用户点击下也会触发
           if (width > 30) {
-            let pointsInfo = {
+            const pointsInfo = {
               x: x1,
               y: y1,
               width: width,
               height: height,
             };
             this.curPoints = pointsInfo;
-            //弹出自定区域编辑
+            // 弹出自定区域编辑
             this.showModal();
           }
         };
       }
     };
-    //在鼠标抬起后终止onmousemove事件
+    // 在鼠标抬起后终止onmousemove事件
     document.onmouseup = function () {
       if (oBox.onmousemove || oBox.onmouseup) {
         console.log("document mouseup");
@@ -226,7 +227,7 @@ class CustomizeArea extends Component {
    * @return {*}
    */
   handleEditTemplate(templateData) {
-    let oBox = this.customizeZoneRef.current;
+    const oBox = this.customizeZoneRef.current;
     oBox.setAttribute("data-temp_id", templateData.temp_id);
     this.editCustomTemplateData = templateData;
     this.drawCustomizeArea(templateData.blockItem);
@@ -238,12 +239,12 @@ class CustomizeArea extends Component {
    * @return:
    */
   drawRect(x1, y1, width, height, type) {
-    let oDiv = document.createElement("div");
+    const oDiv = document.createElement("div");
     oDiv.setAttribute("class", "rect_item");
-    oDiv.style.left = x1 + "px";
-    oDiv.style.top = y1 + "px";
-    oDiv.style.width = width + "px";
-    oDiv.style.height = height + "px";
+    oDiv.style.left = `${x1}px`;
+    oDiv.style.top = `${y1}px`;
+    oDiv.style.width = `${width}px`;
+    oDiv.style.height = `${height}px`;
     this.changeCurDivBg(oDiv, type);
     oDiv.style.position = "absolute";
     return oDiv;
@@ -260,21 +261,21 @@ class CustomizeArea extends Component {
     if (blockItems.length) {
       this.editImageArr = [];
       this.customizeAreaData = [];
-      let oBox = this.oBox;
+      const oBox = this.oBox;
       for (let i = 0; i < blockItems.length; i++) {
-        let item = blockItems[i];
+        const item = blockItems[i];
         // 根据坐标信息转图片 {x: 279, y: 414, width: 218, height: 55}
-        let block = item.block;
-        let imageData = this.getImageByPointsInfo(block);
-        let blockItem = {
+        const block = item.block;
+        const imageData = this.getImageByPointsInfo(block);
+        const blockItem = {
           block_id: item.block_id,
           name: item.name,
           ocr_engine: item.ocr_engine,
           block: item.block,
-          image: imageData, //数据库不需要改字段，裁剪的图片数据
+          image: imageData, // 数据库不需要改字段，裁剪的图片数据
         };
         // 绘制矩形框
-        let oDiv = this.drawRect(
+        const oDiv = this.drawRect(
           block.x,
           block.y,
           block.width,
@@ -322,7 +323,7 @@ class CustomizeArea extends Component {
       if (err) {
         return;
       }
-      let temp_name = values.temp_name;
+      const temp_name = values.temp_name;
       this.saveCustomize(temp_name);
       form.resetFields();
       this.setState({ tempNameModalVisible: false });
@@ -340,7 +341,7 @@ class CustomizeArea extends Component {
    */
   handleCancel = () => {
     // 取消，需要清理本次绘制的自定区域
-    let oBox = this.customizeZoneRef.current;
+    const oBox = this.customizeZoneRef.current;
     // 判断下取消是修改，如果是首次绘制自定区域，那么单击取消就会清删除该区域
     if (!this.editCustomBlockFlag) {
       oBox.removeChild(this.curDiv);
@@ -359,8 +360,8 @@ class CustomizeArea extends Component {
       if (err) {
         return;
       }
-      let name = values.name;
-      let OCR_engine = values.OCR_engine;
+      const name = values.name;
+      const OCR_engine = values.OCR_engine;
       this.customBlockForm = { name, OCR_engine };
       // 用户编辑完自定区域后，进行相关数据的收集
       // 判断editCustomBlockFlag true说明是编辑，否则新增
@@ -384,13 +385,13 @@ class CustomizeArea extends Component {
    * @return:
    */
   getImageByPointsInfo = (points) => {
-    let image = new Image();
+    const image = new Image();
     image.src = this.props.imageUrl;
-    let { x, y, width, height } = points;
-    let canvas = document.createElement("canvas"); //创建canvas元素
+    const { x, y, width, height } = points;
+    const canvas = document.createElement("canvas"); // 创建canvas元素
     canvas.setAttribute("width", width);
     canvas.setAttribute("height", height);
-    let ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     // 裁剪图片
     ctx.drawImage(image, x, y, width, height, 0, 0, width, height);
     // 将canvas转化base64
@@ -398,14 +399,14 @@ class CustomizeArea extends Component {
   };
 
   getUserInputData = () => {
-    let pointsInfo = this.curPoints;
-    let imageData = this.getImageByPointsInfo(pointsInfo);
-    let blockItem = {
+    const pointsInfo = this.curPoints;
+    const imageData = this.getImageByPointsInfo(pointsInfo);
+    const blockItem = {
       block_id: uuid(),
       name: this.customBlockForm.name,
       ocr_engine: this.customBlockForm.OCR_engine,
       block: pointsInfo,
-      image: imageData, //保存到数据库或者本地，不需要保存这个字段数据
+      image: imageData, // 保存到数据库或者本地，不需要保存这个字段数据
     };
     // 给当前正在编辑的区域，添加唯一标识id，用于下次重新编辑进行区分
     this.curDiv.setAttribute("id", blockItem.block_id);
@@ -442,7 +443,7 @@ class CustomizeArea extends Component {
     if (this.editCustomTemplateData) {
       this.saveCustomize(this.editCustomTemplateData.temp_name);
     } else {
-      //新增，弹出框
+      // 新增，弹出框
       this.setState({ tempNameModalVisible: true });
     }
   };
@@ -454,26 +455,24 @@ class CustomizeArea extends Component {
    * @return:
    */
   saveCustomize = (temp_name) => {
-    //处理保存的数据
-    //保存为模板数据到数据库
-    //判斷當前保存模板是新增還是修改,如果temp_id存在則爲修改，否則新增
-    //重新编辑模板数据的时候，不需要重新转换原图数据
-    let oBox = this.customizeZoneRef.current;
-    let temp_id = oBox.getAttribute("data-temp_id") || uuid();
+    // 处理保存的数据
+    // 保存为模板数据到数据库
+    // 判斷當前保存模板是新增還是修改,如果temp_id存在則爲修改，否則新增
+    // 重新编辑模板数据的时候，不需要重新转换原图数据
+    const oBox = this.customizeZoneRef.current;
+    const temp_id = oBox.getAttribute("data-temp_id") || uuid();
     // editImageArr有数据，说明用户在当前模板自定了区域数据
     if (this.editImageArr.length) {
-      let blockData = this.customizeAreaData.map((item) => {
-        return {
-          block_id: item.block_id,
-          name: item.name,
-          ocr_engine: item.ocr_engine,
-          block: item.block,
-        };
-      });
+      const blockData = this.customizeAreaData.map((item) => ({
+        block_id: item.block_id,
+        name: item.name,
+        ocr_engine: item.ocr_engine,
+        block: item.block,
+      }));
       // 模板数据
-      let templateData = {
+      const templateData = {
         temp_id: temp_id,
-        temp_name: temp_name || "temp_name_" + temp_id,
+        temp_name: temp_name || `temp_name_${temp_id}`,
         blockItem: blockData,
         image: this.editCustomTemplateData
           ? this.editCustomTemplateData.image
@@ -481,7 +480,7 @@ class CustomizeArea extends Component {
               this.imgElemRef.current,
               this.myCanvas,
               this.uploadImgType
-            ), //用户上传的原图片base64数据
+            ), // 用户上传的原图片base64数据
       };
       // 保存templateData到数据库中
       if (this.isRequesting) {
@@ -493,22 +492,22 @@ class CustomizeArea extends Component {
         (res) => {
           this.isRequesting = false;
           this.props.setSaveStatus(false);
-          let { errno, data } = res;
+          const { errno, data } = res;
           if (errno == 0) {
             if (data > 0) {
-              notification["success"]({
+              notification.success({
                 message: this.props.t("tip-text"),
                 description: this.props.t("save-succ"),
               });
             } else if (data == -1) {
-              //提示已经超过保存模板数量限制，最多保存10个模板，请删除旧再试
-              notification["warning"]({
+              // 提示已经超过保存模板数量限制，最多保存10个模板，请删除旧再试
+              notification.warning({
                 message: this.props.t("tip-text"),
                 description: this.props.t("over_limit"),
               });
             } else {
-              //提示保存失败，请尝试重新保存！！！！
-              notification["error"]({
+              // 提示保存失败，请尝试重新保存！！！！
+              notification.error({
                 message: this.props.t("tip-text"),
                 description: this.props.t("save-fail"),
               });
@@ -520,7 +519,7 @@ class CustomizeArea extends Component {
           // errno: 401
           this.isRequesting = false;
           this.props.setSaveStatus(false);
-          notification["error"]({
+          notification.error({
             message: this.props.t("tip-text"),
             description: res.errmsg,
           });
@@ -533,7 +532,7 @@ class CustomizeArea extends Component {
       // 如果用户当前保存太多模板数据，由于原图base64较大，有可能造成本地缓存不够，需要考虑下是否限制保存的数量以及考虑分页
       // 限制保存10个模板，后面如果需要再开启更多
     } else {
-      notification["warning"]({
+      notification.warning({
         message: this.props.t("tip-text"),
         description: this.props.t("no-cur-area"),
       });
@@ -555,8 +554,8 @@ class CustomizeArea extends Component {
    * @return:
    */
   clearArea = () => {
-    //清除盒子下新增的子节点
-    let oBox = this.customizeZoneRef.current;
+    // 清除盒子下新增的子节点
+    const oBox = this.customizeZoneRef.current;
     oBox.innerHTML = "";
     this.editImageArr = [];
     this.customizeAreaData = [];
@@ -568,28 +567,28 @@ class CustomizeArea extends Component {
    * @return:
    */
   requestOcrEngine() {
-    this.requestParams = []; //请求参数
+    this.requestParams = []; // 请求参数
     if (this.customizeAreaData.length) {
       for (let i = 0; i < this.customizeAreaData.length; i++) {
-        let item = this.customizeAreaData[i];
-        let itemImage = item.image;
-        let obj = {};
+        const item = this.customizeAreaData[i];
+        const itemImage = item.image;
+        const obj = {};
         obj.image = itemImage.substring(itemImage.indexOf(",") + 1);
-        let nowTime = Date.now() + "";
+        const nowTime = `${Date.now()}`;
         obj.session_id = nowTime;
         if (item.ocr_engine == "postcode") {
           obj.options = {
             scene: "postcode",
           };
         }
-        obj.type = "nri_" + item.ocr_engine;
-        obj.app_id = nowTime; //管理员分配,字符串,比userDataImage里的type多了nri前缀
+        obj.type = `nri_${item.ocr_engine}`;
+        obj.app_id = nowTime; // 管理员分配,字符串,比userDataImage里的type多了nri前缀
         this.requestParams.push(obj);
       }
       this.wrapOcrEngine();
     } else {
-      //给出提示
-      notification["warning"]({
+      // 给出提示
+      notification.warning({
         message: this.props.t("tip-text"),
         description: this.props.t("no-cur-area"),
       });
@@ -608,13 +607,13 @@ class CustomizeArea extends Component {
       this.requestParams,
       (res) => {
         this.props.setRequestStatus(false);
-        let { errno, data } = res;
+        const { errno, data } = res;
         if (errno == 0) {
-          let resDataArr = data;
-          const resDetectDataArr = []; //返回数据
-          //处理相关数据
+          const resDataArr = data;
+          const resDetectDataArr = []; // 返回数据
+          // 处理相关数据
           function handleItemValue(items, noNeedMulti) {
-            //计算平均准确度
+            // 计算平均准确度
             let avg_confidence = 0.0;
             if (items && items.length != 0) {
               items.forEach((value, index) => {
@@ -630,21 +629,21 @@ class CustomizeArea extends Component {
           }
 
           for (let i = 0; i < resDataArr.length; i++) {
-            let item = resDataArr[i];
-            let resObj = {};
+            const item = resDataArr[i];
+            const resObj = {};
             if (item.type != "nri_T_general" && item.type != "nri_G_general") {
-              //针对腾讯优图通用返回不一样数据结构处理
+              // 针对腾讯优图通用返回不一样数据结构处理
               resObj.type = item.type;
               resObj.text = item.items;
-              resObj.code = item.items.length > 0 ? 0 : -1; //如果有数据，code=0
-              //计算平均准确度
+              resObj.code = item.items.length > 0 ? 0 : -1; // 如果有数据，code=0
+              // 计算平均准确度
               resObj.confidence = handleItemValue(item.items, true);
             } else if (item.type == "nri_T_general") {
-              //处理腾讯通用印刷识别
+              // 处理腾讯通用印刷识别
               resObj.type = item.type;
               resObj.text = item.items;
-              resObj.code = item.items.length != 0 ? 0 : -1; //如果有数据，code=0
-              //计算平均准确度
+              resObj.code = item.items.length != 0 ? 0 : -1; // 如果有数据，code=0
+              // 计算平均准确度
               resObj.confidence = handleItemValue(item.items);
             }
             // 处理谷歌通用印刷体识别
@@ -653,13 +652,13 @@ class CustomizeArea extends Component {
               resObj.text = this.handleGoogleOcrData(item);
               // 平均值
               resObj.confidence = handleItemValue(item.items);
-              //获取针对该页面的一个总的confidence
+              // 获取针对该页面的一个总的confidence
               if (resObj.text.length != 0) {
-                resObj.code = 0; //有数据
+                resObj.code = 0; // 有数据
               } else if (resObj.text.length == 0) {
-                resObj.code = 1; //无数据
+                resObj.code = 1; // 无数据
               } else {
-                resObj.code = -1; //报错
+                resObj.code = -1; // 报错
               }
             }
             resObj.imgUrl = this.customizeAreaData[i].image;
@@ -677,49 +676,48 @@ class CustomizeArea extends Component {
   }
   // 处理谷歌通用印刷体识别
   handleGoogleOcrData(resData) {
-    let responses = resData.responses || [];
+    const responses = resData.responses || [];
     // 确认返回的responses有数据
     const googleItems = [];
     if (responses.length && JSON.stringify(responses[0]) != "{}") {
       // 默认至于单个请求体，或者一个页面的请求
-      let firstPage_response = responses[0] || {};
-      let pagesArr = firstPage_response.fullTextAnnotation.pages;
+      const firstPage_response = responses[0] || {};
+      const pagesArr = firstPage_response.fullTextAnnotation.pages;
       // pages里保存了blocks，blocks保存了识别出来的每行文字信息或者段落信息，以及对应的每行坐标
-      //从blocks取出每行文字以及对应的confidence
-      let blocksArr = pagesArr[0].blocks; //由于发送的请求只有一个，所以默认取第一个blocks
-      //从blocksArr中获取该页面每行文字信息和坐标
+      // 从blocks取出每行文字以及对应的confidence
+      const blocksArr = pagesArr[0].blocks; // 由于发送的请求只有一个，所以默认取第一个blocks
+      // 从blocksArr中获取该页面每行文字信息和坐标
       for (let i = 0; i < blocksArr.length; i++) {
-        let block = blocksArr[i];
-        let obj = {
+        const block = blocksArr[i];
+        const obj = {
           itemstring: "",
           itemconf: "",
         };
         // confidence
-        if (block["property"] && block["property"]["detectedLanguages"]) {
+        if (block.property && block.property.detectedLanguages) {
           // block["property"]["detectedLanguages"][0].confidence || 1; //没有默认给个1?
-          obj.itemconf =
-            block["property"]["detectedLanguages"][0].confidence || 0;
+          obj.itemconf = block.property.detectedLanguages[0].confidence || 0;
         }
         // 里面保存了每段或者每行的所有字符，将他们串联起来，保存到itemstring里
-        let paragraphs = block.paragraphs[0];
-        let words = paragraphs.words;
+        const paragraphs = block.paragraphs[0];
+        const words = paragraphs.words;
         obj.itemstring = words.reduce((total, word) => {
-          let symbols = word.symbols;
+          const symbols = word.symbols;
           symbols.forEach((element) => {
             total += element.text;
           });
           return total;
         }, "");
         googleItems.push(obj);
-        //使用canvas绘制识别出的文本行在原图中矩形框
+        // 使用canvas绘制识别出的文本行在原图中矩形框
       }
     }
     return googleItems;
   }
 
   render() {
-    let { imageUrl, bill_width, bill_height } = this.props;
-    let { cusAreaModalVisible, tempNameModalVisible } = this.state;
+    const { imageUrl, bill_width, bill_height } = this.props;
+    const { cusAreaModalVisible, tempNameModalVisible } = this.state;
     return (
       <div className="usercustomize_area">
         <img
@@ -741,7 +739,7 @@ class CustomizeArea extends Component {
           visible={tempNameModalVisible}
           onTempNameCancel={this.onTempNameCancel}
           onTempNameConfirm={this.onTempNameConfirm}
-        ></TempNameFormModal>
+        />
         <div className="img_background_wrap">
           <div
             ref={this.customizeZoneRef}
@@ -749,8 +747,8 @@ class CustomizeArea extends Component {
             style={{
               background: `url(${imageUrl}) no-repeat 0 0`,
               backgroundSize: "cover",
-              width: bill_width + "px",
-              height: bill_height + "px",
+              width: `${bill_width}px`,
+              height: `${bill_height}px`,
               transform: "rotate(0)",
             }}
           />

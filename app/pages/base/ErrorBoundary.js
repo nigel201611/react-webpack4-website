@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Result } from "antd";
-import "@styles/errorBoundary.less";
+import React, { Component } from 'react';
+import { Result } from 'antd';
+import '@styles/errorBoundary.less';
+
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);

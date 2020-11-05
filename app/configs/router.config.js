@@ -3,15 +3,15 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-04 13:59:19
  */
-import React from "react";
+import React from 'react';
 import {
   Router,
   Route,
   IndexRoute,
   hashHistory /* , Redirect */,
-} from "react-router";
+} from 'react-router';
 
-import * as base from "@pages/base"; // 基础
+import * as base from '@pages/base'; // 基础
 
 export default () => (
   <Router history={hashHistory}>

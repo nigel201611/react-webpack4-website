@@ -4,10 +4,10 @@
  * @LastEditTime: 2020-09-15 13:55:41
  */
 
-import { createApi } from "@ajax";
-import { baseURL, path } from "@config";
+import { createApi } from '@ajax';
+import { baseURL, path } from '@config';
 
-const prefix = "auth";
+const prefix = 'auth';
 const option = { baseURL: baseURL };
 
 export const login = createApi(`${path}/${prefix}/login`, option); // 登陆

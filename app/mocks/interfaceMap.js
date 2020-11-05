@@ -1,5 +1,5 @@
-const path = "/mock";
-const base = require("./apis/base"); // 基础的接口
+const path = '/mock';
+const base = require('./apis/base'); // 基础的接口
 
 module.exports = {
   [`${path}/usercenter/login`]: base.login, // 登录

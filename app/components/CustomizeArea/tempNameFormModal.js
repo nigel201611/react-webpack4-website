@@ -21,7 +21,7 @@ const TempNameModalForm = Form.create({ name: "form_in_modal" })(
           okText={t("confirm")}
           onCancel={onTempNameCancel}
           onOk={onTempNameConfirm}
-          mask={true}
+          mask
           maskClosable={false}
         >
           <Form layout="vertical">

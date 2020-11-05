@@ -3,13 +3,14 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-04 14:26:55
  */
-import React, { Component } from "react";
-import { hashHistory } from "react-router";
-import { withTranslation } from "react-i18next";
-import { notification, List, Icon, Modal } from "antd";
+import React, { Component } from 'react';
+import { hashHistory } from 'react-router';
+import { withTranslation } from 'react-i18next';
+import { notification, List, Icon, Modal } from 'antd';
+
 const { confirm } = Modal;
-import "@styles/myTemplate.less";
-import { selectTemplate, deleteTemplate } from "@apis/userTemplate";
+import '@styles/myTemplate.less';
+import { selectTemplate, deleteTemplate } from '@apis/userTemplate';
 
 class MyTemplate extends Component {
   // 初始化页面常量 绑定事件方法
@@ -31,21 +32,21 @@ class MyTemplate extends Component {
   componentWillUnmount() {}
 
   handleEdit(index) {
-    let templateData = this.state.tableData[index];
-    hashHistory.push({ pathname: "/customizeTemp", state: { templateData } });
+    const templateData = this.state.tableData[index];
+    hashHistory.push({ pathname: '/customizeTemp', state: { templateData } });
   }
   handleDelete(index) {
     const { t } = this.props;
     const { tableData } = this.state;
     const self = this;
     confirm({
-      title: t("tips"),
-      content: t("confirm_text"),
+      title: t('tips'),
+      content: t('confirm_text'),
       onOk() {
-        let temp_id = tableData[index].temp_id;
+        const temp_id = tableData[index].temp_id;
         deleteTemplate({ temp_id: temp_id }, (res) => {
           // console.log(res);
-          let { errno, data } = res;
+          const { errno, data } = res;
           if (errno === 0) {
             if (data == 1) {
               // 删除成功
@@ -53,19 +54,19 @@ class MyTemplate extends Component {
               self.setState({
                 tableData,
               });
-              notification["success"]({
-                message: t("tips"),
-                description: t("cancel_succ"),
+              notification.success({
+                message: t('tips'),
+                description: t('cancel_succ'),
               });
             } else {
-              //提示用户删除失败，检查网络是否正常
-              notification["error"]({
-                message: t("tips"),
-                description: t("cancel_fail"),
+              // 提示用户删除失败，检查网络是否正常
+              notification.error({
+                message: t('tips'),
+                description: t('cancel_fail'),
               });
             }
           } else {
-            //提示没有模板数据
+            // 提示没有模板数据
           }
         });
       },
@@ -91,37 +92,37 @@ class MyTemplate extends Component {
         this.setState({
           isRequesting: false,
         });
-        let { errno, errmsg, data } = res;
+        const { errno, errmsg, data } = res;
         if (errno == 0) {
           if (data !== null) {
-            let templateDataArr = data;
+            const templateDataArr = data;
             templateDataArr.forEach((item, index) => {
               let blockItem = item.blockItem;
-              blockItem = blockItem.replace(/\\/, "");
+              blockItem = blockItem.replace(/\\/, '');
               templateDataArr[index].blockItem = JSON.parse(blockItem);
             });
             this.setState({
               tableData: templateDataArr,
             });
           } else {
-            //提示没有模板数据
-            notification["warning"]({
-              message: this.props.t("tips"),
-              description: this.props.t("no_data"),
+            // 提示没有模板数据
+            notification.warning({
+              message: this.props.t('tips'),
+              description: this.props.t('no_data'),
             });
           }
         }
         // this.tableData
       },
       (err) => {
-        notification["error"]({
-          message: this.props.t("tips"),
+        notification.error({
+          message: this.props.t('tips'),
           description: err.errmsg,
         });
         this.setState({
           isRequesting: false,
         });
-      }
+      },
     );
   };
 
@@ -152,7 +153,7 @@ class MyTemplate extends Component {
                       className="action-button"
                       onClick={this.handleEdit.bind(this, index)}
                     >
-                      {t("edit")}
+                      {t('edit')}
                     </span>
                   </span>,
                   <span key="list-vertical-delete">
@@ -161,7 +162,7 @@ class MyTemplate extends Component {
                       className="action-button"
                       onClick={this.handleDelete.bind(this, index)}
                     >
-                      {t("delete")}
+                      {t('delete')}
                     </span>
                   </span>,
                 ]}
@@ -170,29 +171,27 @@ class MyTemplate extends Component {
                     className="template-image"
                     style={{
                       backgroundImage: `url(${item.image})`,
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "contain",
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: 'contain',
                     }}
-                  ></div>
+                  />
                 }
               >
                 <List.Item.Meta
-                  title={t("temp_name") + " " + item.temp_name}
-                  description={t("temp_name") + item.name ? item.item : ""}
+                  title={`${t('temp_name')} ${item.temp_name}`}
+                  description={t('temp_name') + item.name ? item.item : ''}
                 />
-                {item.blockItem.map((block, index) => {
-                  return (
-                    <p key={block.block_id}>
-                      {"(" + (index + 1) + ")" + " "}
-                      <span>
-                        {t("ocr_engine")}:{block.ocr_engine}
-                      </span>{" "}
-                      <span>
-                        {t("area_name")}:{block.name}
-                      </span>
-                    </p>
-                  );
-                })}
+                {item.blockItem.map((block, index) => (
+                  <p key={block.block_id}>
+                    {`(${index + 1})` + ' '}
+                    <span>
+                      {t('ocr_engine')}:{block.ocr_engine}
+                    </span>{' '}
+                    <span>
+                      {t('area_name')}:{block.name}
+                    </span>
+                  </p>
+                ))}
               </List.Item>
             )}
           />
@@ -202,4 +201,4 @@ class MyTemplate extends Component {
   }
 }
 
-export default withTranslation("myTemplate")(MyTemplate);
+export default withTranslation('myTemplate')(MyTemplate);

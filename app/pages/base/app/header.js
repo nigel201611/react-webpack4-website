@@ -1,25 +1,24 @@
-import React, { Component } from "react";
-import { hashHistory } from "react-router";
-import { CSSTransition } from "react-transition-group";
-import { connect } from "react-redux";
-import { setCurrentNav, setCurrentNavItem } from "@actions/common";
-import { withTranslation } from "react-i18next";
-import { Modal, message, Row, Col, Menu, Dropdown } from "antd";
-import HorizontalLoginForm from "./horizontalLoginForm";
+import React, { Component } from 'react';
+import { hashHistory } from 'react-router';
+import { CSSTransition } from 'react-transition-group';
+import { connect } from 'react-redux';
+import { setCurrentNav, setCurrentNavItem } from '@actions/common';
+import { withTranslation } from 'react-i18next';
+import { Modal, message, Row, Col, Menu, Dropdown } from 'antd';
+import HorizontalLoginForm from './horizontalLoginForm';
 
 const { SubMenu } = Menu;
-import { logout } from "@apis/common";
-import logoImage from "@images/logo.png";
+import { logout } from '@apis/common';
+import logoImage from '@images/logo.png';
 // import { store } from "@app/client";
-import "@styles/header.less";
-import navList from "@apis/navList.js";
+import '@styles/header.less';
+import navList from '@apis/navList.js';
+
 const { confirm } = Modal;
 
-@connect((state) => {
-  return {
-    currentNavItem: state.currentNavItem,
-  };
-})
+@connect(state => ({
+  currentNavItem: state.currentNavItem,
+}))
 class Header extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -27,7 +26,7 @@ class Header extends Component {
     this.state = {
       navList: navList,
       showLoginBox: false,
-      name: "", //用户登录名
+      name: '', // 用户登录名
     };
   }
   // 登出
@@ -35,18 +34,18 @@ class Header extends Component {
     event.preventDefault();
     const self = this;
     confirm({
-      title: self.props.t("tip"),
-      content: self.props.t("logoutMesage"),
+      title: self.props.t('tip'),
+      content: self.props.t('logoutMesage'),
       onOk() {
         logout({}, (result) => {
           if (result.errno === 0) {
             sessionStorage.clear();
             self.setState({
-              name: "",
+              name: '',
               showLoginBox: false,
             });
-            self.props.dispatch(setCurrentNavItem("1"));
-            hashHistory.replace("/");
+            self.props.dispatch(setCurrentNavItem('1'));
+            hashHistory.replace('/');
           } else {
             message.warning(result.msg);
           }
@@ -72,28 +71,28 @@ class Header extends Component {
   };
 
   logoClick = () => {
-    console.log("nri");
+    console.log('nri');
   };
   handleClick = (e) => {
-    let { key, item } = e;
-    let { props } = item;
+    const { key, item } = e;
+    const { props } = item;
     this.props.dispatch(setCurrentNavItem(key));
-    window.sessionStorage.setItem("currentNavItem", key);
-    let anchorName = props.name;
-    let path = props.path;
-    if (this.currentPath === path || this.currentPath === "") {
+    window.sessionStorage.setItem('currentNavItem', key);
+    const anchorName = props.name;
+    const path = props.path;
+    if (this.currentPath === path || this.currentPath === '') {
       hashHistory.replace(path);
     } else {
       hashHistory.push(path);
     }
     this.currentPath = path;
-    if (anchorName && path === "/home") {
+    if (anchorName && path === '/home') {
       setTimeout(() => {
-        let anchorElement = document.getElementById(anchorName);
+        const anchorElement = document.getElementById(anchorName);
         if (anchorElement) {
           anchorElement.scrollIntoView({
-            behavior: "smooth",
-            block: key == "2" ? "start" : key == "3" ? "center" : "start",
+            behavior: 'smooth',
+            block: key == '2' ? 'start' : key == '3' ? 'center' : 'start',
           });
         }
       }, 0);
@@ -103,21 +102,21 @@ class Header extends Component {
   scrollToAnchor = (index, anchorName, event) => {
     event.stopPropagation();
     this.props.dispatch(setCurrentNav(index));
-    hashHistory.push("/home"); //可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
+    hashHistory.push('/home'); // 可以带参数过去，看当前点了那个，然后在home页显示时，根据参数滚动到具体位置
     if (anchorName) {
-      let anchorElement = document.getElementById(anchorName);
+      const anchorElement = document.getElementById(anchorName);
       if (anchorElement) {
         anchorElement.scrollIntoView({
-          behavior: "smooth",
-          block: index == 1 ? "start" : index == 2 ? "center" : "start",
+          behavior: 'smooth',
+          block: index == 1 ? 'start' : index == 2 ? 'center' : 'start',
           // inline: "start",
         });
       }
     }
   };
   getUserName() {
-    let name = "";
-    const userinfo = JSON.parse(sessionStorage.getItem("userInfo")) || {};
+    let name = '';
+    const userinfo = JSON.parse(sessionStorage.getItem('userInfo')) || {};
     userinfo && userinfo.username && (name = userinfo.username);
     this.setState({
       name,
@@ -129,21 +128,21 @@ class Header extends Component {
     });
   };
   componentDidMount() {
-    let currentNavItem = window.sessionStorage.getItem("currentNavItem") || "1";
+    const currentNavItem = window.sessionStorage.getItem('currentNavItem') || '1';
     // 设置当前菜单
     this.props.dispatch(setCurrentNavItem(currentNavItem));
-    this.currentPath = ""; //用于保存當前或者上一個path
+    this.currentPath = ''; // 用于保存當前或者上一個path
     this.getUserName();
   }
   render() {
     const { navList, showLoginBox, name } = this.state;
-    let { currentNavItem } = this.props;
+    const { currentNavItem } = this.props;
 
     const userinfoMenu = (
       <Menu>
         <Menu.Item>
           <a href="#" onClick={this.handleLogout.bind(this)}>
-            {this.props.t("logOut")}
+            {this.props.t('logOut')}
           </a>
         </Menu.Item>
         {/* <Menu.Item>
@@ -176,44 +175,40 @@ class Header extends Component {
                 <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
                     <img className="logo_icon" src={logoImage} alt="NRI logo" />
-                    {this.props.t("NRI_title")}
+                    {this.props.t('NRI_title')}
                   </span>
                 </span>
                 <ul className="navList">
-                  {navList.map((item) => {
-                    return (
-                      <Menu
-                        onClick={this.handleClick}
-                        selectedKeys={[currentNavItem]}
-                        mode="horizontal"
-                        key={item.text}
-                      >
-                        {item.children != undefined && item.children.length ? (
-                          <SubMenu
-                            popupClassName="subMenu"
-                            key={item.id}
-                            title={this.props.t(item.nav)}
-                          >
-                            {item.children.map((child) => {
-                              return (
-                                <Menu.Item key={child.id} path={child.path}>
-                                  {this.props.t(child.nav)}
-                                </Menu.Item>
-                              );
-                            })}
-                          </SubMenu>
-                        ) : (
-                          <Menu.Item
-                            key={item.id}
-                            name={item.name}
-                            path={item.path}
-                          >
-                            {this.props.t(item.nav)}
-                          </Menu.Item>
-                        )}
-                      </Menu>
-                    );
-                  })}
+                  {navList.map(item => (
+                    <Menu
+                      onClick={this.handleClick}
+                      selectedKeys={[currentNavItem]}
+                      mode="horizontal"
+                      key={item.text}
+                    >
+                      {item.children != undefined && item.children.length ? (
+                        <SubMenu
+                          popupClassName="subMenu"
+                          key={item.id}
+                          title={this.props.t(item.nav)}
+                        >
+                          {item.children.map(child => (
+                            <Menu.Item key={child.id} path={child.path}>
+                              {this.props.t(child.nav)}
+                            </Menu.Item>
+                          ))}
+                        </SubMenu>
+                      ) : (
+                        <Menu.Item
+                          key={item.id}
+                          name={item.name}
+                          path={item.path}
+                        >
+                          {this.props.t(item.nav)}
+                        </Menu.Item>
+                      )}
+                    </Menu>
+                  ))}
                 </ul>
               </div>
             </Col>
@@ -225,19 +220,19 @@ class Header extends Component {
                       <Dropdown overlay={userinfoMenu}>
                         <a
                           className="ant-dropdown-link"
-                          onClick={(e) => e.preventDefault()}
+                          onClick={e => e.preventDefault()}
                         >
-                          {name} <i className="iconfont icon-login"></i>
+                          {name} <i className="iconfont icon-login" />
                         </a>
                       </Dropdown>
                     ) : showLoginBox ? (
                       <HorizontalLoginForm
                         setUserName={this.setUserName}
-                      ></HorizontalLoginForm>
+                      />
                     ) : (
                       <a onClick={this.handleLogin.bind(this)}>
-                        {this.props.t("login")}{" "}
-                        <i className="iconfont icon-login"></i>
+                        {this.props.t('login')}{' '}
+                        <i className="iconfont icon-login" />
                       </a>
                     )}
                   </li>
@@ -245,10 +240,10 @@ class Header extends Component {
                     <Dropdown overlay={languageMenu}>
                       <a
                         className="ant-dropdown-link"
-                        onClick={(e) => e.preventDefault()}
+                        onClick={e => e.preventDefault()}
                       >
-                        {this.props.t("language_set")}
-                        <i className="iconfont icon-duoyuyan"></i>
+                        {this.props.t('language_set')}
+                        <i className="iconfont icon-duoyuyan" />
                       </a>
                     </Dropdown>
                   </li>
@@ -262,4 +257,4 @@ class Header extends Component {
   }
 }
 
-export default withTranslation("header")(Header);
+export default withTranslation('header')(Header);

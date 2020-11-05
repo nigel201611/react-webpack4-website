@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { Upload } from "antd";
-import "./UploadComp.less";
+import React, { Component } from 'react';
+import { Upload } from 'antd';
+import './UploadComp.less';
+
 export default function UploadComp(props) {
   return (
     <Upload

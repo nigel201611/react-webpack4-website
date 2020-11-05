@@ -1,7 +1,7 @@
 {
   "name": "react-project",
   "version": "0.1.0",
-  "description": "a react develop stack for pc management system",
+  "description": "a react develop stack for Official website",
   "scripts": {
     "dev": "concurrently \"npm run dev\" \"npm run mock\"",
     "start": "webpack-dev-server --config ./scripts/webpack.dev.config.js",
@@ -35,7 +35,6 @@
       "^@config(.*)$": "<rootDir>/app/configs/config.js",
       "^@reg(.*)$": "<rootDir>/app/configs/regular.config.js",
       "^@components(.*)$": "<rootDir>/app/components$1",
-      "^@tableList(.*)$": "<rootDir>/app/components/tableList/tableList.js",
       "^@redux/actions(.*)$": "<rootDir>/app/redux/actions$1",
       "^@images(.*)$": "<rootDir>/app/images$1"
     },
@@ -53,15 +52,13 @@
       "!**/mocks/**",
       "!**/middleware/**",
       "!**/components/**",
-      "!**/menu/**",
+      "!**/locales/**",
       "!**/configs/**",
       "!**/store.js",
       "!**/provider.jsx",
       "!**/example.js",
       "!**/client.js",
       "!**/webpack.config.js",
-      "!**/selectRole.js",
-      "!**/setCenter/index.js",
       "!**/dist/**"
     ],
     "coverageThreshold": {
@@ -98,6 +95,8 @@
     "enzyme": "^3.7.0",
     "eslint": "~4.15.0",
     "eslint-config-airbnb": "~16.1.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^4.0.2",
     "eslint-plugin-babel": "~4.1.2",
     "eslint-plugin-import": "~2.8.0",
     "eslint-plugin-jsx-a11y": "~6.0.3",

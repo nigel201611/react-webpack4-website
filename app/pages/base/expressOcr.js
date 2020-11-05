@@ -3,15 +3,15 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-02 15:54:56
  */
-import React, { Component } from "react";
-import { withTranslation } from "react-i18next";
-import { Spin, Icon, message, Upload, Row, Col, Table, Tag } from "antd";
-import "@styles/expressOcr.less";
-import { expressBill } from "@apis/expressOcr";
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { Spin, Icon, message, Upload, Row, Col, Table, Tag } from 'antd';
+import '@styles/expressOcr.less';
+import { expressBill } from '@apis/expressOcr';
 
 function getBase64(img, callback) {
   const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
+  reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
 
@@ -22,47 +22,47 @@ class ExpressOcr extends Component {
     this.state = {
       loading: false,
       isRequesting: false,
-      imageUrl: "",
+      imageUrl: '',
       data: [],
     };
   }
 
   beforeUpload = (file) => {
     const isJpgOrPng =
-      file.type === "image/jpeg" ||
-      file.type === "image/png" ||
-      file.type === "image/jpg";
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG/JPG file!");
+      message.error('You can only upload JPG/PNG/JPG file!');
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error("Image must smaller than 5MB!");
+      message.error('Image must smaller than 5MB!');
     }
 
     this.setState({
-      imageUrl: "",
+      imageUrl: '',
       data: [],
     });
     return isJpgOrPng && isLt5M;
   };
 
   handleChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       if (this.state.isRequesting) {
         return;
       }
       getBase64(info.file.originFileObj, (imageUrl) => {
-        let nowTime = Date.now() + "";
-        let requestObj = {
+        const nowTime = `${Date.now()}`;
+        const requestObj = {
           request_id: nowTime,
-          appid: nowTime, //管理员分配,字符串
+          appid: nowTime, // 管理员分配,字符串
           image: imageUrl,
-          options: { scene: "all" },
+          options: { scene: 'all' },
         };
         this.setState({
           imageUrl,
@@ -79,11 +79,11 @@ class ExpressOcr extends Component {
             //   如果返回401，或者token失效，提醒有用户去登录，由用户决定是否去登陆
             message.warning(res.errmsg);
             this.setState({ isRequesting: false });
-          }
+          },
         );
       });
     }
-    if (info.file.status === "error") {
+    if (info.file.status === 'error') {
       this.setState({ loading: false });
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -91,30 +91,30 @@ class ExpressOcr extends Component {
 
   handleTableData(data) {
     let tableData = [];
-    let { t } = this.props;
+    const { t } = this.props;
     if (data.data && data.data.code == 0) {
-      let ocrResponse = data.data.data;
+      const ocrResponse = data.data.data;
       if (!ocrResponse.address && !ocrResponse.name && !ocrResponse.postcode) {
         tableData = [];
       } else {
         tableData = [
           {
-            key: "1",
-            fields: t("postcode"),
-            result: ocrResponse.postcode && ocrResponse.postcode["text"],
-            confidence: ocrResponse.postcode && ocrResponse.postcode["score"],
+            key: '1',
+            fields: t('postcode'),
+            result: ocrResponse.postcode && ocrResponse.postcode.text,
+            confidence: ocrResponse.postcode && ocrResponse.postcode.score,
           },
           {
-            key: "2",
-            fields: t("address"),
-            result: ocrResponse.address && ocrResponse.address["text"],
-            confidence: ocrResponse.address && ocrResponse.address["score"],
+            key: '2',
+            fields: t('address'),
+            result: ocrResponse.address && ocrResponse.address.text,
+            confidence: ocrResponse.address && ocrResponse.address.score,
           },
           {
-            key: "3",
-            fields: t("name"),
-            result: ocrResponse.name && ocrResponse.name["text"],
-            confidence: ocrResponse.name && ocrResponse.name["score"],
+            key: '3',
+            fields: t('name'),
+            result: ocrResponse.name && ocrResponse.name.text,
+            confidence: ocrResponse.name && ocrResponse.name.score,
           },
         ];
       }
@@ -135,9 +135,9 @@ class ExpressOcr extends Component {
     } else {
       that.tableData = [
         {
-          key: "1",
-          fields: "error code",
-          result: "something error ",
+          key: '1',
+          fields: 'error code',
+          result: 'something error ',
           confidence: 0,
         },
       ];
@@ -152,43 +152,43 @@ class ExpressOcr extends Component {
     const { t } = this.props;
     const columns = [
       {
-        title: t("fields"),
-        dataIndex: "fields",
-        key: "fields",
-        align: "left",
+        title: t('fields'),
+        dataIndex: 'fields',
+        key: 'fields',
+        align: 'left',
         width: 140,
-        render: (text) => <a>{text}</a>,
+        render: text => <a>{text}</a>,
       },
       {
-        title: t("result"),
-        dataIndex: "result",
-        align: "left",
-        key: "result",
+        title: t('result'),
+        dataIndex: 'result',
+        align: 'left',
+        key: 'result',
         render: (text, record) => (
           <p
-            id={"border_" + record.fields}
-            className={record.result ? "border_" + record.fields : ""}
+            id={`border_${record.fields}`}
+            className={record.result ? `border_${record.fields}` : ''}
           >
             <span>{text}</span>
           </p>
         ),
       },
       {
-        title: t("confidence"),
-        dataIndex: "confidence",
-        align: "left",
-        key: "confidence",
+        title: t('confidence'),
+        dataIndex: 'confidence',
+        align: 'left',
+        key: 'confidence',
         width: 120,
-        render: (text) => (text ? <span>{text}%</span> : ""),
+        render: text => (text ? <span>{text}%</span> : ''),
       },
     ];
     const uploadButton = (
       <div>
         <Icon
-          style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
-          type={this.state.loading ? "loading" : "inbox"}
+          style={{ fontSize: '36px', color: '#11aae4', margin: '0 0 10px 0' }}
+          type={this.state.loading ? 'loading' : 'inbox'}
         />
-        <div className="ant-upload-text">{t("upload-tip")}</div>
+        <div className="ant-upload-text">{t('upload-tip')}</div>
       </div>
     );
     const { imageUrl, isRequesting, data } = this.state;
@@ -197,8 +197,8 @@ class ExpressOcr extends Component {
         <section className="express-wrap">
           <div className="express-banner">
             <div className="express-title">
-              <h1>{t("banner-title")}</h1>
-              <p>{t("banner-desc")}</p>
+              <h1>{t('banner-title')}</h1>
+              <p>{t('banner-desc')}</p>
             </div>
           </div>
           <div className="express-main">
@@ -219,7 +219,7 @@ class ExpressOcr extends Component {
                       <img
                         src={imageUrl}
                         alt="avatar"
-                        style={{ width: "100%" }}
+                        style={{ width: '100%' }}
                       />
                     ) : (
                       uploadButton
@@ -243,4 +243,4 @@ class ExpressOcr extends Component {
   }
 }
 
-export default withTranslation("expressOcr")(ExpressOcr);
+export default withTranslation('expressOcr')(ExpressOcr);

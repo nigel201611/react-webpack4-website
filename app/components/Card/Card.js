@@ -28,29 +28,27 @@ export default class Card extends Component {
       [5, { path: "/T_GeneralOcr", nav: "2_5" }],
       [6, { path: "/G_GeneralOcr", nav: "2_6" }],
     ]);
-    let pathInfo = map.get(id);
+    const pathInfo = map.get(id);
     window.sessionStorage.setItem("currentNavItem", pathInfo.nav);
     this.props.dispatch(setCurrentNavItem(pathInfo.nav));
     this.props.dispatch(setCurrentNav(pathInfo.nav.substr(0, 1)));
     hashHistory.push(pathInfo.path);
   };
   render() {
-    const listItems = this.props.cardList.map((item) => {
-      return (
-        <Col className="gutter-row" span={8} key={item.id}>
-          <div
-            className="gutter-box"
-            onClick={this.handleClickCardItem.bind(this, item.id)}
-          >
-            <img src={item.image} alt="image" />
-            <div className="desc_content">
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </div>
+    const listItems = this.props.cardList.map((item) => (
+      <Col className="gutter-row" span={8} key={item.id}>
+        <div
+          className="gutter-box"
+          onClick={this.handleClickCardItem.bind(this, item.id)}
+        >
+          <img src={item.image} alt="image" />
+          <div className="desc_content">
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
           </div>
-        </Col>
-      );
-    });
+        </div>
+      </Col>
+    ));
     return (
       <Row
         className="cards-row"

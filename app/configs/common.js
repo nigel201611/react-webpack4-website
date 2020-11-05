@@ -4,15 +4,15 @@
  * @LastEditTime: 2020-09-15 14:16:33
  */
 
-import { login as loginApi } from "@apis/common";
+import { login as loginApi } from '@apis/common';
 
 export function parseQueryString(url) {
   const obj = {};
-  if (url.indexOf("?") !== -1) {
-    const str = url.split("?")[1];
-    const strs = str.split("&");
+  if (url.indexOf('?') !== -1) {
+    const str = url.split('?')[1];
+    const strs = str.split('&');
     strs.map((item, i) => {
-      const arr = strs[i].split("=");
+      const arr = strs[i].split('=');
       /* eslint-disable */
       obj[arr[0]] = arr[1];
     });

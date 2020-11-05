@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Progress } from "antd";
+import React, { Component } from 'react';
+import { Progress } from 'antd';
 
 // 声明组件  并对外输出
 export default class developing extends Component {
@@ -19,16 +19,16 @@ export default class developing extends Component {
       <div
         className="developing"
         style={{
-          height: "86vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          height: '86vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <Progress
           type="circle"
           percent={100}
-          format={() => "Coming online soon, please look forward to..."}
+          format={() => 'Coming online soon, please look forward to...'}
           width={200}
           status="active"
         />

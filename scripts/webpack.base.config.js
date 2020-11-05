@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-29 17:58:19
+ * @LastEditTime: 2020-11-05 10:47:44
  */
 
 const path = require("path");
@@ -123,6 +123,20 @@ const webpackConfigBase = {
   module: {
     // noParse: /lodash/,
     rules: [
+      // {
+      //   enforce: "pre",
+      //   test: /\.(js|jsx)$/,
+      //   include: [resolve("../app")],
+      //   exclude: /node_modules/,
+      //   loader: "eslint-loader",
+      //   options: {
+      //     // cache: true,
+      //     fix: true,
+      //     formatter: require("eslint-friendly-formatter"),
+      //     // failOnError Will cause the module build to fail if there are any errors, if option is set to true.
+      //     failOnError: true,
+      //   },
+      // },
       {
         test: /\.js[x]?$/,
         exclude: /node_modules/,

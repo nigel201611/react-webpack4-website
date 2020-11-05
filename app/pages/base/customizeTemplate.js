@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-03 14:48:58
+ * @LastEditTime: 2020-11-05 13:57:14
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -35,24 +35,24 @@ class CustomizeTemp extends Component {
       loading: false,
       isRequesting: false,
       imageUrl: "",
-      current: 0, //当前步骤索引
-      bill_width: "680", //運單默認寬度
-      bill_height: "400", //運單默認高度
+      current: 0, // 当前步骤索引
+      bill_width: "680", // 運單默認寬度
+      bill_height: "400", // 運單默認高度
       uploadImgType: "image/jpeg",
       saving: false,
     };
   }
 
   componentDidMount() {
-    this.fixSizeW = 2048; //控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
+    this.fixSizeW = 2048; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
     this.fixSizeH = 2048;
-    this.OriginImageUrl = ""; //保存用户上传未处理的图片数据
-    this.calibrating = false; //控制图片校准标识，防止过频
+    this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
+    this.calibrating = false; // 控制图片校准标识，防止过频
     this.templateData =
       (this.props.location &&
         this.props.location.state &&
         this.props.location.state.templateData) ||
-      null; //是否有从路由跳转传来参数
+      null; // 是否有从路由跳转传来参数
     this.handleMyTemplateEdit(this.templateData);
   }
 
@@ -64,16 +64,16 @@ class CustomizeTemp extends Component {
   // 从我的模板通过编辑按钮，跳转过来处理
   handleMyTemplateEdit(templateData) {
     if (templateData && JSON.stringify(templateData) != "{}") {
-      //调用自定区域组件方法根据数据绘制自定区域
-      let image = templateData.image;
-      let imageElem = new Image();
+      // 调用自定区域组件方法根据数据绘制自定区域
+      const image = templateData.image;
+      const imageElem = new Image();
       imageElem.onload = () => {
-        let bill_width = imageElem.width;
-        let bill_height = imageElem.height;
+        const bill_width = imageElem.width;
+        const bill_height = imageElem.height;
         this.setState(
           { current: 1, imageUrl: templateData.image, bill_width, bill_height },
           () => {
-            let customizeArea = this.customizeAreaRef.current;
+            const customizeArea = this.customizeAreaRef.current;
             customizeArea.handleEditTemplate(templateData);
           }
         );
@@ -111,18 +111,18 @@ class CustomizeTemp extends Component {
     if (this.calibrating) {
       return;
     }
-    let imgElem = new Image();
-    let myCanvas = document.createElement("canvas");
-    let myCtx = myCanvas.getContext("2d");
+    const imgElem = new Image();
+    const myCanvas = document.createElement("canvas");
+    const myCtx = myCanvas.getContext("2d");
     imgElem.src = this.OriginImageUrl;
     this.calibrating = true;
     imgElem.onload = () => {
-      let imgWidth = imgElem.width, //上传图片的宽
-        imgHeight = imgElem.height, //上传图片的高
-        maxWidth = this.fixSizeW, //图片最大宽
-        maxHeight = this.fixSizeH, //图片最大高
-        targetWidth = imgWidth, //最后图片的宽
-        targetHeight = imgHeight; //最后图片的高
+      let imgWidth = imgElem.width, // 上传图片的宽
+        imgHeight = imgElem.height, // 上传图片的高
+        maxWidth = this.fixSizeW, // 图片最大宽
+        maxHeight = this.fixSizeH, // 图片最大高
+        targetWidth = imgWidth, // 最后图片的宽
+        targetHeight = imgHeight; // 最后图片的高
       // 如果图片的宽或者高大于限定的最大宽高
       if (imgWidth > maxWidth || imgHeight > maxHeight) {
         // 宽大于高
@@ -136,12 +136,12 @@ class CustomizeTemp extends Component {
           targetWidth = Math.round(maxHeight * (imgWidth / imgHeight));
         }
       }
-      myCanvas.width = targetWidth; //canvas的宽=图片的宽
-      myCanvas.height = targetHeight; //canvas的高=图片的高
-      myCtx.clearRect(0, 0, targetWidth, targetHeight); //清理canvas
-      myCtx.drawImage(imgElem, 0, 0, targetWidth, targetHeight); //canvas绘图
+      myCanvas.width = targetWidth; // canvas的宽=图片的宽
+      myCanvas.height = targetHeight; // canvas的高=图片的高
+      myCtx.clearRect(0, 0, targetWidth, targetHeight); // 清理canvas
+      myCtx.drawImage(imgElem, 0, 0, targetWidth, targetHeight); // canvas绘图
       // 去掉dll校准，添加此处代码，否则注释掉
-      let imageUrl = myCanvas.toDataURL(file.type, 1.0);
+      const imageUrl = myCanvas.toDataURL(file.type, 1.0);
       this.calibrating = false;
       this.setState({
         imageUrl,
@@ -162,12 +162,12 @@ class CustomizeTemp extends Component {
     }
     if (info.file.status === "done") {
       // 对上传成功，如果尺寸过大做些控制
-      let fileObj = info.file.originFileObj;
+      const fileObj = info.file.originFileObj;
       this.OriginImageUrl = URL.createObjectURL(fileObj);
       this.setState({
         uploadImgType: fileObj.type,
       });
-      //上传成功调用校准接口校准下图片，file.raw
+      // 上传成功调用校准接口校准下图片，file.raw
       this.calibrationImage(fileObj);
     }
     if (info.file.status === "error") {
@@ -176,7 +176,7 @@ class CustomizeTemp extends Component {
     }
   };
   handleClearArea = () => {
-    //清除盒子下新增的子节点
+    // 清除盒子下新增的子节点
     this.customizeAreaRef.current.clearArea();
   };
 
@@ -230,7 +230,7 @@ class CustomizeTemp extends Component {
             uploadImgType={uploadImgType}
             setSaveStatus={this.setSaveStatus}
             ref={this.customizeAreaRef}
-          ></CustomizeArea>
+          />
         );
         break;
     }
@@ -253,12 +253,15 @@ class CustomizeTemp extends Component {
             <div className="steps-action">
               {current === 1 && (
                 <>
+                  ' '
                   <Button type="primary" onClick={this.prev}>
                     {t("back-upload")}
                   </Button>
+                  ' '
                   <Button type="primary" onClick={this.handleClearArea}>
                     {t("clear-area")}
                   </Button>
+                  ' '
                   <Button
                     type="primary"
                     loading={saving}
@@ -266,6 +269,7 @@ class CustomizeTemp extends Component {
                   >
                     {t("save-template")}
                   </Button>
+                  ' '
                 </>
               )}
             </div>

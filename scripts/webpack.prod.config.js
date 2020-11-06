@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-29 18:00:16
+ * @LastEditTime: 2020-11-06 16:26:23
  */
 
 const webpack = require("webpack");
@@ -59,7 +59,12 @@ const webpackConfigProd = {
     }),
     // 分析代码
     new BundleAnalyzerPlugin({ analyzerMode: "static" }),
-    // new Copy([{ from: "./app/resource/dll", to: "../dist/resource/dll" }]),
+    new Copy([
+      {
+        from: "./static/official/images",
+        to: "../dist/static/official/images",
+      },
+    ]),
     // new webpack.DllReferencePlugin({
     //   context: __dirname,
     //   manifest: require("../app/resource/dll/vendor.manifest.json"),

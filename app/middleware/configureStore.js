@@ -1,18 +1,19 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
-import rootReducer from '@reducers';
-import { logger, /* router, */ reduxRouterMiddleware } from './index';
+import { createStore, applyMiddleware } from "redux";
+import thunkMiddleware from "redux-thunk";
+import rootReducer from "@reducers";
+import { /*logger,*/ /* router, */ reduxRouterMiddleware } from "./index";
 
-const nextReducer = require('@reducers');
+const nextReducer = require("@reducers");
 
 export default function configure(initialState) {
-  const create = window.devToolsExtension
-    ? window.devToolsExtension()(createStore)
-    : createStore;
+  // const create = window.devToolsExtension
+  //   ? window.devToolsExtension()(createStore)
+  //   : createStore;
+  const create = createStore;
 
   const createStoreWithMiddleware = applyMiddleware(
     reduxRouterMiddleware,
-    thunkMiddleware,
+    thunkMiddleware
     // logger
     // router,
   )(create);
@@ -20,7 +21,7 @@ export default function configure(initialState) {
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   if (module.hot) {
-    module.hot.accept('@reducers', () => {
+    module.hot.accept("@reducers", () => {
       store.replaceReducer(nextReducer);
     });
   }

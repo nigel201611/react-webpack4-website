@@ -13,7 +13,7 @@ export default {
   cardList: [
     {
       id: 1,
-      image: "../images/home/jpexpress.png",
+      image: require("@images/home/jpexpress.png"),
       title: "日本語送り状の識別",
       desc:
         "'日本語送り状の識別'日本語送り状の画像をアップロードし、対応する郵便番号、住所、氏名データを識別する",
@@ -27,28 +27,28 @@ export default {
     // },
     {
       id: 3,
-      image: "../images/home/customTemplate.jpg",
+      image: require("@images/home/customTemplate.jpg"),
       title: "自定OCRテンプレート",
       desc:
         "「自定OCRテンプレート」は、所望のテンプレートをカスタマイズし、「OCR実行」で同じフォーマットの画像を選択して、自分の欲しいデータを識別することができます。",
     },
     {
       id: 4,
-      image: "../images/home/executeocr.jpg",
+      image: require("@images/home/executeocr.jpg"),
       title: "OCRを実行",
       desc:
         " 'OCRを実行する'は自分で決めたテンプレートに基づいて、同じテンプレートのフォーマットの画像をアップロードすることを選択し、自分が欲しい画像データを識別する。",
     },
     {
       id: 5,
-      image: "../images/home/tengxunocr.png",
+      image: require("@images/home/tengxunocr.png"),
       title: "T-汎用認識",
       desc:
         "'T-汎用識別'画像をアップロードし、T-汎用エンジンで対応画像データを識別し、印刷、手書き、英語などの文字に対して",
     },
     {
       id: 6,
-      image: "../images/home/ai_algorithorm.png",
+      image: require("@images/home/ai_algorithorm.png"),
       title: "G-汎用認識",
       desc:
         "'G-汎用識別'画像をアップロードし、G-汎用エンジンで対応画像データを識別し、印刷、手書き、英語などの文字に対して",

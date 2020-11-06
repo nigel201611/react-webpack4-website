@@ -13,7 +13,7 @@ export default {
   cardList: [
     {
       id: 1,
-      image: "../images/home/jpexpress.png",
+      image: require("@images/home/jpexpress.png"),
       title: "日文运单识别",
       desc: "'日文运单识别'上传日文运单图片，识别对应邮编、地址、姓名数据",
     },
@@ -26,28 +26,28 @@ export default {
     // },
     {
       id: 3,
-      image: "../images/home/executeocr.jpg",
+      image: require("@images/home/executeocr.jpg"),
       title: "执行OCR",
       desc:
         " '执行OCR'根据自定好的模板，选择上传同样模板格式图片，识别得到自己想要的图片数据",
     },
     {
       id: 4,
-      image: "../images/home/customTemplate.jpg",
+      image: require("@images/home/customTemplate.jpg"),
       title: "自定OCR模板",
       desc:
         "'自定OCR模板'可定制想要的模板，并在'执行OCR'中选择同样格式图片，识别得到自己想要的数据",
     },
     {
       id: 5,
-      image: "../images/home/tengxunocr.png",
+      image: require("@images/home/tengxunocr.png"),
       title: "T-通用识别",
       desc:
         "'T-通用识别'上传图片，使用T-通用引擎识别对应图片数据，针对印刷，手写，英文等字符",
     },
     {
       id: 6,
-      image: "../images/home/ai_algorithorm.png",
+      image: require("@images/home/ai_algorithorm.png"),
       title: "G-通用识别",
       desc:
         "'G-通用识别'上传图片，使用G-通用引擎识别对应图片数据，针对印刷，手写，英文等字符",

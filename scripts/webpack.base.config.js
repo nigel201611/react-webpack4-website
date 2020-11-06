@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-05 10:47:44
+ * @LastEditTime: 2020-11-06 15:18:14
  */
 
 const path = require("path");
@@ -22,11 +22,11 @@ const webpackConfigBase = {
   output: {
     path: resolve("../dist"),
     filename: devMode
-      ? "static/js/[name].[hash].js"
-      : "static/js/[name].[contenthash].js",
+      ? "static/official/js/[name].[hash].js"
+      : "static/official/js/[name].[contenthash].js",
     chunkFilename: devMode
-      ? "static/chunks/[name].[hash:4].js"
-      : "static/chunks/[name].[contenthash].js",
+      ? "static/official/chunks/[name].[hash:4].js"
+      : "static/official/chunks/[name].[contenthash].js",
     publicPath: "/",
   },
   resolve: {
@@ -47,16 +47,12 @@ const webpackConfigBase = {
       "@config": path.join(__dirname, "../app/configs/config.js"),
       "@ajax": path.join(__dirname, "../app/configs/ajax.js"),
       "@reg": path.join(__dirname, "../app/configs/regular.config.js"),
-      "@images": path.join(__dirname, "../app/images"),
+      "@images": path.join(__dirname, "../static/official/images"),
       "@utils": path.join(__dirname, "../app/utils"),
       "@locales": path.join(__dirname, "../app/locales"),
       "@middleware": path.join(__dirname, "../app/middleware"),
       "@pages": path.join(__dirname, "../app/pages"),
       "@styles": path.join(__dirname, "../app/styles"),
-      "@tableList": path.join(
-        __dirname,
-        "../app/components/tableList/tableList.js"
-      ),
       "react-dom": devMode ? "@hot-loader/react-dom" : "react-dom", // react-hot-loader需要
     },
   },
@@ -161,11 +157,14 @@ const webpackConfigBase = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         exclude: /node_modules/,
-        include: [resolve("../app/images")],
+        include: [
+          resolve("../app/images"),
+          resolve("../static/official/images"),
+        ],
         loader: "url-loader",
         options: {
           limit: 8192,
-          name: "static/img/[name].[ext]",
+          name: "static/official/images/[name].[ext]",
           // outputPath: '/img'
         },
       },
@@ -174,7 +173,7 @@ const webpackConfigBase = {
         loader: "url-loader",
         options: {
           limit: 8192,
-          name: "static/font/[name].[hash:4].[ext]",
+          name: "static/official/font/[name].[hash:4].[ext]",
         },
       },
     ],
@@ -186,11 +185,11 @@ const webpackConfigBase = {
 
     new MiniCssExtractPlugin({
       filename: devMode
-        ? "static/css/style.css"
-        : "static/css/style.[contenthash].css",
+        ? "static/official/css/style.css"
+        : "static/official/css/style.[contenthash].css",
       chunkFilename: devMode
-        ? "static/css/style.[id].css"
-        : "static/css/style.[contenthash].[id].css",
+        ? "static/official/css/style.[id].css"
+        : "static/official/css/style.[contenthash].[id].css",
     }),
 
     new HappyPack({

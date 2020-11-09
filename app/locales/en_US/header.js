@@ -1,5 +1,5 @@
 export default {
-  NRI_title: "Nomura Institute",
+  NRI_title: "Nomura Research Institute",
   ocr_nav: "OCR recognition",
   iot_nav: "IOT",
   ai_nav: "AI algorithm",

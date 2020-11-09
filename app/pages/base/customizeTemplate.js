@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-05 13:57:14
+ * @LastEditTime: 2020-11-09 14:14:10
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -253,15 +253,12 @@ class CustomizeTemp extends Component {
             <div className="steps-action">
               {current === 1 && (
                 <>
-                  ' '
                   <Button type="primary" onClick={this.prev}>
                     {t("back-upload")}
                   </Button>
-                  ' '
                   <Button type="primary" onClick={this.handleClearArea}>
                     {t("clear-area")}
                   </Button>
-                  ' '
                   <Button
                     type="primary"
                     loading={saving}
@@ -269,7 +266,6 @@ class CustomizeTemp extends Component {
                   >
                     {t("save-template")}
                   </Button>
-                  ' '
                 </>
               )}
             </div>

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-09-15 14:08:40
+ * @LastEditTime: 2020-11-09 14:15:58
  */
 
 export const set = "set$";
@@ -22,13 +22,14 @@ let _baseURL = `${_localIp}`;
 // }
 if (process.env.NODE_ENV === "production") {
   // 发布环境
-  _port = "80";
-  _serverIp = "127.0.0.1";
-  _baseURL = `${_serverIp}:${_port}`;
+  // _port = "80";
+  // _serverIp = "127.0.0.1";
+  // _baseURL = `${_serverIp}:${_port}`;
+  _baseURL = "";
 }
 
 export const serverIp = _serverIp;
 export const path = "/api"; // /mock,api
-export const timeout = "15000"; // 接口超时限制(ms)
+export const timeout = "65000"; // 接口超时限制(ms)
 export const baseURL = _baseURL;
 // export const mockURL = _mockURL;

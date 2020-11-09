@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-05 10:55:38
+ * @LastEditTime: 2020-11-09 10:13:07
  */
 // import '@babel/polyfill'
 import React from "react";
@@ -12,11 +12,11 @@ import "@config";
 import Routes from "@configs/router.config";
 import configure from "@middleware/configureStore";
 import "./i18n";
+import * as base from "@pages/base"; // 基础
 // const HotRoutes = hot(Routes);
 export const store = configure({
   currentNav: "1",
 });
-
 ReactDOM.render(
   <Provider store={store}>
     <Routes />

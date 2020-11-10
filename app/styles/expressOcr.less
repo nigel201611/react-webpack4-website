@@ -1,3 +1,5 @@
+@bgWidth: 500px;
+@bgHeight: 512px;
 .express-container {
   width: 100%;
   margin: 0 0 40px 0;
@@ -23,13 +25,15 @@
   .express-main {
     width: 1200px;
     margin: 0 auto;
+
     .avatar-uploader {
       margin: 60px 0 0 0;
+      position: relative;
+      z-index: 100;
     }
     .avatar-uploader > .ant-upload {
-      // width: 612px;
-      height: 412px;
-      width: 100%;
+      height: @bgHeight;
+      width: @bgWidth;
     }
     .ant-upload-text {
       color: #c1c1c0;

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-10 18:46:08
+ * @LastEditTime: 2020-11-11 11:40:07
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import DrawPolygon from "@components/DrawPolygon/DrawPolygon";
 import DrawLine from "@components/DrawLine";
 import { expressBill } from "@apis/expressOcr";
 import "@styles/expressOcr.less";
-import { func } from "prop-types";
+// import { func } from "prop-types";
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -55,16 +55,16 @@ class ExpressOcr extends Component {
     this.box_w = "500";
     this.box_h = "510";
     // 分别记录postcode,address,name起点和终点坐标，用于计算鼠标滚动时，重新计算对应虚线两点坐标
-    this.postcodePoints_start = { x: 0, y: 0 };
-    this.postcodePoints_end = { x: 0, y: 0 };
-    this.addressPoints_start = { x: 0, y: 0 };
-    this.addressPoints_end = { x: 0, y: 0 };
-    this.namePoints_start = { x: 0, y: 0 };
-    this.namePoints_end = { x: 0, y: 0 };
+    // this.postcodePoints_start = { x: 0, y: 0 };
+    // this.postcodePoints_end = { x: 0, y: 0 };
+    // this.addressPoints_start = { x: 0, y: 0 };
+    // this.addressPoints_end = { x: 0, y: 0 };
+    // this.namePoints_start = { x: 0, y: 0 };
+    // this.namePoints_end = { x: 0, y: 0 };
     //用于记录根容器滚动位置
-    this.origin_scrollLeft = 0;
-    this.origin_scrollTop = 0;
-    this.timer = null; //用于绘制虚线的定时器
+    // this.origin_scrollLeft = 0;
+    // this.origin_scrollTop = 0;
+    this.timer = null; //用于控制绘制虚线时机，下一轮 event loop 开始执行，确保可以获取到dom元素
     this.root_container = document.getElementById("root");
     // this.root_container.addEventListener("scroll", this.handleScroll);
   }
@@ -74,6 +74,7 @@ class ExpressOcr extends Component {
     // this.root_container.removeEventListener("scroll", this.handleScroll);
     this.root_container = null;
     clearTimeout(this.timer);
+    this.timer = null;
   }
 
   beforeUpload = (file) => {
@@ -92,6 +93,24 @@ class ExpressOcr extends Component {
     this.setState({
       imageUrl: "",
       data: [],
+      postcodePositions: {
+        //绘制邮编虚线对应起点和终点
+        start: { x: 0, y: 0 },
+        end: { x: 0, y: 0 },
+      },
+      addressPositions: {
+        //绘制邮编虚线对应起点和终点
+        start: { x: 0, y: 0 },
+        end: { x: 0, y: 0 },
+      },
+      namePositions: {
+        //绘制邮编虚线对应起点和终点
+        start: { x: 0, y: 0 },
+        end: { x: 0, y: 0 },
+      },
+      polygonPostcodePoints: [],
+      polygonAddressPoints: [],
+      polygonNamePoints: [],
     });
     return isJpgOrPng && isLt5M;
   };
@@ -218,7 +237,6 @@ class ExpressOcr extends Component {
     // 获取选区坐标
     // 前面timer清理掉，以免多次产生多个定时器
     this.timer && clearTimeout(this.timer);
-
     this.timer = setTimeout(() => {
       // 获取绘制的多边形位置信息，getBoundingClientRect获取的是针对当前窗口的相对位
       const polygonBoundElems = this.getMyBoundingClientRects([
@@ -232,12 +250,9 @@ class ExpressOcr extends Component {
         "#border_address",
         "#border_name",
       ]);
-      console.log(polygonBoundElems);
-
-      //postcode
       // 获取this.root_container 开始滚动坐标
-      this.origin_scrollLeft = this.root_container.scrollLeft;
-      this.origin_scrollTop = this.root_container.scrollTop;
+      // this.origin_scrollLeft = this.root_container.scrollLeft;
+      // this.origin_scrollTop = this.root_container.scrollTop;
       function setLineStartEnd(
         points,
         polygonBoundElems,
@@ -260,36 +275,36 @@ class ExpressOcr extends Component {
         }
       }
 
-      const savePointsOfStartEnd = (
-        postcodePositions,
-        addressPositions,
-        namePositions
-      ) => {
-        this.postcodePoints_start = {
-          x: postcodePositions.start.x || 0,
-          y: postcodePositions.start.y || 0,
-        };
-        this.postcodePoints_end = {
-          x: postcodePositions.end.x || 0,
-          y: postcodePositions.end.y || 0,
-        };
-        this.addressPoints_start = {
-          x: addressPositions.start.x || 0,
-          y: addressPositions.start.y || 0,
-        };
-        this.addressPoints_end = {
-          x: addressPositions.end.x || 0,
-          y: addressPositions.end.y || 0,
-        };
-        this.namePoints_start = {
-          x: namePositions.start.x || 0,
-          y: namePositions.start.y || 0,
-        };
-        this.namePoints_end = {
-          x: namePositions.end.x || 0,
-          y: namePositions.end.y || 0,
-        };
-      };
+      // const savePointsOfStartEnd = (
+      //   postcodePositions,
+      //   addressPositions,
+      //   namePositions
+      // ) => {
+      //   this.postcodePoints_start = {
+      //     x: postcodePositions.start.x || 0,
+      //     y: postcodePositions.start.y || 0,
+      //   };
+      //   this.postcodePoints_end = {
+      //     x: postcodePositions.end.x || 0,
+      //     y: postcodePositions.end.y || 0,
+      //   };
+      //   this.addressPoints_start = {
+      //     x: addressPositions.start.x || 0,
+      //     y: addressPositions.start.y || 0,
+      //   };
+      //   this.addressPoints_end = {
+      //     x: addressPositions.end.x || 0,
+      //     y: addressPositions.end.y || 0,
+      //   };
+      //   this.namePoints_start = {
+      //     x: namePositions.start.x || 0,
+      //     y: namePositions.start.y || 0,
+      //   };
+      //   this.namePoints_end = {
+      //     x: namePositions.end.x || 0,
+      //     y: namePositions.end.y || 0,
+      //   };
+      // };
 
       const postcodePositions = setLineStartEnd(
         postcodePoints,
@@ -309,7 +324,7 @@ class ExpressOcr extends Component {
         dashedLineBoundElems,
         2
       );
-      savePointsOfStartEnd(postcodePositions, addressPositions, namePositions);
+      // savePointsOfStartEnd(postcodePositions, addressPositions, namePositions);
       this.setState({
         postcodePositions,
         addressPositions,
@@ -318,7 +333,6 @@ class ExpressOcr extends Component {
     });
   };
   computeSvgSize = (postcodePoints, addressPoints, namePoints) => {
-    console.log(namePoints);
     let source_w = this.bill_width;
     let source_h = this.bill_height;
     let dWidth = this.box_w;
@@ -363,70 +377,70 @@ class ExpressOcr extends Component {
     this.computeSvgLine(postcodePoints, addressPoints, namePoints);
   };
 
-  handleScroll = (ev) => {
-    let scrollTop = ev.target.scrollTop;
-    let scrollLeft = ev.target.scrollLeft;
-    this.scrollTop = scrollTop;
-    this.scrollLeft = scrollLeft;
-    let diffX = Math.abs(this.origin_scrollLeft - scrollLeft);
-    let diffY = Math.abs(this.origin_scrollTop - scrollTop);
-    //重新计算polygon的坐标
-    //postcode
-    if (this.postcodeOfPoints.length) {
-      // 横坐标处理
-      if (this.origin_scrollLeft > scrollLeft) {
-        this.postcodePoints.start.x = this.postcodePoints_start.x + diffX;
-        this.postcodePoints.end.x = this.postcodePoints_end.x + diffX;
-      } else {
-        this.postcodePoints.start.x = this.postcodePoints_start.x - diffX;
-        this.postcodePoints.end.x = this.postcodePoints_end.x - diffX;
-      }
+  // handleScroll = (ev) => {
+  //   let scrollTop = ev.target.scrollTop;
+  //   let scrollLeft = ev.target.scrollLeft;
+  //   this.scrollTop = scrollTop;
+  //   this.scrollLeft = scrollLeft;
+  //   let diffX = Math.abs(this.origin_scrollLeft - scrollLeft);
+  //   let diffY = Math.abs(this.origin_scrollTop - scrollTop);
+  //   //重新计算polygon的坐标
+  //   //postcode
+  //   if (this.postcodeOfPoints.length) {
+  //     // 横坐标处理
+  //     if (this.origin_scrollLeft > scrollLeft) {
+  //       this.postcodePoints.start.x = this.postcodePoints_start.x + diffX;
+  //       this.postcodePoints.end.x = this.postcodePoints_end.x + diffX;
+  //     } else {
+  //       this.postcodePoints.start.x = this.postcodePoints_start.x - diffX;
+  //       this.postcodePoints.end.x = this.postcodePoints_end.x - diffX;
+  //     }
 
-      if (this.origin_scrollTop > scrollTop) {
-        this.postcodePoints.start.y = this.postcodePoints_start.y + diffY;
-        this.postcodePoints.end.y = this.postcodePoints_end.y + diffY;
-      } else {
-        this.postcodePoints.start.y = this.postcodePoints_start.y - diffY;
-        this.postcodePoints.end.y = this.postcodePoints_end.y - diffY;
-      }
-    }
-    //address
-    if (this.addressOfPoints.length) {
-      if (this.origin_scrollLeft > scrollLeft) {
-        this.addressPoints.start.x = this.addressPoints_start.x + diffX;
-        this.addressPoints.end.x = this.addressPoints_end.x + diffX;
-      } else {
-        this.addressPoints.start.x = this.addressPoints_start.x - diffX;
-        this.addressPoints.end.x = this.addressPoints_end.x - diffX;
-      }
+  //     if (this.origin_scrollTop > scrollTop) {
+  //       this.postcodePoints.start.y = this.postcodePoints_start.y + diffY;
+  //       this.postcodePoints.end.y = this.postcodePoints_end.y + diffY;
+  //     } else {
+  //       this.postcodePoints.start.y = this.postcodePoints_start.y - diffY;
+  //       this.postcodePoints.end.y = this.postcodePoints_end.y - diffY;
+  //     }
+  //   }
+  //   //address
+  //   if (this.addressOfPoints.length) {
+  //     if (this.origin_scrollLeft > scrollLeft) {
+  //       this.addressPoints.start.x = this.addressPoints_start.x + diffX;
+  //       this.addressPoints.end.x = this.addressPoints_end.x + diffX;
+  //     } else {
+  //       this.addressPoints.start.x = this.addressPoints_start.x - diffX;
+  //       this.addressPoints.end.x = this.addressPoints_end.x - diffX;
+  //     }
 
-      if (this.origin_scrollTop > scrollTop) {
-        this.addressPoints.start.y = this.addressPoints_start.y + diffY;
-        this.addressPoints.end.y = this.addressPoints_end.y + diffY;
-      } else {
-        this.addressPoints.start.y = this.addressPoints_start.y - diffY;
-        this.addressPoints.end.y = this.addressPoints_end.y - diffY;
-      }
-    }
-    //name
-    if (this.nameOfPoints.length) {
-      if (this.origin_scrollLeft > scrollLeft) {
-        this.namePoints.start.x = this.namePoints_start.x + diffX;
-        this.namePoints.end.x = this.namePoints_end.x + diffX;
-      } else {
-        this.namePoints.start.x = this.namePoints_start.x - diffX;
-        this.namePoints.end.x = this.namePoints_end.x - diffX;
-      }
+  //     if (this.origin_scrollTop > scrollTop) {
+  //       this.addressPoints.start.y = this.addressPoints_start.y + diffY;
+  //       this.addressPoints.end.y = this.addressPoints_end.y + diffY;
+  //     } else {
+  //       this.addressPoints.start.y = this.addressPoints_start.y - diffY;
+  //       this.addressPoints.end.y = this.addressPoints_end.y - diffY;
+  //     }
+  //   }
+  //   //name
+  //   if (this.nameOfPoints.length) {
+  //     if (this.origin_scrollLeft > scrollLeft) {
+  //       this.namePoints.start.x = this.namePoints_start.x + diffX;
+  //       this.namePoints.end.x = this.namePoints_end.x + diffX;
+  //     } else {
+  //       this.namePoints.start.x = this.namePoints_start.x - diffX;
+  //       this.namePoints.end.x = this.namePoints_end.x - diffX;
+  //     }
 
-      if (this.origin_scrollTop > scrollTop) {
-        this.namePoints.start.y = this.namePoints_start.y + diffY;
-        this.namePoints.end.y = this.namePoints_end.y + diffY;
-      } else {
-        this.namePoints.start.y = this.namePoints_start.y - diffY;
-        this.namePoints.end.y = this.namePoints_end.y - diffY;
-      }
-    }
-  };
+  //     if (this.origin_scrollTop > scrollTop) {
+  //       this.namePoints.start.y = this.namePoints_start.y + diffY;
+  //       this.namePoints.end.y = this.namePoints_end.y + diffY;
+  //     } else {
+  //       this.namePoints.start.y = this.namePoints_start.y - diffY;
+  //       this.namePoints.end.y = this.namePoints_end.y - diffY;
+  //     }
+  //   }
+  // };
 
   render() {
     const { t } = this.props;
@@ -463,7 +477,7 @@ class ExpressOcr extends Component {
       },
     ];
     const uploadButton = (
-      <div>
+      <div className="uploadButton">
         <Icon
           style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
           type={this.state.loading ? "loading" : "inbox"}
@@ -496,12 +510,12 @@ class ExpressOcr extends Component {
             </div>
           </div>
           <div className="express-main">
+            <DrawLine
+              postcodePoints={postcodePositions}
+              addressPoints={addressPositions}
+              namePoints={namePositions}
+            ></DrawLine>
             <Spin spinning={isRequesting}>
-              <DrawLine
-                postcodePoints={postcodePositions}
-                addressPoints={addressPositions}
-                namePoints={namePositions}
-              ></DrawLine>
               <Row gutter={16} className="main-content">
                 <Col span={12}>
                   <Upload
@@ -514,25 +528,17 @@ class ExpressOcr extends Component {
                     beforeUpload={this.beforeUpload}
                     onChange={this.handleChange}
                   >
-                    {imageUrl ? (
-                      // <img
-                      //   src={imageUrl}
-                      //   alt="avatar"
-                      //   style={{ width: "100%" }}
-                      // />
-                      <DrawPolygon
-                        polygonPostcodePoints={polygonPostcodePoints}
-                        polygonAddressPoints={polygonAddressPoints}
-                        polygonNamePoints={polygonNamePoints}
-                        polygonSvgWidth={polygonSvgWidth}
-                        polygonSvgHeight={polygonSvgHeight}
-                        scaleX={scaleX}
-                        scaleY={scaleY}
-                        imageUrl={imageUrl}
-                      ></DrawPolygon>
-                    ) : (
-                      uploadButton
-                    )}
+                    <DrawPolygon
+                      polygonPostcodePoints={polygonPostcodePoints}
+                      polygonAddressPoints={polygonAddressPoints}
+                      polygonNamePoints={polygonNamePoints}
+                      polygonSvgWidth={polygonSvgWidth}
+                      polygonSvgHeight={polygonSvgHeight}
+                      scaleX={scaleX}
+                      scaleY={scaleY}
+                      imageUrl={imageUrl}
+                    ></DrawPolygon>
+                    {!imageUrl && uploadButton}
                   </Upload>
                 </Col>
                 <Col span={12}>

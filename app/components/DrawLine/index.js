@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-11-10 18:16:59
+ * @LastEditTime: 2020-11-11 11:36:54
  */
 
 import React from "react";
@@ -9,7 +9,6 @@ import "./index.less";
 // 声明组件  并对外输出
 export default function DrawLine(props) {
   const { postcodePoints, addressPoints, namePoints } = props;
-
   return (
     <svg
       className="lineSvg"
@@ -50,3 +49,18 @@ export default function DrawLine(props) {
     </svg>
   );
 }
+
+DrawLine.defaultProps = {
+  postcodePoints: {
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 0 },
+  },
+  addressPoints: {
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 0 },
+  },
+  namePoints: {
+    start: { x: 0, y: 0 },
+    end: { x: 0, y: 0 },
+  },
+};

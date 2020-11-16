@@ -9,4 +9,6 @@ export default {
   "save-template": "Save template",
   upload: "Upload",
   "customize-area": "Self defined region",
+  "perform-ocr": "Test OCR",
+  stepback: "Back",
 };

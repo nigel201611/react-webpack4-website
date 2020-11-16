@@ -9,4 +9,6 @@ export default {
   "save-template": "テンプレートを保存",
   upload: "アップロード",
   "customize-area": "自定区域",
+  "perform-ocr": "OCRをテストします",
+  stepback: "前へ",
 };

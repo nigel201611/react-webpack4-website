@@ -1,11 +1,11 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-14 10:59:58
- * @LastEditTime: 2020-11-05 11:10:39
+ * @LastEditTime: 2020-11-16 11:54:17
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import { notification } from "antd";
+import { notification, message } from "antd";
 import ModalForm from "@components/ModalForm/ModalForm";
 import { uuid, convertImgElemByCanvas } from "@utils/common";
 import { saveTemplate } from "@apis/userTemplate";
@@ -213,7 +213,6 @@ class CustomizeArea extends Component {
     // 在鼠标抬起后终止onmousemove事件
     document.onmouseup = function () {
       if (oBox.onmousemove || oBox.onmouseup) {
-        console.log("document mouseup");
         oBox.onmousemove = null;
         oBox.onmouseup = null;
       }
@@ -249,6 +248,14 @@ class CustomizeArea extends Component {
     oDiv.style.position = "absolute";
     return oDiv;
   }
+
+  // getBlockItems() {
+  //   const customizeAreaData =
+  //     this.customizeAreaData ||
+  //     JSON.parse(window.sessionStorage.getItem("customizeAreaData"));
+  //   console.log(customizeAreaData);
+  //   return customizeAreaData || [];
+  // }
   /**
    * @name: drawCustomizeArea
    * @msg: 根据数据绘制自定区域
@@ -285,6 +292,7 @@ class CustomizeArea extends Component {
         oDiv.setAttribute("id", item.block_id);
         oBox.appendChild(oDiv);
         this.customizeAreaData.push(blockItem);
+        //保存一份到本地 自定区域返回上一步可以获取
         this.editImageArr.push(block);
       }
     }
@@ -438,7 +446,6 @@ class CustomizeArea extends Component {
   };
 
   confirmSaveTemplate = () => {
-    console.log("保存模板时显示编辑模板名字弹出框");
     // 修改
     if (this.editCustomTemplateData) {
       this.saveCustomize(this.editCustomTemplateData.temp_name);
@@ -668,8 +675,10 @@ class CustomizeArea extends Component {
           this.props.setResponseData(resDetectDataArr);
         }
       },
-      () => {
+      (err) => {
         this.props.setRequestStatus(false);
+        // 提示错误信息
+        message.error(err.errmsg);
         // this.result = this.props.t("recognition-fail");
       }
     );
@@ -716,10 +725,12 @@ class CustomizeArea extends Component {
   }
 
   render() {
-    const { imageUrl, bill_width, bill_height } = this.props;
+    const { imageUrl, bill_width, bill_height, needKeepAlive } = this.props;
     const { cusAreaModalVisible, tempNameModalVisible } = this.state;
     return (
-      <div className="usercustomize_area">
+      <div
+        className={"usercustomize_area " + (needKeepAlive ? "show" : "hidden")}
+      >
         <img
           ref={this.imgElemRef}
           className="imgElem"
@@ -757,6 +768,10 @@ class CustomizeArea extends Component {
     );
   }
 }
+
+CustomizeArea.defaultProps = {
+  needKeepAlive: true,
+};
 
 export default withTranslation("customizeArea", { withRef: true })(
   CustomizeArea

@@ -1,5 +1,6 @@
 .usercustomize_area {
   .img_background_wrap {
+    overflow: hidden;
     width: 1200px;
     height: 68vh;
     box-sizing: border-box;
@@ -19,11 +20,18 @@
     background: rgba(0, 0, 0, 0.2);
   }
   .img-wrap {
-    position: relative;
     cursor: crosshair;
     float: left;
     .rect_item {
       z-index: 99999;
     }
   }
+}
+
+.show {
+  opacity: 1;
+}
+.hidden {
+  opacity: 0;
+  display: none;
 }

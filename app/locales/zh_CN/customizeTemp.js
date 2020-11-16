@@ -8,4 +8,6 @@ export default {
   "save-template": "保存模板",
   upload: "上传",
   "customize-area": "自定区域",
+  "perform-ocr": "测试OCR",
+  stepback: "上一步",
 };

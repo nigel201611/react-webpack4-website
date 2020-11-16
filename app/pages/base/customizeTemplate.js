@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-09 14:14:10
+ * @LastEditTime: 2020-11-16 11:56:44
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -10,7 +10,7 @@ import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
 import "@styles/customizeTemplate.less";
 import UploadComp from "@components/UploadComp/UploadComp";
 import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
-
+import TableList from "@components/TableList/TableList";
 const { Step } = Steps;
 const steps = [
   {
@@ -22,6 +22,11 @@ const steps = [
     title: "customize-area",
     content: "Second-content",
     icon: <UngroupOutlined />,
+  },
+  {
+    title: "perform-ocr",
+    content: "Third-content",
+    icon: <Icon type="scan" />,
   },
 ];
 
@@ -40,12 +45,14 @@ class CustomizeTemp extends Component {
       bill_height: "400", // 運單默認高度
       uploadImgType: "image/jpeg",
       saving: false,
+      responseData: [], // 保存执行ocr结果数据
+      performOcrRequesting: false, // 标识当前是否正在执行OCR识别
     };
   }
 
   componentDidMount() {
-    this.fixSizeW = 2048; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
-    this.fixSizeH = 2048;
+    this.fixSizeW = 1280; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
+    this.fixSizeH = 1280;
     this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
     this.calibrating = false; // 控制图片校准标识，防止过频
     this.templateData =
@@ -84,7 +91,14 @@ class CustomizeTemp extends Component {
 
   prev = () => {
     const current = this.state.current - 1;
+    // 返回上一步，应该显示用户之前绘制的区域，获取绘制的区域数据
     this.setState({ current });
+    // this.setState({ current }, () => {
+    //   if (current === 1) {
+    //     const blockItems = this.customizeAreaRef.current.getBlockItems();
+    //     this.hanldeDrawCustomArea(blockItems);
+    //   }
+    // });
   };
 
   beforeUpload = (file) => {
@@ -189,6 +203,31 @@ class CustomizeTemp extends Component {
   saveCustTemplate = () => {
     this.customizeAreaRef.current.confirmSaveTemplate();
   };
+  hanldeDrawCustomArea = (blockItems) => {
+    this.customizeAreaRef.current.drawCustomizeArea(blockItems);
+  };
+
+  /*
+   * @name: setResponseData
+   * @msg: 获取识别结果数据
+   * @param {*}
+   * @return {*}
+   */
+  setResponseData = (responseData) => {
+    this.setState({
+      responseData,
+      current: 2,
+    });
+  };
+  setRequestStatus = (status) => {
+    this.setState({
+      performOcrRequesting: status,
+    });
+  };
+
+  performOcr = () => {
+    this.customizeAreaRef.current.requestOcrEngine();
+  };
 
   render() {
     const { t } = this.props;
@@ -199,6 +238,8 @@ class CustomizeTemp extends Component {
       bill_height,
       loading,
       uploadImgType,
+      performOcrRequesting,
+      responseData,
       saving,
     } = this.state;
     const uploadButton = (
@@ -221,17 +262,22 @@ class CustomizeTemp extends Component {
           </UploadComp>
         );
         break;
-      case 1:
-        steps[current].content = (
-          <CustomizeArea
-            imageUrl={imageUrl}
-            bill_height={bill_height}
-            bill_width={bill_width}
-            uploadImgType={uploadImgType}
-            setSaveStatus={this.setSaveStatus}
-            ref={this.customizeAreaRef}
-          />
-        );
+      // case 1:
+      //   steps[current].content = (
+      //     <CustomizeArea
+      //       imageUrl={imageUrl}
+      //       bill_height={bill_height}
+      //       bill_width={bill_width}
+      //       uploadImgType={uploadImgType}
+      //       setSaveStatus={this.setSaveStatus}
+      //       ref={this.customizeAreaRef}
+      //       setRequestStatus={this.setRequestStatus}
+      //       setResponseData={this.setResponseData}
+      //     />
+      //   );
+      //   break;
+      case 2:
+        steps[current].content = <TableList tableData={responseData} />;
         break;
     }
     return (
@@ -249,15 +295,47 @@ class CustomizeTemp extends Component {
                 <Step key={item.title} title={t(item.title)} icon={item.icon} />
               ))}
             </Steps>
-            <div className="steps-content">{steps[current].content}</div>
+            <div className="steps-content">
+              {current !== 1 && steps[current].content}
+              <CustomizeArea
+                imageUrl={imageUrl}
+                needKeepAlive={current === 1}
+                bill_height={bill_height}
+                bill_width={bill_width}
+                uploadImgType={uploadImgType}
+                setSaveStatus={this.setSaveStatus}
+                ref={this.customizeAreaRef}
+                setRequestStatus={this.setRequestStatus}
+                setResponseData={this.setResponseData}
+              />
+            </div>
             <div className="steps-action">
               {current === 1 && (
                 <>
-                  <Button type="primary" onClick={this.prev}>
-                    {t("back-upload")}
-                  </Button>
+                  <Button onClick={this.prev}>{t("back-upload")}</Button>
                   <Button type="primary" onClick={this.handleClearArea}>
                     {t("clear-area")}
+                  </Button>
+                  <Button
+                    type="primary"
+                    loading={saving}
+                    onClick={this.saveCustTemplate}
+                  >
+                    {t("save-template")}
+                  </Button>
+                  <Button
+                    type="primary"
+                    loading={performOcrRequesting}
+                    onClick={this.performOcr}
+                  >
+                    {t("perform-ocr")}
+                  </Button>
+                </>
+              )}
+              {current === 2 && (
+                <>
+                  <Button type="primary" onClick={this.prev}>
+                    {t("stepback")}
                   </Button>
                   <Button
                     type="primary"

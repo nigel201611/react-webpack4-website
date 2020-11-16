@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-13 17:42:32
+ * @LastEditTime: 2020-11-16 15:06:49
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -57,8 +57,8 @@ class PerformOcr extends Component {
   }
 
   componentDidMount() {
-    this.fixSizeW = 1280; // 控制用户上传图片宽度，宽大于2024，固定尺寸为2024,小于2024，原图片显示。
-    this.fixSizeH = 1280;
+    this.fixSizeW = 1680; // 控制用户上传图片宽度，宽大于2024，固定尺寸为2024,小于2024，原图片显示。
+    this.fixSizeH = 1680;
     this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
     this.calibrating = false; // 控制图片校准标识，防止过频
   }

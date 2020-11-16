@@ -226,6 +226,23 @@ class Header extends Component {
                           {name} <i className="iconfont icon-login" />
                         </a>
                       </Dropdown>
+                    ) : (
+                      showLoginBox === false && (
+                        <a onClick={this.handleLogin.bind(this)}>
+                          {this.props.t("login")}{" "}
+                          <i className="iconfont icon-login" />
+                        </a>
+                      )
+                    )}
+                    {/* {name ? (
+                      <Dropdown overlay={userinfoMenu}>
+                        <a
+                          className="ant-dropdown-link"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          {name} <i className="iconfont icon-login" />
+                        </a>
+                      </Dropdown>
                     ) : showLoginBox ? (
                       <HorizontalLoginForm setUserName={this.setUserName} />
                     ) : (
@@ -233,7 +250,12 @@ class Header extends Component {
                         {this.props.t("login")}{" "}
                         <i className="iconfont icon-login" />
                       </a>
-                    )}
+                    )} */}
+
+                    <HorizontalLoginForm
+                      showLoginBox={showLoginBox && !name}
+                      setUserName={this.setUserName}
+                    />
                   </li>
                   <li>
                     <Dropdown overlay={languageMenu}>

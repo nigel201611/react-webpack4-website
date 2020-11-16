@@ -1,17 +1,18 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-09 14:47:22
+ * @LastEditTime: 2020-11-16 14:25:16
  */
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import { withTranslation } from "react-i18next";
 import { notification, List, Icon, Modal, Spin } from "antd";
-
+import { connect } from "react-redux";
+import { editTemplateData, setCurrentNavItem } from "@actions/common";
 const { confirm } = Modal;
 import "@styles/myTemplate.less";
 import { selectTemplate, deleteTemplate } from "@apis/userTemplate";
-
+@connect((state) => ({}))
 class MyTemplate extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -33,7 +34,10 @@ class MyTemplate extends Component {
 
   handleEdit(index) {
     const templateData = this.state.tableData[index];
-    hashHistory.push({ pathname: "/customizeTemp", state: { templateData } });
+    this.props.dispatch(setCurrentNavItem("2_4"));
+    window.sessionStorage.setItem("currentNavItem", "2_4");
+    this.props.dispatch(editTemplateData(templateData));
+    hashHistory.push({ pathname: "/customizeTemp" });
   }
   handleDelete(index) {
     const { t } = this.props;

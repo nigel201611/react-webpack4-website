@@ -1,16 +1,19 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-16 11:56:44
+ * @LastEditTime: 2020-11-16 15:06:37
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { Icon, message, Steps, Button } from "antd";
+import { connect } from "react-redux";
 import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
 import "@styles/customizeTemplate.less";
 import UploadComp from "@components/UploadComp/UploadComp";
 import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
 import TableList from "@components/TableList/TableList";
+import { editTemplateData } from "@actions/common";
+
 const { Step } = Steps;
 const steps = [
   {
@@ -29,7 +32,9 @@ const steps = [
     icon: <Icon type="scan" />,
   },
 ];
-
+@connect((state) => ({
+  currentEditTemplateData: state.currentEditTemplateData,
+}))
 class CustomizeTemp extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -51,22 +56,29 @@ class CustomizeTemp extends Component {
   }
 
   componentDidMount() {
-    this.fixSizeW = 1280; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
-    this.fixSizeH = 1280;
+    this.fixSizeW = 1680; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
+    this.fixSizeH = 1680;
     this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
-    this.calibrating = false; // 控制图片校准标识，防止过频
-    this.templateData =
-      (this.props.location &&
-        this.props.location.state &&
-        this.props.location.state.templateData) ||
-      null; // 是否有从路由跳转传来参数
-    this.handleMyTemplateEdit(this.templateData);
+    this.calibrating = false; // 控制图片校准，防止过频
+    // this.templateData =
+    //   (this.props.location &&
+    //     this.props.location.state &&
+    //     this.props.location.state.templateData) ||
+    //   null; // 是否有从路由跳转传来参数
+    // this.handleMyTemplateEdit(this.templateData);
+    if (
+      this.props.currentEditTemplateData &&
+      typeof this.props.currentEditTemplateData === "object"
+    ) {
+      this.handleMyTemplateEdit(this.props.currentEditTemplateData);
+    }
   }
 
   componentWillUnmount() {
     URL.revokeObjectURL(this.OriginImageUrl);
     this.customizeZoneRef = null;
     this.customizeAreaRef = null;
+    this.props.dispatch(editTemplateData(null));
   }
   // 从我的模板通过编辑按钮，跳转过来处理
   handleMyTemplateEdit(templateData) {
@@ -157,6 +169,7 @@ class CustomizeTemp extends Component {
       // 去掉dll校准，添加此处代码，否则注释掉
       const imageUrl = myCanvas.toDataURL(file.type, 1.0);
       this.calibrating = false;
+      console.log(targetWidth, targetHeight);
       this.setState({
         imageUrl,
         loading: false,

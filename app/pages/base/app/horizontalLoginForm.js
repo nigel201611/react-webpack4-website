@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { hashHistory /* , Link */ } from 'react-router';
-import { Form, Icon, Input, Button, message } from 'antd';
-import { connect } from 'react-redux';
-import { login } from '@actions/common';
-
-@connect(state => ({
+import React, { Component } from "react";
+import { hashHistory /* , Link */ } from "react-router";
+import { Form, Icon, Input, Button, message } from "antd";
+import { connect } from "react-redux";
+import { login } from "@actions/common";
+import "@styles/horizontalLoginForm.less";
+@connect((state) => ({
   loginResponse: state.loginResponse,
 }))
 @Form.create({
-  name: 'horizontal_login',
+  name: "horizontal_login",
 })
 class HorizontalLoginForm extends Component {
   constructor(props, context) {
@@ -27,68 +27,80 @@ class HorizontalLoginForm extends Component {
       if (!err) {
         this.setState({ loading: true });
         // values.password = md5(values.password);
-        this.props.dispatch(login(
-          values,
-          (res) => {
-            this.setState({ loading: false });
-            sessionStorage.setItem('token', res.data.token);
-            sessionStorage.setItem(
-              'userInfo',
-              JSON.stringify(res.data.userInfo),
-            );
-            const name =
-                (res.data.userInfo && res.data.userInfo.username) || '';
-            this.props.setUserName(name);
-            //  如果从其他页面登录的，需要记录当前页面，登录后，跳转当前页面
-            const hashPath = window.location.hash;
-            const path = hashPath.substr(1);
-            // 这样进去不会触发组件的 componentDidMount？？？
-            hashHistory.replace({ pathname: path });
-          },
-          (res) => {
-            message.warning(res.errmsg);
-            this.setState({ loading: false });
-          },
-        ));
+        this.props.dispatch(
+          login(
+            values,
+            (res) => {
+              this.setState({ loading: false });
+              sessionStorage.setItem("token", res.data.token);
+              sessionStorage.setItem(
+                "userInfo",
+                JSON.stringify(res.data.userInfo)
+              );
+              const name =
+                (res.data.userInfo && res.data.userInfo.username) || "";
+              this.props.setUserName(name);
+              //  如果从其他页面登录的，需要记录当前页面，登录后，跳转当前页面
+              const hashPath = window.location.hash;
+              const path = hashPath.substr(1);
+              // 这样进去不会触发组件的 componentDidMount？？？
+              hashHistory.replace({ pathname: path });
+            },
+            (res) => {
+              message.warning(res.errmsg);
+              this.setState({ loading: false });
+            }
+          )
+        );
       }
     });
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
-
+    const { showLoginBox } = this.props;
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
+      <Form
+        className={
+          "loginBox " + (showLoginBox ? "showLoginBox" : "hiddenLoginBox")
+        }
+        layout="inline"
+        onSubmit={this.handleSubmit}
+      >
         <Form.Item>
-          {getFieldDecorator('username', {
+          {getFieldDecorator("username", {
             rules: [
               {
                 required: true,
                 min: 4,
                 max: 10,
-                message: '4-10 characters',
+                message: "4-10 characters",
               },
             ],
-          })(<Input
-            prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            placeholder="Username"
-          />)}
+          })(
+            <Input
+              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+              placeholder="Username"
+            />
+          )}
         </Form.Item>
         <Form.Item>
-          {getFieldDecorator('password', {
+          {getFieldDecorator("password", {
             rules: [
               {
                 required: true,
                 min: 4,
                 max: 16,
-                message: '4-16 characters',
+                message: "4-16 characters",
               },
             ],
-          })(<Input
-            prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-            type="password"
-            placeholder="Password"
-          />)}
+          })(
+            <Input
+              prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+              type="password"
+              placeholder="Password"
+            />
+          )}
         </Form.Item>
         <Form.Item>
           <Button type="primary" loading={this.state.loading} htmlType="submit">

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-11 11:40:07
+ * @LastEditTime: 2020-11-16 15:45:34
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -239,6 +239,7 @@ class ExpressOcr extends Component {
     this.timer && clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       // 获取绘制的多边形位置信息，getBoundingClientRect获取的是针对当前窗口的相对位
+      let rootScrollTop = document.getElementById("root").scrollTop;
       const polygonBoundElems = this.getMyBoundingClientRects([
         "#polygonPostcode",
         "#polygonAddress",
@@ -264,47 +265,16 @@ class ExpressOcr extends Component {
           const endPositions = dashedLineBoundElems[index];
           let start = {
             x: (startPositions && startPositions.x + startPositions.width) || 0,
-            y: (startPositions && startPositions.y - 55) || 0,
+            y: (startPositions && startPositions.y - 55 + rootScrollTop) || 0,
           };
           let end = {
             x: (endPositions && endPositions.x) || 0,
-            y: (endPositions && endPositions.y - 60) || 0,
+            y: (endPositions && endPositions.y - 60 + rootScrollTop) || 0,
           };
           return { start, end };
           // 记录第一次的原始值
         }
       }
-
-      // const savePointsOfStartEnd = (
-      //   postcodePositions,
-      //   addressPositions,
-      //   namePositions
-      // ) => {
-      //   this.postcodePoints_start = {
-      //     x: postcodePositions.start.x || 0,
-      //     y: postcodePositions.start.y || 0,
-      //   };
-      //   this.postcodePoints_end = {
-      //     x: postcodePositions.end.x || 0,
-      //     y: postcodePositions.end.y || 0,
-      //   };
-      //   this.addressPoints_start = {
-      //     x: addressPositions.start.x || 0,
-      //     y: addressPositions.start.y || 0,
-      //   };
-      //   this.addressPoints_end = {
-      //     x: addressPositions.end.x || 0,
-      //     y: addressPositions.end.y || 0,
-      //   };
-      //   this.namePoints_start = {
-      //     x: namePositions.start.x || 0,
-      //     y: namePositions.start.y || 0,
-      //   };
-      //   this.namePoints_end = {
-      //     x: namePositions.end.x || 0,
-      //     y: namePositions.end.y || 0,
-      //   };
-      // };
 
       const postcodePositions = setLineStartEnd(
         postcodePoints,

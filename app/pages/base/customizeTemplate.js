@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-16 15:06:37
+ * @LastEditTime: 2020-11-23 15:13:08
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -166,10 +166,8 @@ class CustomizeTemp extends Component {
       myCanvas.height = targetHeight; // canvas的高=图片的高
       myCtx.clearRect(0, 0, targetWidth, targetHeight); // 清理canvas
       myCtx.drawImage(imgElem, 0, 0, targetWidth, targetHeight); // canvas绘图
-      // 去掉dll校准，添加此处代码，否则注释掉
       const imageUrl = myCanvas.toDataURL(file.type, 1.0);
       this.calibrating = false;
-      console.log(targetWidth, targetHeight);
       this.setState({
         imageUrl,
         loading: false,

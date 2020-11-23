@@ -6,6 +6,8 @@ export default {
   "multi-angle-experience": "日文英文多角度体验",
   "experience-in-other": "其他语种体验",
   input_url_tip: "使用网络图片,请粘贴图片URL",
+  "url-error-tip":
+    "网络图片格式错误，请以http://或https://开头，以(jpg|jpeg|png|bmp|pdf)结尾",
   "upload-btn-text": "上传本地图片",
   "analyse-btn": "分析",
 };

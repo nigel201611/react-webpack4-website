@@ -6,6 +6,8 @@ export default {
   "multi-angle-experience": "日本語と英語の多角度体験",
   "experience-in-other": "その他の言語体験",
   input_url_tip: "ネット画像を使用する場合、該当URLを入力してください",
+  "url-error-tip":
+    "ネット画像のフォーマットが間違っています。http:/またはhttps:/で始めてください",
   "upload-btn-text": "ローカル画像をアップロード",
   "analyse-btn": "分析",
 };

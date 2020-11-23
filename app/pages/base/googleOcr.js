@@ -1,14 +1,15 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-10 11:03:31
+ * @LastEditTime: 2020-11-23 18:15:15
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
 import { Spin, Icon, message, Upload, Row, Table, Button, Input } from "antd";
 import "@styles/tengxunOcr.less";
 import { googleOcr } from "@apis/googleOcr";
-
+const MAX_SIZE_WIDTH = 1680;
+const MAX_SIZE_HEIGHT = 1680;
 const columns = [
   {
     title: "#",
@@ -72,6 +73,7 @@ class GoogleOcr extends Component {
     this.box_w = 400;
     this.box_h = 410;
     this.myCtx = this.myCanvasRef.current.getContext("2d");
+    this.useUploadBtn = false; //用于区分用户是否通过上传本地图片
   }
 
   beforeUpload = (file) => {
@@ -98,6 +100,7 @@ class GoogleOcr extends Component {
   };
 
   handleInputUrlChange = (event) => {
+    this.useUploadBtn = false;
     this.setState({ input_url: event.target.value });
   };
 
@@ -110,15 +113,54 @@ class GoogleOcr extends Component {
       if (this.state.isRequesting) {
         return;
       }
+      this.useUploadBtn = true;
 
-      getBase64(info.file.originFileObj, (imageUrl) => {
+      /*
+       * @msg: 图片尺寸过大，做处理
+       */
+      const handleImgExceedSize = function (
+        imgElem,
+        imgWidth,
+        imgHeight,
+        type
+      ) {
+        const myCanvas = document.createElement("canvas");
+        const myCtx = myCanvas.getContext("2d");
+        const maxWidth = MAX_SIZE_WIDTH;
+        const maxHeight = MAX_SIZE_HEIGHT;
+        let targetWidth = imgWidth;
+        let targetHeight = imgHeight;
+        // 等比例固定尺寸
+        if (imgWidth > maxWidth || imgHeight > maxHeight) {
+          // 宽大于高
+          if (imgWidth / imgHeight > maxWidth / maxHeight) {
+            targetWidth = maxWidth;
+            targetHeight = Math.round(maxWidth * (imgHeight / imgWidth));
+          }
+          // 宽小于高
+          else {
+            targetHeight = maxHeight;
+            targetWidth = Math.round(maxHeight * (imgWidth / imgHeight));
+          }
+        }
+        myCanvas.width = targetWidth; // canvas的宽=图片的宽
+        myCanvas.height = targetHeight; // canvas的高=图片的高
+        myCtx.clearRect(0, 0, targetWidth, targetHeight); // 清理canvas
+        myCtx.drawImage(imgElem, 0, 0, targetWidth, targetHeight); // canvas绘图
+        const imageUrl = myCanvas.toDataURL(type, 1.0);
+        return imageUrl;
+      };
+      const fileObj = info.file.originFileObj;
+      getBase64(fileObj, (imageUrl) => {
         const image = new Image();
         image.onload = () => {
-          // 限制图片宽
-          this.img_width = image.width;
-          this.img_height = image.height;
           // 这里使用createObjectURL来创建临时图片链接，是为了防止base64格式数据太大，给浏览器造成负担
-          const imgUrl = URL.createObjectURL(info.file.originFileObj);
+          // 对用户上传图片坐下尺寸固定
+          const { width, height } = image;
+          const imgUrl = this.useUploadBtn
+            ? handleImgExceedSize(image, width, height, fileObj.type)
+            : URL.createObjectURL(fileObj);
+          // const imgUrl = URL.createObjectURL(info.file.originFileObj);
           this.setState(
             {
               loading: false,
@@ -155,7 +197,6 @@ class GoogleOcr extends Component {
     if (input_url != "") {
       const http_image_pattern = /^(http:\/\/|https:\/\/){1}.+\.(jpg|jpeg|png|bmp|pdf)$/gi;
       if (http_image_pattern.test(input_url)) {
-        // 目前对网络图片的框图有些问题，估计没有读取到正确的宽高
         this.setState({
           imageUrl: url,
           imgObj: {
@@ -165,15 +206,23 @@ class GoogleOcr extends Component {
         this.clearCanvasContent();
         this.googleGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        message.warning(t("input_url-tip"));
+        message.warning(t("url-error-tip"));
       }
     } else {
       // 上面上传转换得到的imageUrl是临时图片链接，需要再计算一次，牺牲计算减少内存使用
       // imageUrl可能是临时图片链接，可能是初始化时赋值的图片路径
-      this.getImageToBase64Data(imageUrl).then((params) => {
-        // 默认第一张图,调用接口返回数据
+      // 用户上传，前面已经转换
+      if (this.useUploadBtn) {
+        const params = {
+          image: imageUrl,
+          url: "",
+        };
         this.googleGeneralOcr(params, this.imgOptions);
-      });
+      } else {
+        this.getImageToBase64Data(imageUrl).then((params) => {
+          this.googleGeneralOcr(params, this.imgOptions);
+        });
+      }
     }
   }
   handleAnalyse = () => {
@@ -365,8 +414,6 @@ class GoogleOcr extends Component {
           url: "",
         };
         // 返回接口请求需要的参数
-        this.img_width = imgElem.width;
-        this.img_height = imgElem.height;
         resolve(pramas);
       };
       imgElem.onerror = () => {
@@ -377,6 +424,7 @@ class GoogleOcr extends Component {
   }
   // 处理用户单击选择图片
   handleClickImg = (image, index) => {
+    this.useUploadBtn = false;
     if (this.state.isRequesting) {
       return;
     }

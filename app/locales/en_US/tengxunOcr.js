@@ -6,6 +6,8 @@ export default {
   "multi-angle-experience": "Multi angle experience in Japanese and English",
   "experience-in-other": "Experience in other languages",
   input_url_tip: "Use network picture, please paste picture URL",
+  "url-error-tip":
+    "Network image format error, please start with http: / / or HTTPS: /, and end with (jpg|jpeg| png | BMP | PDF)",
   "upload-btn-text": "Upload local pictures",
   "analyse-btn": "Analysis",
 };

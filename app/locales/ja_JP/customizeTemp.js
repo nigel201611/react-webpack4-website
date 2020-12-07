@@ -11,4 +11,6 @@ export default {
   "customize-area": "自定区域",
   "perform-ocr": "OCRをテストします",
   stepback: "前へ",
+  customizeTip:
+    "画像が大きすぎたり、小さすぎたりします,ブラウザを使って縮小機能（winショートカットキーctrl+/-）を拡大し、画像のサイズを調整して表示することをお勧めします",
 };

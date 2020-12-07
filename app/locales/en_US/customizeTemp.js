@@ -11,4 +11,6 @@ export default {
   "customize-area": "Self defined region",
   "perform-ocr": "Test OCR",
   stepback: "Back",
+  customizeTip:
+    "If the picture is too large or too small, it is recommended to use the browser zoom function (win shortcut key Ctrl + / -) to adjust the image size",
 };

@@ -10,4 +10,6 @@ export default {
   "customize-area": "自定区域",
   "perform-ocr": "测试OCR",
   stepback: "上一步",
+  customizeTip:
+    "图片太大或太小，建议使用浏览器放大缩小功能（win快捷键ctrl+/-），调整图片大小",
 };

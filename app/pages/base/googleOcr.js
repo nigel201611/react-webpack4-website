@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-23 18:15:15
+ * @LastEditTime: 2020-11-23 18:42:40
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
@@ -57,8 +57,6 @@ class GoogleOcr extends Component {
       isRequesting: false,
       imgArr: imgArrOrigin,
       imageUrl: imgArrOrigin[0].url,
-      img_height: "",
-      img_width: "",
       imgObj: {
         backgroundImage: `url(${imgArrOrigin[0].url})`,
       },
@@ -164,8 +162,6 @@ class GoogleOcr extends Component {
           this.setState(
             {
               loading: false,
-              img_width: image.width,
-              img_height: image.height,
               imageUrl: imgUrl,
               imgObj: {
                 backgroundImage: `url(${imgUrl})`,
@@ -383,12 +379,13 @@ class GoogleOcr extends Component {
     }
   }
   clearCanvasContent() {
-    const imgOrigin = this.imgOriginRef.current;
-    const source_w = imgOrigin.width;
-    const source_h = imgOrigin.height;
-    this.myCanvasRef.current.width = source_w;
-    this.myCanvasRef.current.height = source_h;
-    this.myCtx.clearRect(0, 0, source_w, source_h);
+    // const imgOrigin = this.imgOriginRef.current;
+    // const source_w = imgOrigin.width;
+    // const source_h = imgOrigin.height;
+    // this.myCanvasRef.current.width = source_w;
+    // this.myCanvasRef.current.height = source_h;
+    const { width, height } = this.imgOriginRef.current;
+    this.myCtx.clearRect(0, 0, width, height);
   }
   // 图片对象转base64
   getBase64Image(img) {
@@ -453,8 +450,6 @@ class GoogleOcr extends Component {
       tableData,
       imgArr,
       curentIndex,
-      img_height,
-      img_width,
       imgObj,
       input_url,
     } = this.state;
@@ -514,8 +509,6 @@ class GoogleOcr extends Component {
                 <img
                   ref={this.imgOriginRef}
                   className="imgOrigin"
-                  height={img_height}
-                  width={img_width}
                   src={imageUrl}
                 />
                 <div ref={this.imgEditRef} className="ocr_image" style={imgObj}>

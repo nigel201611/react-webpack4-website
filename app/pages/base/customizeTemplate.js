@@ -1,11 +1,11 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-23 15:13:08
+ * @LastEditTime: 2020-12-07 10:34:19
  */
 import React, { Component } from "react";
 import { withTranslation } from "react-i18next";
-import { Icon, message, Steps, Button } from "antd";
+import { Icon, message, Steps, Button, Alert } from "antd";
 import { connect } from "react-redux";
 import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
 import "@styles/customizeTemplate.less";
@@ -24,6 +24,7 @@ const steps = [
   {
     title: "customize-area",
     content: "Second-content",
+    description: "customizeTip",
     icon: <UngroupOutlined />,
   },
   {
@@ -303,11 +304,19 @@ class CustomizeTemp extends Component {
           <div className="page-main">
             <Steps current={current}>
               {steps.map((item) => (
-                <Step key={item.title} title={t(item.title)} icon={item.icon} />
+                <Step
+                  key={item.title}
+                  title={t(item.title)}
+                  icon={item.icon}
+                  description={
+                    item.description != null ? t(item.description) : ""
+                  }
+                />
               ))}
             </Steps>
             <div className="steps-content">
               {current !== 1 && steps[current].content}
+              {/* {current === 1 && <Alert message="Success Text" type="success" />} */}
               <CustomizeArea
                 imageUrl={imageUrl}
                 needKeepAlive={current === 1}

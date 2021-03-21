@@ -1,7 +1,7 @@
 <!--
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-10-27 11:13:52
+ * @LastEditTime: 2021-03-20 09:13:41
 -->
 
 ## 项目技术栈
@@ -11,9 +11,6 @@ node10.15.3 + react@16.12.0 + redux@3.7.2 + react-router@3.2.0 + webpack@4.41.2 
 ## 项目运行
 
 ```
-git clone --depth 1 https://github.com/duxianwei520/react.git
-
-cd react (进入项目)
 
 npm install (安装依赖包)
 

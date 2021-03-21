@@ -1,7 +1,7 @@
 <!--
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2021-03-21 10:59:40
+ * @LastEditTime: 2021-03-21 11:16:10
 -->
 
 ## 项目技术栈
@@ -64,6 +64,10 @@ axiosHandle.cancel('手动取消。')
 }
 
 ```
+
+### 运行后截图如下
+
+ <img src="./static/sc_20210321111339.png"  alt="nigel2014luo" align=center />
 
 ### 此项目需结合后端代码，加微信联系（备注：官网代码），只供学习使用，谢谢！
 

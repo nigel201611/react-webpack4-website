@@ -1,7 +1,7 @@
 <!--
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2021-03-20 09:13:41
+ * @LastEditTime: 2021-03-21 10:59:40
 -->
 
 ## 项目技术栈
@@ -48,10 +48,8 @@ npm run testing (测试环境的打包部署命令，可以根据具体需求自
 如果 status 值是-1，表示登录超时，那么就会跳出登录。
 这些参数都可以根据实际情况进行调整，报错或者成功的提示信息放在 msg 里面返回。
 
-```
-
-
 ### 取消http请求示例：
+
 ```
 
 import axios from 'axios'
@@ -67,4 +65,6 @@ axiosHandle.cancel('手动取消。')
 
 ```
 
-```
+### 此项目需结合后端代码，加微信联系（备注：官网代码），只供学习使用，谢谢！
+
+ <img src="./static/WechatIMG32.jpeg" width = "200" alt="nigel2014luo" align=center />

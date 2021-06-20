@@ -1,5 +1,5 @@
 export default {
-  NRI_title: "Nomura Research Institute",
+  NRI_title: "Shenzhen Zhiming Intelligent Technology Co., Ltd",
   ocr_nav: "OCR recognition",
   iot_nav: "IOT",
   ai_nav: "AI algorithm",

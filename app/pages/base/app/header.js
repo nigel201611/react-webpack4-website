@@ -71,7 +71,7 @@ class Header extends Component {
   };
 
   logoClick = () => {
-    console.log("nri");
+    console.log("深圳市知鸣智能科技有限公司");
   };
   handleClick = (e) => {
     const { key, item } = e;
@@ -171,11 +171,11 @@ class Header extends Component {
       <header id="navbar">
         <div id="navbar-container" className="boxed">
           <Row className="row">
-            <Col span={16}>
+            <Col span={20}>
               <div className="navbar-brand">
                 <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
-                    <img className="logo_icon" src={logoImage} alt="NRI logo" />
+                    <img className="logo_icon" src={logoImage} alt="深圳市知鸣智能科技有限公司" />
                     {this.props.t("NRI_title")}
                   </span>
                 </span>
@@ -213,7 +213,7 @@ class Header extends Component {
                 </ul>
               </div>
             </Col>
-            <Col span={8} className="col">
+            <Col span={4} className="col">
               <div className="right">
                 <ul>
                   <li>

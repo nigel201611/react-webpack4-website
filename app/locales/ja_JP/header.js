@@ -1,5 +1,5 @@
 export default {
-  NRI_title: "野村総合研究所",
+  NRI_title: "深セン市知鳴智能科技有限公司",
   ocr_nav: "OCR 識別",
   iot_nav: "IOT 物聯",
   ai_nav: "AI アルゴリズム",

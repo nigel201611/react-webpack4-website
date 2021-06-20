@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-06 15:05:47
+ * @LastEditTime: 2021-06-20 21:05:28
  */
 import React from "react";
 import {
@@ -20,7 +20,7 @@ export default () => (
       <Route path="/home" component={base.home} />
       <Route path="/expressOcr" component={base.expressOcr} />
       <Route path="/T_GeneralOcr" component={base.tengxunOcr} />
-      <Route path="/G_GeneralOcr" component={base.googleOcr} />
+      {/* <Route path="/G_GeneralOcr" component={base.googleOcr} /> */}
       <Route path="/customizeTemp" component={base.customizeTemplate} />
       <Route
         // key={Math.random() * 100 + "/mytemplate"}

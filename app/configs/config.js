@@ -1,11 +1,11 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-09 14:15:58
+ * @LastEditTime: 2021-06-20 21:02:34
  */
 
 export const set = "set$";
-export const brandName = "NRI"; // slogan
+export const brandName = "深圳市知鸣智能科技有限公司"; // slogan
 
 // 开发环境默认配置,本地环境测试配置
 let _serverIp = "http://127.0.0.1";

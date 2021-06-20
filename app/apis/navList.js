@@ -47,13 +47,13 @@ export default [
         nav: 'T_GeneralOcr',
         parentId: '2',
       },
-      {
-        id: '2_6',
-        text: 'G-通用',
-        path: '/G_GeneralOcr',
-        nav: 'G_GeneralOcr',
-        parentId: '2',
-      },
+      // {
+      //   id: '2_6',
+      //   text: 'G-通用',
+      //   path: '/G_GeneralOcr',
+      //   nav: 'G_GeneralOcr',
+      //   parentId: '2',
+      // },
     ],
   },
   {

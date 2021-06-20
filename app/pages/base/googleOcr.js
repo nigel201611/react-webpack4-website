@@ -3,30 +3,31 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-23 18:42:40
  */
-import React, { Component } from "react";
-import { withTranslation } from "react-i18next";
-import { Spin, Icon, message, Upload, Row, Table, Button, Input } from "antd";
-import "@styles/tengxunOcr.less";
-import { googleOcr } from "@apis/googleOcr";
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { Spin, Icon, message, Upload, Row, Table, Button, Input } from 'antd';
+import '@styles/tengxunOcr.less';
+import { googleOcr } from '@apis/googleOcr';
+
 const MAX_SIZE_WIDTH = 1680;
 const MAX_SIZE_HEIGHT = 1680;
 const columns = [
   {
-    title: "#",
-    dataIndex: "index",
-    key: "index",
-    align: "left",
+    title: '#',
+    dataIndex: 'index',
+    key: 'index',
+    align: 'left',
     width: 100,
   },
   {
-    title: "Result",
-    dataIndex: "itemstring",
-    key: "itemstring",
-    align: "left",
+    title: 'Result',
+    dataIndex: 'itemstring',
+    key: 'itemstring',
+    align: 'left',
     render: (text, record) => (
       <p
         id={`border_${record.fields}`}
-        className={record.result ? `border_${record.fields}` : ""}
+        className={record.result ? `border_${record.fields}` : ''}
       >
         <span>{text}</span>
       </p>
@@ -34,16 +35,16 @@ const columns = [
   },
 ];
 const imgArrOrigin = [
-  { url: require("@images/ocr_common03.jpg") },
-  { url: require("@images/ocr_common04.jpg") },
-  { url: require("@images/ocr_common05.jpg") },
-  { url: require("@images/ocr_common06.jpg") },
-  { url: require("@images/worddetect_3.jpg") },
-  { url: require("@images/worddetect_4.jpg") },
+  { url: require('@images/ocr_common03.jpg') },
+  { url: require('@images/ocr_common04.jpg') },
+  { url: require('@images/ocr_common05.jpg') },
+  { url: require('@images/ocr_common06.jpg') },
+  { url: require('@images/worddetect_3.jpg') },
+  { url: require('@images/worddetect_4.jpg') },
 ];
 function getBase64(imagefile, callback) {
   const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
+  reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(imagefile);
 }
 class GoogleOcr extends Component {
@@ -60,7 +61,7 @@ class GoogleOcr extends Component {
       imgObj: {
         backgroundImage: `url(${imgArrOrigin[0].url})`,
       },
-      input_url: "",
+      input_url: '',
       curentIndex: 0, // 当前激活要识别的图片索引
       tableData: [],
     };
@@ -70,26 +71,26 @@ class GoogleOcr extends Component {
     this.imgOptions = {}; // 中引文体验，多角度，其他语种体验不同选项
     this.box_w = 400;
     this.box_h = 410;
-    this.myCtx = this.myCanvasRef.current.getContext("2d");
-    this.useUploadBtn = false; //用于区分用户是否通过上传本地图片
+    this.myCtx = this.myCanvasRef.current.getContext('2d');
+    this.useUploadBtn = false; // 用于区分用户是否通过上传本地图片
   }
 
   beforeUpload = (file) => {
     const isJpgOrPng =
-      file.type === "image/jpeg" ||
-      file.type === "image/png" ||
-      file.type === "image/jpg";
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG/JPG file!");
+      message.error('You can only upload JPG/PNG/JPG file!');
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error("Image must smaller than 5MB!");
+      message.error('Image must smaller than 5MB!');
     }
 
     if (isLt5M && isJpgOrPng) {
       this.setState({
-        imageUrl: "",
+        imageUrl: '',
         tableData: [],
       });
       this.clearCanvasContent();
@@ -103,11 +104,11 @@ class GoogleOcr extends Component {
   };
 
   handleUploadChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       if (this.state.isRequesting) {
         return;
       }
@@ -120,10 +121,10 @@ class GoogleOcr extends Component {
         imgElem,
         imgWidth,
         imgHeight,
-        type
+        type,
       ) {
-        const myCanvas = document.createElement("canvas");
-        const myCtx = myCanvas.getContext("2d");
+        const myCanvas = document.createElement('canvas');
+        const myCtx = myCanvas.getContext('2d');
         const maxWidth = MAX_SIZE_WIDTH;
         const maxHeight = MAX_SIZE_HEIGHT;
         let targetWidth = imgWidth;
@@ -169,13 +170,13 @@ class GoogleOcr extends Component {
             },
             () => {
               this.init();
-            }
+            },
           );
         };
         image.src = imageUrl;
       });
     }
-    if (info.file.status === "error") {
+    if (info.file.status === 'error') {
       this.setState({ loading: false });
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -190,7 +191,7 @@ class GoogleOcr extends Component {
   init(url) {
     // 判断是否有网络图片地址，有的话以网络图片优先
     const { input_url, imageUrl } = this.state;
-    if (input_url != "") {
+    if (input_url != '') {
       const http_image_pattern = /^(http:\/\/|https:\/\/){1}.+\.(jpg|jpeg|png|bmp|pdf)$/gi;
       if (http_image_pattern.test(input_url)) {
         this.setState({
@@ -202,7 +203,7 @@ class GoogleOcr extends Component {
         this.clearCanvasContent();
         this.googleGeneralOcr({ url: input_url }, this.imgOptions);
       } else {
-        message.warning(t("url-error-tip"));
+        message.warning(t('url-error-tip'));
       }
     } else {
       // 上面上传转换得到的imageUrl是临时图片链接，需要再计算一次，牺牲计算减少内存使用
@@ -211,7 +212,7 @@ class GoogleOcr extends Component {
       if (this.useUploadBtn) {
         const params = {
           image: imageUrl,
-          url: "",
+          url: '',
         };
         this.googleGeneralOcr(params, this.imgOptions);
       } else {
@@ -259,14 +260,14 @@ class GoogleOcr extends Component {
             for (let i = 0; i < blocksArr.length; i++) {
               const block = blocksArr[i];
               const obj = {
-                itemstring: "",
-                itemconf: "",
+                itemstring: '',
+                itemconf: '',
                 coordpoint: [],
               };
               // confidence
               obj.itemconf = block.property
                 ? block.property.detectedLanguages.confidence
-                : "";
+                : '';
               // 该行对应坐标
               obj.coordpoint = block.boundingBox.vertices || [];
               // 里面保存了每段或者每行的所有字符，将他们串联起来，保存到itemstring里
@@ -278,7 +279,7 @@ class GoogleOcr extends Component {
                   total += element.text;
                 });
                 return total;
-              }, "");
+              }, '');
               items.push(obj);
               // canvas绘制识别出的文本行在原图中矩形框需要的坐标
               const coordpoint = obj.coordpoint.reduce((total, item) => {
@@ -288,8 +289,7 @@ class GoogleOcr extends Component {
               coordpointArr.push({ x: coordpoint });
             }
             items = items.map((item, index) =>
-              Object.assign({}, item, { index: index, key: index })
-            );
+              Object.assign({}, item, { index: index, key: index }));
             this.setState({
               tableData: items,
             });
@@ -304,7 +304,7 @@ class GoogleOcr extends Component {
         // console.warn(error);
         message.warning(res.errmsg);
         this.setState({ isRequesting: false });
-      }
+      },
     );
   }
   // 绘制canvas框图
@@ -367,7 +367,7 @@ class GoogleOcr extends Component {
         y3 = item[5],
         x4 = item[6],
         y4 = item[7];
-      this.myCtx.strokeStyle = "#00a4ff";
+      this.myCtx.strokeStyle = '#00a4ff';
       this.myCtx.lineWidth = 4;
       this.myCtx.beginPath();
       this.myCtx.moveTo(x1, y1);
@@ -389,12 +389,12 @@ class GoogleOcr extends Component {
   }
   // 图片对象转base64
   getBase64Image(img) {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
-    const ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+    const ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase();
     const dataURL = canvas.toDataURL(`image/${ext}`);
     return dataURL;
   }
@@ -408,7 +408,7 @@ class GoogleOcr extends Component {
         // 构造接口请求参数，前端只需要传image或者url即可
         const pramas = {
           image: img_base64,
-          url: "",
+          url: '',
         };
         // 返回接口请求需要的参数
         resolve(pramas);
@@ -430,7 +430,7 @@ class GoogleOcr extends Component {
     this.clearCanvasContent();
     this.setState(
       {
-        input_url: "",
+        input_url: '',
         curentIndex: index,
         imageUrl: image,
         imgObj: {
@@ -439,7 +439,7 @@ class GoogleOcr extends Component {
       },
       () => {
         this.init();
-      }
+      },
     );
   };
   render() {
@@ -458,7 +458,7 @@ class GoogleOcr extends Component {
         key={index}
         src={item.url}
         className={
-          curentIndex == index ? "pic-item pic-item_active" : "pic-item"
+          curentIndex == index ? 'pic-item pic-item_active' : 'pic-item'
         }
         onClick={this.handleClickImg.bind(this, item.url, index)}
       />
@@ -468,8 +468,8 @@ class GoogleOcr extends Component {
         <section className="tx-wrap">
           <div className="tx-banner">
             <div className="tx-title">
-              <h1>{t("banner-title")}</h1>
-              <p>{t("banner-desc")}</p>
+              <h1>{t('banner-title')}</h1>
+              <p>{t('banner-desc')}</p>
             </div>
           </div>
           <div className="tx-main">
@@ -485,8 +485,8 @@ class GoogleOcr extends Component {
                   onChange={this.handleUploadChange}
                 >
                   <Button type="primary">
-                    <Icon type={this.state.loading ? "loading" : "upload"} />
-                    {t("upload-btn-text")}
+                    <Icon type={this.state.loading ? 'loading' : 'upload'} />
+                    {t('upload-btn-text')}
                   </Button>
                 </Upload>
                 <div className="url_input">
@@ -494,7 +494,7 @@ class GoogleOcr extends Component {
                     value={input_url}
                     onChange={this.handleInputUrlChange.bind(this)}
                     allowClear
-                    placeholder={t("input_url_tip")}
+                    placeholder={t('input_url_tip')}
                   />
                 </div>
                 <Button
@@ -502,7 +502,7 @@ class GoogleOcr extends Component {
                   type="primary"
                   onClick={this.handleAnalyse}
                 >
-                  {t("analyse-btn")}
+                  {t('analyse-btn')}
                 </Button>
               </Row>
               <Row gutter={16} className="ocr-result">
@@ -530,4 +530,4 @@ class GoogleOcr extends Component {
   }
 }
 
-export default withTranslation("googleOcr")(GoogleOcr);
+export default withTranslation('googleOcr')(GoogleOcr);

@@ -3,16 +3,18 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-16 14:25:16
  */
-import React, { Component } from "react";
-import { hashHistory } from "react-router";
-import { withTranslation } from "react-i18next";
-import { notification, List, Icon, Modal, Spin } from "antd";
-import { connect } from "react-redux";
-import { editTemplateData, setCurrentNavItem } from "@actions/common";
+import React, { Component } from 'react';
+import { hashHistory } from 'react-router';
+import { withTranslation } from 'react-i18next';
+import { notification, List, Icon, Modal, Spin } from 'antd';
+import { connect } from 'react-redux';
+import { editTemplateData, setCurrentNavItem } from '@actions/common';
+
 const { confirm } = Modal;
-import "@styles/myTemplate.less";
-import { selectTemplate, deleteTemplate } from "@apis/userTemplate";
-@connect((state) => ({}))
+import '@styles/myTemplate.less';
+import { selectTemplate, deleteTemplate } from '@apis/userTemplate';
+
+@connect(state => ({}))
 class MyTemplate extends Component {
   // 初始化页面常量 绑定事件方法
   constructor(props, context) {
@@ -34,18 +36,18 @@ class MyTemplate extends Component {
 
   handleEdit(index) {
     const templateData = this.state.tableData[index];
-    this.props.dispatch(setCurrentNavItem("2_4"));
-    window.sessionStorage.setItem("currentNavItem", "2_4");
+    this.props.dispatch(setCurrentNavItem('2_4'));
+    window.sessionStorage.setItem('currentNavItem', '2_4');
     this.props.dispatch(editTemplateData(templateData));
-    hashHistory.push({ pathname: "/customizeTemp" });
+    hashHistory.push({ pathname: '/customizeTemp' });
   }
   handleDelete(index) {
     const { t } = this.props;
     const { tableData } = this.state;
     const self = this;
     confirm({
-      title: t("tips"),
-      content: t("confirm_text"),
+      title: t('tips'),
+      content: t('confirm_text'),
       onOk() {
         const temp_id = tableData[index].temp_id;
         deleteTemplate({ temp_id: temp_id }, (res) => {
@@ -59,14 +61,14 @@ class MyTemplate extends Component {
                 tableData,
               });
               notification.success({
-                message: t("tips"),
-                description: t("cancel_succ"),
+                message: t('tips'),
+                description: t('cancel_succ'),
               });
             } else {
               // 提示用户删除失败，检查网络是否正常
               notification.error({
-                message: t("tips"),
-                description: t("cancel_fail"),
+                message: t('tips'),
+                description: t('cancel_fail'),
               });
             }
           } else {
@@ -102,7 +104,7 @@ class MyTemplate extends Component {
             const templateDataArr = data;
             templateDataArr.forEach((item, index) => {
               let blockItem = item.blockItem;
-              blockItem = blockItem.replace(/\\/, "");
+              blockItem = blockItem.replace(/\\/, '');
               templateDataArr[index].blockItem = JSON.parse(blockItem);
             });
             this.setState({
@@ -111,8 +113,8 @@ class MyTemplate extends Component {
           } else {
             // 提示没有模板数据
             notification.warning({
-              message: this.props.t("tips"),
-              description: this.props.t("no_data"),
+              message: this.props.t('tips'),
+              description: this.props.t('no_data'),
             });
           }
         }
@@ -120,13 +122,13 @@ class MyTemplate extends Component {
       },
       (err) => {
         notification.error({
-          message: this.props.t("tips"),
+          message: this.props.t('tips'),
           description: err.errmsg,
         });
         this.setState({
           isRequesting: false,
         });
-      }
+      },
     );
   };
 
@@ -158,7 +160,7 @@ class MyTemplate extends Component {
                         className="action-button"
                         onClick={this.handleEdit.bind(this, index)}
                       >
-                        {t("edit")}
+                        {t('edit')}
                       </span>
                     </span>,
                     <span key="list-vertical-delete">
@@ -167,7 +169,7 @@ class MyTemplate extends Component {
                         className="action-button"
                         onClick={this.handleDelete.bind(this, index)}
                       >
-                        {t("delete")}
+                        {t('delete')}
                       </span>
                     </span>,
                   ]}
@@ -176,24 +178,24 @@ class MyTemplate extends Component {
                       className="template-image"
                       style={{
                         backgroundImage: `url(${item.image})`,
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "contain",
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: 'contain',
                       }}
                     />
                   }
                 >
                   <List.Item.Meta
-                    title={`${t("temp_name")} ${item.temp_name}`}
-                    description={t("temp_name") + item.name ? item.item : ""}
+                    title={`${t('temp_name')} ${item.temp_name}`}
+                    description={t('temp_name') + item.name ? item.item : ''}
                   />
                   {item.blockItem.map((block, index) => (
                     <p key={block.block_id}>
-                      {`(${index + 1})` + " "}
+                      {`(${index + 1})` + ' '}
                       <span>
-                        {t("ocr_engine")}:{block.ocr_engine}
-                      </span>{" "}
+                        {t('ocr_engine')}:{block.ocr_engine}
+                      </span>{' '}
                       <span>
-                        {t("area_name")}:{block.name}
+                        {t('area_name')}:{block.name}
                       </span>
                     </p>
                   ))}
@@ -207,4 +209,4 @@ class MyTemplate extends Component {
   }
 }
 
-export default withTranslation("myTemplate")(MyTemplate);
+export default withTranslation('myTemplate')(MyTemplate);

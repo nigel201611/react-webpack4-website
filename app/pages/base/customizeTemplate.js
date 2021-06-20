@@ -3,37 +3,37 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-12-07 10:34:19
  */
-import React, { Component } from "react";
-import { withTranslation } from "react-i18next";
-import { Icon, message, Steps, Button, Alert } from "antd";
-import { connect } from "react-redux";
-import { PictureOutlined, UngroupOutlined } from "@ant-design/icons";
-import "@styles/customizeTemplate.less";
-import UploadComp from "@components/UploadComp/UploadComp";
-import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
-import TableList from "@components/TableList/TableList";
-import { editTemplateData } from "@actions/common";
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { Icon, message, Steps, Button, Alert } from 'antd';
+import { connect } from 'react-redux';
+import { PictureOutlined, UngroupOutlined } from '@ant-design/icons';
+import '@styles/customizeTemplate.less';
+import UploadComp from '@components/UploadComp/UploadComp';
+import CustomizeArea from '@components/CustomizeArea/CustomizeArea';
+import TableList from '@components/TableList/TableList';
+import { editTemplateData } from '@actions/common';
 
 const { Step } = Steps;
 const steps = [
   {
-    title: "upload",
-    content: "First-content",
+    title: 'upload',
+    content: 'First-content',
     icon: <PictureOutlined />,
   },
   {
-    title: "customize-area",
-    content: "Second-content",
-    description: "customizeTip",
+    title: 'customize-area',
+    content: 'Second-content',
+    description: 'customizeTip',
     icon: <UngroupOutlined />,
   },
   {
-    title: "perform-ocr",
-    content: "Third-content",
+    title: 'perform-ocr',
+    content: 'Third-content',
     icon: <Icon type="scan" />,
   },
 ];
-@connect((state) => ({
+@connect(state => ({
   currentEditTemplateData: state.currentEditTemplateData,
 }))
 class CustomizeTemp extends Component {
@@ -45,11 +45,11 @@ class CustomizeTemp extends Component {
     this.state = {
       loading: false,
       isRequesting: false,
-      imageUrl: "",
+      imageUrl: '',
       current: 0, // 当前步骤索引
-      bill_width: "680", // 運單默認寬度
-      bill_height: "400", // 運單默認高度
-      uploadImgType: "image/jpeg",
+      bill_width: '680', // 運單默認寬度
+      bill_height: '400', // 運單默認高度
+      uploadImgType: 'image/jpeg',
       saving: false,
       responseData: [], // 保存执行ocr结果数据
       performOcrRequesting: false, // 标识当前是否正在执行OCR识别
@@ -59,7 +59,7 @@ class CustomizeTemp extends Component {
   componentDidMount() {
     this.fixSizeW = 1680; // 控制用户上传图片宽度，宽大于1024，固定尺寸为1024,小于1024，原图片显示。
     this.fixSizeH = 1680;
-    this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
+    this.OriginImageUrl = ''; // 保存用户上传未处理的图片数据
     this.calibrating = false; // 控制图片校准，防止过频
     // this.templateData =
     //   (this.props.location &&
@@ -69,7 +69,7 @@ class CustomizeTemp extends Component {
     // this.handleMyTemplateEdit(this.templateData);
     if (
       this.props.currentEditTemplateData &&
-      typeof this.props.currentEditTemplateData === "object"
+      typeof this.props.currentEditTemplateData === 'object'
     ) {
       this.handleMyTemplateEdit(this.props.currentEditTemplateData);
     }
@@ -83,7 +83,7 @@ class CustomizeTemp extends Component {
   }
   // 从我的模板通过编辑按钮，跳转过来处理
   handleMyTemplateEdit(templateData) {
-    if (templateData && JSON.stringify(templateData) != "{}") {
+    if (templateData && JSON.stringify(templateData) != '{}') {
       // 调用自定区域组件方法根据数据绘制自定区域
       const image = templateData.image;
       const imageElem = new Image();
@@ -95,7 +95,7 @@ class CustomizeTemp extends Component {
           () => {
             const customizeArea = this.customizeAreaRef.current;
             customizeArea.handleEditTemplate(templateData);
-          }
+          },
         );
       };
       imageElem.src = image;
@@ -116,19 +116,19 @@ class CustomizeTemp extends Component {
 
   beforeUpload = (file) => {
     const isJpgOrPng =
-      file.type === "image/jpeg" ||
-      file.type === "image/png" ||
-      file.type === "image/jpg";
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG/JPG file!");
+      message.error('You can only upload JPG/PNG/JPG file!');
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error("Image must smaller than 5MB!");
+      message.error('Image must smaller than 5MB!');
     }
 
     this.setState({
-      imageUrl: "",
+      imageUrl: '',
     });
     return isJpgOrPng && isLt5M;
   };
@@ -139,8 +139,8 @@ class CustomizeTemp extends Component {
       return;
     }
     const imgElem = new Image();
-    const myCanvas = document.createElement("canvas");
-    const myCtx = myCanvas.getContext("2d");
+    const myCanvas = document.createElement('canvas');
+    const myCtx = myCanvas.getContext('2d');
     imgElem.src = this.OriginImageUrl;
     this.calibrating = true;
     imgElem.onload = () => {
@@ -182,11 +182,11 @@ class CustomizeTemp extends Component {
   }
 
   handleChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       // 对上传成功，如果尺寸过大做些控制
       const fileObj = info.file.originFileObj;
       this.OriginImageUrl = URL.createObjectURL(fileObj);
@@ -196,7 +196,7 @@ class CustomizeTemp extends Component {
       // 上传成功调用校准接口校准下图片，file.raw
       this.calibrationImage(fileObj);
     }
-    if (info.file.status === "error") {
+    if (info.file.status === 'error') {
       this.setState({ loading: false });
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -257,10 +257,10 @@ class CustomizeTemp extends Component {
     const uploadButton = (
       <div>
         <Icon
-          style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
-          type={loading ? "loading" : "inbox"}
+          style={{ fontSize: '36px', color: '#11aae4', margin: '0 0 10px 0' }}
+          type={loading ? 'loading' : 'inbox'}
         />
-        <div className="ant-upload-text">{t("upload-tips")}</div>
+        <div className="ant-upload-text">{t('upload-tips')}</div>
       </div>
     );
     switch (current) {
@@ -297,19 +297,19 @@ class CustomizeTemp extends Component {
         <section className="page-wrap">
           <div className="page-banner">
             <div className="page-title">
-              <h1>{t("banner-title")}</h1>
-              <p>{t("banner-desc")}</p>
+              <h1>{t('banner-title')}</h1>
+              <p>{t('banner-desc')}</p>
             </div>
           </div>
           <div className="page-main">
             <Steps current={current}>
-              {steps.map((item) => (
+              {steps.map(item => (
                 <Step
                   key={item.title}
                   title={t(item.title)}
                   icon={item.icon}
                   description={
-                    item.description != null ? t(item.description) : ""
+                    item.description != null ? t(item.description) : ''
                   }
                 />
               ))}
@@ -331,40 +331,32 @@ class CustomizeTemp extends Component {
             </div>
             <div className="steps-action">
               {current === 1 && (
-                <>
-                  <Button onClick={this.prev}>{t("back-upload")}</Button>
-                  <Button type="primary" onClick={this.handleClearArea}>
-                    {t("clear-area")}
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={saving}
-                    onClick={this.saveCustTemplate}
-                  >
-                    {t("save-template")}
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={performOcrRequesting}
-                    onClick={this.performOcr}
-                  >
-                    {t("perform-ocr")}
-                  </Button>
-                </>
+                <>'                 '<Button onClick={this.prev}>{t('back-upload')}</Button>'                 '<Button type="primary" onClick={this.handleClearArea}>
+                  {t('clear-area')}
+                </Button>'                 '<Button
+                  type="primary"
+                  loading={saving}
+                  onClick={this.saveCustTemplate}
+                >
+                  {t('save-template')}
+                </Button>'                 '<Button
+                  type="primary"
+                  loading={performOcrRequesting}
+                  onClick={this.performOcr}
+                >
+                  {t('perform-ocr')}
+                </Button>'               '</>
               )}
               {current === 2 && (
-                <>
-                  <Button type="primary" onClick={this.prev}>
-                    {t("stepback")}
-                  </Button>
-                  <Button
-                    type="primary"
-                    loading={saving}
-                    onClick={this.saveCustTemplate}
-                  >
-                    {t("save-template")}
-                  </Button>
-                </>
+                <>'                 '<Button type="primary" onClick={this.prev}>
+                  {t('stepback')}
+                </Button>'                 '<Button
+                  type="primary"
+                  loading={saving}
+                  onClick={this.saveCustTemplate}
+                >
+                  {t('save-template')}
+                </Button>'               '</>
               )}
             </div>
           </div>
@@ -374,4 +366,4 @@ class CustomizeTemp extends Component {
   }
 }
 
-export default withTranslation("customizeTemp")(CustomizeTemp);
+export default withTranslation('customizeTemp')(CustomizeTemp);

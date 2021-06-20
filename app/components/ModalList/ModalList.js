@@ -3,10 +3,10 @@
  * @Date: 2020-10-27 14:54:04
  * @LastEditTime: 2020-11-05 11:13:32
  */
-import React, { Component } from "react";
-import { Modal, Checkbox } from "antd";
-import { withTranslation } from "react-i18next";
-import "./ModalList.less";
+import React, { Component } from 'react';
+import { Modal, Checkbox } from 'antd';
+import { withTranslation } from 'react-i18next';
+import './ModalList.less';
 
 class ModalList extends Component {
   render() {
@@ -24,8 +24,8 @@ class ModalList extends Component {
         visible={visible}
         closable
         keyboard
-        title={t("modal-title")}
-        okText={t("confirm")}
+        title={t('modal-title')}
+        okText={t('confirm')}
         onOk={onConfirm}
         onCancel={onCancel}
         mask
@@ -39,21 +39,21 @@ class ModalList extends Component {
               key={item.temp_id}
               className={`listItem ${
                 index != tableData.length - 1 && tableData.length > 1
-                  ? "borderB"
-                  : ""
+                  ? 'borderB'
+                  : ''
               }`}
             >
               <span className="item-desc">
-                {`${t("temp_name")} ${item.temp_name}`}
+                {`${t('temp_name')} ${item.temp_name}`}
                 {item.blockItem.map((block, index2) => (
                   <p key={block.block_id}>
                     {`(${index2 + 1})  `}
                     <span>
-                      {t("ocr_engine")}:{block.ocr_engine}
+                      {t('ocr_engine')}:{block.ocr_engine}
                     </span>
-                    {" ,"}
+                    {' ,'}
                     <span>
-                      {t("area_name")}:{block.name}
+                      {t('area_name')}:{block.name}
                     </span>
                   </p>
                 ))}
@@ -62,8 +62,8 @@ class ModalList extends Component {
                 className="template-image"
                 style={{
                   backgroundImage: `url(${item.image})`,
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "contain",
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
                 }}
               />
               <Checkbox
@@ -73,7 +73,7 @@ class ModalList extends Component {
                 data-index={index}
                 className="checkbox"
               >
-                {t("choice")}
+                {t('choice')}
               </Checkbox>
             </li>
           ))}
@@ -83,4 +83,4 @@ class ModalList extends Component {
   }
 }
 
-export default withTranslation("modalList", { withRef: true })(ModalList);
+export default withTranslation('modalList', { withRef: true })(ModalList);

@@ -4,8 +4,8 @@
  * @LastEditTime: 2020-11-10 14:52:31
  */
 
-import React from "react";
-import "./DrawPolygon.less";
+import React from 'react';
+import './DrawPolygon.less';
 
 // 声明组件  并对外输出
 export default function DrawLine(props) {

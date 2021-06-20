@@ -14,11 +14,6 @@
     "test:report": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "dll": "webpack --config ./scripts/webpack.dll.config.js"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "author": "nigel",
   "jest": {
     "moduleFileExtensions": [
@@ -146,7 +141,6 @@
     "echarts": "^4.5.0",
     "enzyme-adapter-react-16": "^1.6",
     "esri-loader": "0.3.1",
-    "husky": "^1.1.2",
     "i18next": "^19.7.0",
     "identity-obj-proxy": "^3.0.0",
     "immutable": "~3.8.1",

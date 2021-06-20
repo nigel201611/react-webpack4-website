@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Modal, Form, Input } from "antd";
-import { withTranslation } from "react-i18next";
+import React, { Component } from 'react';
+import { Modal, Form, Input } from 'antd';
+import { withTranslation } from 'react-i18next';
 
-const TempNameModalForm = Form.create({ name: "form_in_modal" })(
+const TempNameModalForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line
   class extends Component {
     render() {
@@ -17,20 +17,20 @@ const TempNameModalForm = Form.create({ name: "form_in_modal" })(
       return (
         <Modal
           visible={visible}
-          title={t("modal-title")}
-          okText={t("confirm")}
+          title={t('modal-title')}
+          okText={t('confirm')}
           onCancel={onTempNameCancel}
           onOk={onTempNameConfirm}
           mask
           maskClosable={false}
         >
           <Form layout="vertical">
-            <Form.Item label={t("temp_name")}>
-              {getFieldDecorator("temp_name", {
+            <Form.Item label={t('temp_name')}>
+              {getFieldDecorator('temp_name', {
                 rules: [
                   {
                     required: true,
-                    message: "Please input template name!",
+                    message: 'Please input template name!',
                   },
                 ],
               })(<Input placeholder="Please input template name" />)}
@@ -39,8 +39,5 @@ const TempNameModalForm = Form.create({ name: "form_in_modal" })(
         </Modal>
       );
     }
-  }
-);
-export default withTranslation("customizeArea", { withRef: true })(
-  TempNameModalForm
-);
+  });
+export default withTranslation('customizeArea', { withRef: true })(TempNameModalForm);

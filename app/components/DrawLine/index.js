@@ -4,8 +4,8 @@
  * @LastEditTime: 2020-11-11 11:36:54
  */
 
-import React from "react";
-import "./index.less";
+import React from 'react';
+import './index.less';
 // 声明组件  并对外输出
 export default function DrawLine(props) {
   const { postcodePoints, addressPoints, namePoints } = props;

@@ -3,33 +3,33 @@
  * @Date: 2020-09-03 15:54:51
  * @LastEditTime: 2020-11-16 15:06:49
  */
-import React, { Component } from "react";
-import { withTranslation } from "react-i18next";
-import { Icon, message, Steps, Button, Spin, notification } from "antd";
-import { PictureOutlined } from "@ant-design/icons";
-import { selectTemplate } from "@apis/userTemplate";
-import "@styles/performOcr.less";
-import UploadComp from "@components/UploadComp/UploadComp";
-import CustomizeArea from "@components/CustomizeArea/CustomizeArea";
-import ModalList from "@components/ModalList/ModalList";
-import TableList from "@components/TableList/TableList";
+import React, { Component } from 'react';
+import { withTranslation } from 'react-i18next';
+import { Icon, message, Steps, Button, Spin, notification } from 'antd';
+import { PictureOutlined } from '@ant-design/icons';
+import { selectTemplate } from '@apis/userTemplate';
+import '@styles/performOcr.less';
+import UploadComp from '@components/UploadComp/UploadComp';
+import CustomizeArea from '@components/CustomizeArea/CustomizeArea';
+import ModalList from '@components/ModalList/ModalList';
+import TableList from '@components/TableList/TableList';
 
 const { Step } = Steps;
 const steps = [
   {
-    title: "upload",
-    content: "First-content",
+    title: 'upload',
+    content: 'First-content',
     icon: <PictureOutlined />,
   },
   {
-    title: "select-template",
-    description: "selectTemp-desc",
-    content: "Second-content",
+    title: 'select-template',
+    description: 'selectTemp-desc',
+    content: 'Second-content',
     icon: <Icon type="solution" />,
   },
   {
-    title: "perform-ocr",
-    content: "Third-content",
+    title: 'perform-ocr',
+    content: 'Third-content',
     icon: <Icon type="scan" />,
   },
 ];
@@ -44,11 +44,11 @@ class PerformOcr extends Component {
       loading: false,
       isRequesting: false,
       performOcrRequesting: false, // 标识当前是否正在执行OCR识别
-      imageUrl: "",
+      imageUrl: '',
       current: 0, // 当前步骤索引
-      bill_width: "680", // 運單默認寬度
-      bill_height: "400", // 運單默認高度
-      uploadImgType: "image/jpeg",
+      bill_width: '680', // 運單默認寬度
+      bill_height: '400', // 運單默認高度
+      uploadImgType: 'image/jpeg',
       templateDataArr: [], // 模板对象数据
       modalListVisible: false, // 控制modalList显示
       templateIndex: 0, // 用户选择的模板索引，默认第一个
@@ -59,7 +59,7 @@ class PerformOcr extends Component {
   componentDidMount() {
     this.fixSizeW = 1680; // 控制用户上传图片宽度，宽大于2024，固定尺寸为2024,小于2024，原图片显示。
     this.fixSizeH = 1680;
-    this.OriginImageUrl = ""; // 保存用户上传未处理的图片数据
+    this.OriginImageUrl = ''; // 保存用户上传未处理的图片数据
     this.calibrating = false; // 控制图片校准标识，防止过频
   }
   componentWillUnmount() {
@@ -86,19 +86,19 @@ class PerformOcr extends Component {
 
   beforeUpload = (file) => {
     const isJpgOrPng =
-      file.type === "image/jpeg" ||
-      file.type === "image/png" ||
-      file.type === "image/jpg";
+      file.type === 'image/jpeg' ||
+      file.type === 'image/png' ||
+      file.type === 'image/jpg';
     if (!isJpgOrPng) {
-      message.error("You can only upload JPG/PNG/JPG file!");
+      message.error('You can only upload JPG/PNG/JPG file!');
     }
     const isLt5M = file.size / 1024 / 1024 < 5;
     if (!isLt5M) {
-      message.error("Image must smaller than 5MB!");
+      message.error('Image must smaller than 5MB!');
     }
 
     this.setState({
-      imageUrl: "",
+      imageUrl: '',
     });
     return isJpgOrPng && isLt5M;
   };
@@ -109,8 +109,8 @@ class PerformOcr extends Component {
       return;
     }
     const imgElem = new Image();
-    const myCanvas = document.createElement("canvas");
-    const myCtx = myCanvas.getContext("2d");
+    const myCanvas = document.createElement('canvas');
+    const myCtx = myCanvas.getContext('2d');
     imgElem.src = this.OriginImageUrl;
     this.calibrating = true;
     imgElem.onload = () => {
@@ -153,11 +153,11 @@ class PerformOcr extends Component {
   }
 
   handleChange = (info) => {
-    if (info.file.status === "uploading") {
+    if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       // 对上传成功，如果尺寸过大做些控制
       const fileObj = info.file.originFileObj;
       this.OriginImageUrl = URL.createObjectURL(fileObj);
@@ -169,7 +169,7 @@ class PerformOcr extends Component {
       // 请求用户模板数据
       this.selectUserTemplate();
     }
-    if (info.file.status === "error") {
+    if (info.file.status === 'error') {
       this.setState({ loading: false });
       message.error(`${info.file.name} file upload failed.`);
     }
@@ -200,7 +200,7 @@ class PerformOcr extends Component {
             const templateDataArr = data;
             templateDataArr.forEach((item, index) => {
               let blockItem = item.blockItem;
-              blockItem = blockItem.replace(/\\/, "");
+              blockItem = blockItem.replace(/\\/, '');
               templateDataArr[index].blockItem = JSON.parse(blockItem);
             });
             this.setState(
@@ -212,13 +212,13 @@ class PerformOcr extends Component {
                 // 绘制区域前，先清理之前的
                 this.handleClearArea();
                 this.hanldeDrawCustomArea(templateDataArr[0].blockItem);
-              }
+              },
             );
           } else {
             // 提示没有模板数据
             notification.warning({
-              message: this.props.t("tips"),
-              description: this.props.t("no_data"),
+              message: this.props.t('tips'),
+              description: this.props.t('no_data'),
             });
           }
         }
@@ -226,13 +226,13 @@ class PerformOcr extends Component {
       },
       (err) => {
         notification.error({
-          message: this.props.t("tips"),
+          message: this.props.t('tips'),
           description: err.errmsg,
         });
         this.setState({
           isRequesting: false,
         });
-      }
+      },
     );
   };
 
@@ -294,7 +294,7 @@ class PerformOcr extends Component {
    * @return {*}
    */
   handleConfirm = () => {
-    console.log("confirm");
+    console.log('confirm');
     this.setState({ modalListVisible: false });
   };
   /*
@@ -304,14 +304,12 @@ class PerformOcr extends Component {
    * @return {*}
    */
   changeTemplateIndex = (event) => {
-    const templateIndex = event.target["data-index"];
+    const templateIndex = event.target['data-index'];
     const checked = event.target.checked;
     if (checked) {
       // 绘制区域前，先清理之前的
       this.handleClearArea();
-      this.hanldeDrawCustomArea(
-        this.state.templateDataArr[templateIndex].blockItem
-      );
+      this.hanldeDrawCustomArea(this.state.templateDataArr[templateIndex].blockItem);
       this.setState({
         templateIndex: templateIndex,
       });
@@ -337,10 +335,10 @@ class PerformOcr extends Component {
     const uploadButton = (
       <div>
         <Icon
-          style={{ fontSize: "36px", color: "#11aae4", margin: "0 0 10px 0" }}
-          type={loading ? "loading" : "inbox"}
+          style={{ fontSize: '36px', color: '#11aae4', margin: '0 0 10px 0' }}
+          type={loading ? 'loading' : 'inbox'}
         />
-        <div className="ant-upload-text">{t("upload-tips")}</div>
+        <div className="ant-upload-text">{t('upload-tips')}</div>
       </div>
     );
     switch (current) {
@@ -379,34 +377,29 @@ class PerformOcr extends Component {
         <section className="page-wrap">
           <div className="page-banner">
             <div className="page-title">
-              <h1>{t("banner-title")}</h1>
-              <p>{t("banner-desc")}</p>
+              <h1>{t('banner-title')}</h1>
+              <p>{t('banner-desc')}</p>
               <span className="steps-action">
                 {current === 1 && (
-                  <>
-                    <Button onClick={this.prev}>{t("back-upload")}</Button>'
+                  <>'                   '<Button onClick={this.prev}>{t('back-upload')}</Button>'
                     <Button
                       type="primary"
                       disabled={!templateDataArr.length}
                       onClick={this.showTemplate}
                     >
-                      {t("show-template")}
-                    </Button>
-                    <Button
+                      {t('show-template')}
+                    </Button>'                   '<Button
                       type="primary"
                       loading={performOcrRequesting}
                       onClick={this.performOcr}
                     >
-                      {t("perform-ocr")}
-                    </Button>
-                  </>
+                      {t('perform-ocr')}
+                    </Button>'                 '</>
                 )}
                 {current === 2 && (
-                  <>
-                    <Button type="primary" onClick={this.prev}>
-                      {t("stepback")}
-                    </Button>
-                  </>
+                  <>'                   '<Button type="primary" onClick={this.prev}>
+                    {t('stepback')}
+                  </Button>'                 '</>
                 )}
               </span>
             </div>
@@ -422,7 +415,7 @@ class PerformOcr extends Component {
               tableData={templateDataArr}
             />
             <Steps size="small" current={current}>
-              {steps.map((item) => (
+              {steps.map(item => (
                 <Step
                   key={item.title}
                   title={t(item.title)}
@@ -439,4 +432,4 @@ class PerformOcr extends Component {
   }
 }
 
-export default withTranslation("performOcr")(PerformOcr);
+export default withTranslation('performOcr')(PerformOcr);

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-12-07 10:34:19
+ * @LastEditTime: 2021-07-17 15:19:08
  */
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -331,32 +331,40 @@ class CustomizeTemp extends Component {
             </div>
             <div className="steps-action">
               {current === 1 && (
-                <>'                 '<Button onClick={this.prev}>{t('back-upload')}</Button>'                 '<Button type="primary" onClick={this.handleClearArea}>
+                <>
+                <Button onClick={this.prev}>{t('back-upload')}</Button>
+                <Button type="primary" onClick={this.handleClearArea}>
                   {t('clear-area')}
-                </Button>'                 '<Button
+                </Button>
+                <Button
                   type="primary"
                   loading={saving}
                   onClick={this.saveCustTemplate}
                 >
                   {t('save-template')}
-                </Button>'                 '<Button
+                </Button>
+                <Button
                   type="primary"
                   loading={performOcrRequesting}
                   onClick={this.performOcr}
                 >
                   {t('perform-ocr')}
-                </Button>'               '</>
+                </Button>
+              </>
               )}
               {current === 2 && (
-                <>'                 '<Button type="primary" onClick={this.prev}>
+                <>
+                <Button type="primary" onClick={this.prev}>
                   {t('stepback')}
-                </Button>'                 '<Button
+                </Button>
+                <Button
                   type="primary"
                   loading={saving}
                   onClick={this.saveCustTemplate}
                 >
                   {t('save-template')}
-                </Button>'               '</>
+                </Button>
+                </>
               )}
             </div>
           </div>

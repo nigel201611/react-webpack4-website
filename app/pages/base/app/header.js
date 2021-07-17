@@ -175,7 +175,7 @@ class Header extends Component {
               <div className="navbar-brand">
                 <span className="brand-title" onClick={this.logoClick}>
                   <span className="brand-text">
-                    <img className="logo_icon" src={logoImage} alt="深圳市知鸣智能科技有限公司" />
+                    {/* <img className="logo_icon" src={logoImage} alt="深圳市知鸣智能科技有限公司" /> */}
                     {this.props.t('NRI_title')}
                   </span>
                 </span>

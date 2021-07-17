@@ -130,7 +130,7 @@ class Home extends Component {
             </Col>
             <Col className="column-item" span={12}>
               <div className="ai_video">
-                <video src="../videos/flower.mp4" controls="controls">
+                <video src="../videos/yanwuSmoking.mp4" controls="controls">
                   Sorry, your browser doesn't support embedded videos.
                 </video>
               </div>

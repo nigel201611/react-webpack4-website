@@ -1,13 +1,14 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-06 15:18:14
+ * @LastEditTime: 2021-07-17 23:20:53
  */
 
 const path = require("path");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HappyPack = require("happypack");
+// const CopyPlugin = require("copy-webpack-plugin");
 const os = require("os");
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 const devMode = process.env.NODE_ENV !== "production";
@@ -176,6 +177,16 @@ const webpackConfigBase = {
           name: "static/official/font/[name].[hash:4].[ext]",
         },
       },
+      {
+        test: /\.(mp4)$/,
+        loader: "file-loader",
+        include: [
+          resolve("../static/videos"),
+        ],
+        options: {
+          name: "static/videos/[name].[ext]",
+        },
+      },
     ],
   },
   performance: false,
@@ -242,6 +253,12 @@ const webpackConfigBase = {
       verbose: false,
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // new CopyPlugin([
+    //   {
+    //     from: "../videos",
+    //     to: "../static/videos",
+    //   },
+    // ]),
   ],
 };
 

@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-03 16:45:21
+ * @LastEditTime: 2021-07-18 12:51:26
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -74,7 +74,7 @@ class Login extends Component {
       <div className="login-container">
         <div className="login-main">
           <QueuiAnim delay={300} type="bottom" key="row">
-            <h3 className="title">NRI Demo Platform</h3>
+            <h3 className="title">Demo Platform</h3>
             <Row>
               <Spin spinning={this.state.loading}>
                 <Form onSubmit={e => this.handleSubmit(e)}>

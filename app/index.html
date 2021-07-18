@@ -1,7 +1,7 @@
 <!--
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-06 10:46:00
+ * @LastEditTime: 2021-07-18 12:51:17
 -->
 <!DOCTYPE html>
 <html lang="cn">
@@ -9,15 +9,15 @@
 <head>
   <meta charset="utf-8">
   <link rel="shortcut icon" href="/static/official/images/nri_logo.png">
-  <title>NRI Demo Platform</title>
+  <title>Demo Platform</title>
 </head>
 
 <body>
   <div class="root" id="root"></div>
-  <% for(var i = 0; i < htmlWebpackPlugin.options.dlls.length;i++){%>
-  <script src="<%=htmlWebpackPlugin.options.dlls[i] %>"></script>
-  <%}%>
-  <!-- <%= '<script src="'+ htmlWebpackPlugin.options.mapConfig +'"></script>' %> -->
+  <% for(var i=0; i < htmlWebpackPlugin.options.dlls.length;i++){%>
+    <script src="<%=htmlWebpackPlugin.options.dlls[i] %>"></script>
+    <%}%>
+      <!-- <%= '<script src="'+ htmlWebpackPlugin.options.mapConfig +'"></script>' %> -->
 </body>
 
 </html>

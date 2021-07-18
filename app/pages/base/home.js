@@ -6,7 +6,7 @@ import { withTranslation } from 'react-i18next';
 import '@styles/home.less';
 import { debounce, getElemOffsetTop } from '@utils/common';
 import { setCurrentNavItem } from '@actions/common';
-
+import videoSrc from '../../../static/videos/yanwuSmoking.mp4'
 @connect(state => ({}))
 class Home extends Component {
   static defaultProps = {};
@@ -130,7 +130,7 @@ class Home extends Component {
             </Col>
             <Col className="column-item" span={12}>
               <div className="ai_video">
-                <video src="../videos/yanwuSmoking.mp4" controls="controls">
+                <video src={videoSrc} controls="controls" autoPlay='autoPlay' loop='loop' type="video/mp4">
                   Sorry, your browser doesn't support embedded videos.
                 </video>
               </div>

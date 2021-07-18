@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-16 15:45:34
+ * @LastEditTime: 2021-07-18 13:14:56
  */
 import React, { Component } from 'react';
 import { withTranslation } from 'react-i18next';
@@ -154,6 +154,7 @@ class ExpressOcr extends Component {
           },
           (res) => {
             //   如果返回401，或者token失效，提醒有用户去登录，由用户决定是否去登陆
+            console.log('nigel=====',res)
             message.warning(res.errmsg);
             this.setState({ isRequesting: false });
           },

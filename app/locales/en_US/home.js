@@ -7,7 +7,7 @@ export default {
   iot_desc2:
     "The temperature and humidity sensor transmits the temperature and humidity data to the front-end interface for display, and detects the temperature and humidity in real time...",
   ocr_desc:
-    "NRI universal OCR recognition, custom OCR template, waybill recognition, postcode recognition, t-general, g-general OCR identification",
+    "universal OCR recognition, custom OCR template, waybill recognition, postcode recognition, t-general, g-general OCR identification",
   ai_desc:
     "In the field of AI algorithm, algorithm engineers are applied in different fields. On the right are smoke detection and monitoring algorithms, and more applications in other fields",
   cardList: [

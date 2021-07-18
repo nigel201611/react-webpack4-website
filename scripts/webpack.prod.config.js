@@ -1,7 +1,7 @@
 /*
  * @Author: nigel
  * @Date: 2020-09-03 15:54:51
- * @LastEditTime: 2020-11-09 09:56:11
+ * @LastEditTime: 2021-07-17 23:16:48
  */
 
 const webpack = require("webpack");
@@ -63,6 +63,10 @@ const webpackConfigProd = {
       {
         from: "./static/official/images",
         to: "../dist/static/official/images",
+      },
+      {
+        from: "./static/videos",
+        to: "../dist/static/videos",
       },
     ]),
     // new webpack.DllReferencePlugin({
